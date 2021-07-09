@@ -14,3 +14,13 @@
       </React.StrictMode>,
       document.getElementById('root')
     );
+2、react 配置ant时遇见的一个Error: Multiple configuration files found. Please remove one: – package.json#babel – .babelrc
+问题原因：
+    create react app 里面的package.json里面已经配置了
+           "babel": {
+             "presets": [
+               "react-app"
+             ]
+           }
+     同时又在根目录下新建了 .babelrc文件导致
+解决方案：删除任意其中一项的配置即可
