@@ -63,6 +63,9 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+/** 新加less匹配项**/
+const lessRegex = /\.less$/;
+const lessModuleRegex = /\.module\.less$/
 
 const hasJsxRuntime = (() => {
   if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
@@ -138,23 +141,28 @@ module.exports = function (webpackEnv) {
         },
       },
     ].filter(Boolean);
-    if (preProcessor) {
-      loaders.push(
-        {
-          loader: require.resolve('resolve-url-loader'),
-          options: {
-            sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
-            root: paths.appSrc,
-          },
-        },
-        {
-          loader: require.resolve(preProcessor),
-          options: {
-            sourceMap: true,
-          },
-        }
-      );
-    }
+    /**为less-loader添加配置项，启动javascript**/
+      if (preProcessor) {
+          if (preProcessor === 'less-loader') {
+              loaders.push({
+                  loader: require.resolve(preProcessor),
+                  options: {
+                      sourceMap: isEnvProduction && shouldUseSourceMap,
+                      lessOptions: {
+                          javascriptEnabled: true,
+                      }
+                  },
+              });
+          }else{
+              loaders.push({
+                  loader: require.resolve(preProcessor),
+                  options: {
+                      sourceMap: isEnvProduction && shouldUseSourceMap,
+                  },
+              });
+          }
+
+      }
     return loaders;
   };
 
@@ -407,7 +415,7 @@ module.exports = function (webpackEnv) {
                     },
                   ],
                 ],
-                
+
                 plugins: [
                   [
                     require.resolve('babel-plugin-named-asset-import'),
@@ -452,7 +460,7 @@ module.exports = function (webpackEnv) {
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
-                
+
                 // Babel sourcemaps are needed for debugging into node_modules
                 // code.  Without the options below, debuggers like VSCode
                 // show incorrect code and set breakpoints on the wrong lines.
@@ -534,6 +542,23 @@ module.exports = function (webpackEnv) {
                 'sass-loader'
               ),
             },
+              /**添加less编译**/
+              {
+                  test: lessRegex,
+                  exclude: lessModuleRegex,
+                  use: getStyleLoaders({ importLoaders: 2 }, 'less-loader'),
+              },
+              {
+                  test: lessModuleRegex,
+                  use: getStyleLoaders(
+                      {
+                          importLoaders: 2,
+                          modules: true,
+                          getLocalIdent: getCSSModuleLocalIdent,
+                      },
+                      'less-loader'
+                  ),
+              },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.

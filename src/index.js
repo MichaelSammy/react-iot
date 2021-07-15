@@ -1,93 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+
+// import './index.css';
+
+import './stylus/index.less'
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { Form, Input, Button, Checkbox } from 'antd';
-function Demo (){
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    };
+import * as serviceWorker from './serviceWorker';
+import { Provider } from 'react-redux'
+import store from './store'
+import {HashRouter, Route} from 'react-router-dom'
 
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
-
+const Main = () =>{
     return (
-        <Form
-            name="basic"
-            labelCol={{
-                span: 8,
-            }}
-            wrapperCol={{
-                span: 16,
-            }}
-            initialValues={{
-                remember: true,
-            }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-        >
-            <Form.Item
-                label="Username"
-                name="username"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Please input your username!',
-                    },
-                ]}
-            >
-                <Input />
-            </Form.Item>
+        <Provider store={store}>
+            <HashRouter basename='/'>
+                <Route path={`/`} component={App}></Route>
+            </HashRouter>
+        </Provider>
+    )
+}
 
-            <Form.Item
-                label="Password"
-                name="password"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Please input your password!',
-                    },
-                ]}
-            >
-                <Input.Password />
-            </Form.Item>
+ReactDOM.render(<Main />, document.getElementById('root'));
 
-            <Form.Item
-                name="remember"
-                valuePropName="checked"
-                wrapperCol={{
-                    offset: 8,
-                    span: 16,
-                }}
-            >
-                <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-
-            <Form.Item
-                wrapperCol={{
-                    offset: 8,
-                    span: 16,
-                }}
-            >
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
-            </Form.Item>
-        </Form>
-    );
-};
-ReactDOM.render(
-    <Demo></Demo>,
- /** <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  **/
-  document.getElementById('root')
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
