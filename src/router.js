@@ -1,7 +1,8 @@
-
+﻿
     import Index from './pages/User/Home'
 
 import AsyncComponent from './utils/asyncComponent'
+import UserManage from './pages/User/Permission/UserManage'
 const Home = AsyncComponent(()=>import('./pages/Home'))
 const Login = AsyncComponent(()=>import('./pages/Login'))
 const User = AsyncComponent(()=>import('./pages/User'))
@@ -104,36 +105,36 @@ const routes = [
             //         }
             //     ]
             // },
-            // {
-            //     path: '/user/permission',
-            //     component: SecondLevelComponent,
-            //     pathName: 'permission',
-            //     name: '权限管理',
-            //     icon: 'table',
-            //     children: [
-            //         {
-            //             path: '/user/permission/user',
-            //             pathName: 'user-manage',
-            //             component: UserManage,
-            //             name: '用户管理',
-            //             icon: 'table'
-            //         },
-            //         {
-            //             path: '/user/permission/role',
-            //             pathName: 'role-manage',
-            //             component: RoleManage,
-            //             name: '角色管理',
-            //             icon: 'eye'
-            //         },
-            //         {
-            //             path: '/user/permission/menu',
-            //             pathName: 'menu-manage',
-            //             component: MenuManage,
-            //             name: '菜单管理',
-            //             icon: 'eye'
-            //         }
-            //     ]
-            // }
+            {
+                path: '/user/permission',
+                component: SecondLevelComponent,
+                pathName: 'permission',
+                name: '权限管理',
+                icon: 'table',
+                children: [
+                    {
+                        path: '/user/permission/user',
+                        pathName: 'user-manage',
+                        component: UserManage,
+                        name: '用户管理',
+                        icon: 'table'
+                    },
+                    // {
+                    //     path: '/user/permission/role',
+                    //     pathName: 'role-manage',
+                    //     component: RoleManage,
+                    //     name: '角色管理',
+                    //     icon: 'eye'
+                    // },
+                    // {
+                    //     path: '/user/permission/menu',
+                    //     pathName: 'menu-manage',
+                    //     component: MenuManage,
+                    //     name: '菜单管理',
+                    //     icon: 'eye'
+                    // }
+                ]
+            }
         ]
 
     },
