@@ -34,7 +34,7 @@ const routes = [
                 pathName:'index',
                 component:Index,
                 name: '首页',
-                icon:'pie-chart'
+                icon:'iconrenwuguanli1'
             },
             // {
             //     path: '/user/order',
@@ -110,14 +110,14 @@ const routes = [
                 component: SecondLevelComponent,
                 pathName: 'permission',
                 name: '权限管理',
-                icon: 'table',
+                icon:'iconxiangmu',
                 children: [
                     {
                         path: '/user/permission/user',
                         pathName: 'user-manage',
                         component: UserManage,
                         name: '用户管理',
-                        icon: 'table'
+                        icon:'iconxiangmu'
                     },
                     // {
                     //     path: '/user/permission/role',

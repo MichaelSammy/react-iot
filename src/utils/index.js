@@ -2,7 +2,8 @@ import React from "react"
 import { Menu, Icon, Breadcrumb,Select } from "antd"
 import { Link } from "react-router-dom"
 import request from './request'
-
+import IconFont from './../utils/IconFont';
+import '../index.css'
 const Option = Select.Option
 const { SubMenu } = Menu
 const MenuItem = Menu.Item
@@ -16,7 +17,7 @@ export const getMenuItem = list => {
                     key={item.path}
                     title={
                         <span>
-                            <Icon type={item.icon} />
+                           <IconFont style={{ fontSize: '16px', color: '#6d3' }} type={item.icon} />
                             <span>{item.name}</span>
                         </span>
                     }
@@ -28,7 +29,7 @@ export const getMenuItem = list => {
             return (
                 <MenuItem key={item.path}>
                     <Link to={item.path}>
-                        <Icon type={item.icon} />
+                        <IconFont type={item.icon} style={{ fontSize: '16px', color: '#6d3' }}/>
                         <span>{item.name}</span>
                     </Link>
                 </MenuItem>
@@ -51,7 +52,7 @@ export const getBreadItem = (list) => {
                     </Breadcrumb.Item>
                 )
                 getItem(item.children)
-                
+
             }else{
                 arr.push(
                     <Breadcrumb.Item key={index}>
@@ -61,7 +62,7 @@ export const getBreadItem = (list) => {
                     </Breadcrumb.Item>
                 )
             }
-            
+
         })
     }
     getItem(list)

@@ -140,6 +140,12 @@ export default class Permission extends React.Component {
     saveUserSubmit = () => {
         this.child.handleSubmit();
     }
+    resetUserFrom = () =>{
+            this.setState({
+                roleVisible: false
+            })
+        this.child.resetUserFrom()
+    }
 
     render() {
         const columns = [
@@ -208,24 +214,22 @@ export default class Permission extends React.Component {
                     >
                     </Etable>
                 </Card>
-                <Modal
-                    forceRender={true}
-                    title={this.state.title}
-                    visible={this.state.roleVisible}
-                    okText="保存"
-                    cancelText="取消"
-                    onOk={this.saveUserSubmit}
-                    onCancel={() => {
-                        this.setState({
-                            roleVisible: false
-                        })
-                    }}
-                >
-                    <CreatUser
-                        detail={this.state.detail}
-                        onRef={this.onRef}
-                    />
-                </Modal>
+                {
+                    this.state.roleVisible &&
+                    <Modal
+                        title={this.state.title}
+                        visible={this.state.roleVisible}
+                        okText="保存"
+                        cancelText="取消"
+                        onOk={this.saveUserSubmit}
+                        onCancel={this.resetUserFrom}
+                    >
+                        <CreatUser
+                            detail={this.state.detail}
+                            onRef={this.onRef}
+                        />
+                    </Modal>
+                }
             </div>
         )
     }
@@ -248,18 +252,23 @@ class CreatUser extends React.Component {
             console.log('失败')
             console.log(errInfo)
         })
-    };
-
+    }
+    resetUserFrom=()=>{
+        const form = this.formRefUser.current;
+        form.resetFields();
+    }
     render() {
         const formItemLayout = {
             labelCol: {span: 5},
             wrapperCol: {span: 16}
         }
         const detail = this.props.detail
+
         return (
             <Form ref={this.formRefUser}>
                 <FormItem label="登录名"
                           name="loginName"
+                          initialValue={detail.loginName}
                           rules={[
                               {
                                   required: true,
@@ -270,6 +279,7 @@ class CreatUser extends React.Component {
                 </FormItem>
                 <FormItem label="真实姓名"
                           name="name"
+                          initialValue={detail.name}
                           rules={[
                               {
                                   required: true,
@@ -279,6 +289,7 @@ class CreatUser extends React.Component {
                     <Input type="text" placeholder="真实姓名"/>
                 </FormItem>
                 <FormItem label="联系电话" name="mobile"
+                          initialValue={detail.mobile}
                           rules={[
                               {
                                   required: true,
@@ -288,6 +299,7 @@ class CreatUser extends React.Component {
                     <Input type="text" placeholder="联系电话"/>
                 </FormItem>
                 <FormItem label="联系地址" name="address"
+                          initialValue={detail.address}
                           rules={[
                               {
                                   required: true,
@@ -297,6 +309,7 @@ class CreatUser extends React.Component {
                     <Input type="text" placeholder="联系地址"/>
                 </FormItem>
                 <FormItem label="电子邮箱" name="email"
+                          initialValue={detail.email}
                           rules={[
                               {
                                   required: true,
