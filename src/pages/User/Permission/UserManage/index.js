@@ -123,19 +123,20 @@ export default class Permission extends React.Component {
         })
     }
     //重置密码
-    resetPassword = () => {
+    resetPassword = (values) => {
         const _this = this
+        const _values=values
         Modal.confirm({
             title: '提示',
             content: '确认要重置密码吗?',
             okText: '确认',
             cancelText: '取消',
-            onOk: _this.doResetPassword
+            onOk: _this.doResetPassword(_values)
         });
     }
     //确认重置
-    doResetPassword = () => {
-        console.log(11)
+    doResetPassword = (_values) => {
+        console.log(_values)
     }
     saveUserSubmit = () => {
         this.child.handleSubmit();
@@ -185,7 +186,7 @@ export default class Permission extends React.Component {
                         <div>
                             <Button size="small" type="primary" onClick={this.userEdit.bind(this, item)}
                                     style={{marginRight: '10px'}}>编辑</Button>
-                            <Button size="small" type="primary" onClick={this.resetPassword}>重置密码</Button>
+                            <Button size="small" type="primary" onClick={this.resetPassword.bind(this,item)}>重置密码</Button>
                         </div>
                     )
                 }

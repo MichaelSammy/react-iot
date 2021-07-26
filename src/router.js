@@ -3,6 +3,7 @@
 
 import AsyncComponent from './utils/asyncComponent'
 import UserManage from './pages/User/Permission/UserManage'
+import RoleManage from './pages/User/Permission/RoleManage'
 const Home = AsyncComponent(()=>import('./pages/Home'))
 const Login = AsyncComponent(()=>import('./pages/Login'))
 const User = AsyncComponent(()=>import('./pages/User'))
@@ -119,13 +120,13 @@ const routes = [
                         name: '用户管理',
                         icon:'iconxiangmu'
                     },
-                    // {
-                    //     path: '/user/permission/role',
-                    //     pathName: 'role-manage',
-                    //     component: RoleManage,
-                    //     name: '角色管理',
-                    //     icon: 'eye'
-                    // },
+                    {
+                        path: '/user/permission/role',
+                        pathName: 'role-manage',
+                        component: RoleManage,
+                        name: '角色管理',
+                        icon: 'iconxiangmu'
+                    },
                     // {
                     //     path: '/user/permission/menu',
                     //     pathName: 'menu-manage',
