@@ -51,8 +51,11 @@ export const permissionAction = (path) =>{
         .then(res =>{
             const allList = routes[2].children
             res.data.data.push('index')
+            res.data.data.push('role/add')
             const permissionList = recursionRouter(res.data.data,allList)
-
+            console.log('permissionList-start');
+            console.log(permissionList);
+            console.log('permissionList-end');
             const defaultOpenKeys = filterRoutes(path)
             const currentList = recursionRouterThree(defaultOpenKeys,permissionList)
             const action = doAuthChangeAction.permissionChange(permissionList,currentList,res.data.avatar,res.data.name)

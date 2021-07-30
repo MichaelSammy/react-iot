@@ -27,6 +27,7 @@ export const getMenuItem = list => {
             )
         } else {
             return (
+                 item.show!=false &&
                 <MenuItem key={item.path}>
                     <Link to={item.path}>
                         <IconFont type={item.icon} style={{ fontSize: '16px', color: '#6d3' }}/>

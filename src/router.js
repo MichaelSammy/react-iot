@@ -4,6 +4,7 @@
 import AsyncComponent from './utils/asyncComponent'
 import UserManage from './pages/User/Permission/UserManage'
 import RoleManage from './pages/User/Permission/RoleManage'
+import addRole from './pages/User/Permission/RoleManage/AddRole'
 const Home = AsyncComponent(()=>import('./pages/Home'))
 const Login = AsyncComponent(()=>import('./pages/Login'))
 const User = AsyncComponent(()=>import('./pages/User'))
@@ -37,75 +38,6 @@ const routes = [
                 name: '首页',
                 icon:'iconrenwuguanli1'
             },
-            // {
-            //     path: '/user/order',
-            //     component: SecondLevelComponent,
-            //     pathName: 'order-manage',
-            //     name: '订单管理',
-            //     icon: 'eye',
-            //     children: [
-            //         {
-            //             path: '/user/order/list',
-            //             pathName: 'order-list',
-            //             component: OrderList,
-            //             name: '订单列表',
-            //             icon: 'table'
-            //         },
-            //         {
-            //             path: '/user/order/product',
-            //             pathName: 'product-manage',
-            //             component: ThirdLevelComponent,
-            //             name: '生产管理',
-            //             icon: 'user',
-            //             children: [
-            //                 {
-            //                     path: '/user/order/product/list',
-            //                     pathName: 'product-list',
-            //                     component: ProductionList,
-            //                     name: '生产列表',
-            //                     icon: 'table'
-            //                 },
-            //                 {
-            //                     path: '/user/order/product/review',
-            //                     pathName: 'review-manage',
-            //                     component: ReviewManage,
-            //                     name: '审核管理',
-            //                     icon: 'eye'
-            //                 }
-            //             ]
-            //         },
-            //         {
-            //             path: '/user/order/returnGoods',
-            //             pathName: 'return-goods',
-            //             component: ReturnGoods,
-            //             name: '退货管理',
-            //             icon: 'eye'
-            //         }
-            //     ]
-            // },
-            // {
-            //     path: '/user/goods',
-            //     component: SecondLevelComponent,
-            //     pathName: 'goods',
-            //     name: '产品管理',
-            //     icon: 'user',
-            //     children: [
-            //         {
-            //             path: '/user/goods/list',
-            //             pathName: 'goods-list',
-            //             component: GoodsList,
-            //             name: '产品列表',
-            //             icon: 'table'
-            //         },
-            //         {
-            //             path: '/user/goods/classify',
-            //             pathName: 'goods-classify',
-            //             component: GoodsClassify,
-            //             name: '产品分类',
-            //             icon: 'eye'
-            //         }
-            //     ]
-            // },
             {
                 path: '/user/permission',
                 component: SecondLevelComponent,
@@ -126,6 +58,15 @@ const routes = [
                         component: RoleManage,
                         name: '角色管理',
                         icon: 'iconxiangmu'
+                    },
+                    {
+                        path: '/user/permission/role/add',
+                        pathName: 'role/add',
+                        component: addRole,
+                        name: '角色添加',
+                        icon: 'iconxiangmu',
+                        exact: true,
+                        show:false
                     },
                     // {
                     //     path: '/user/permission/menu',

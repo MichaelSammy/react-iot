@@ -1,21 +1,22 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button} from "antd";
-import BaseForm from '../../../../common/BaseForm'
-import Etable from "../../../../common/Etable";
-import {updateSelectedItem} from '../../../../utils'
-import request from '../../../../utils/request'
+import BaseForm from '../../../../../common/BaseForm'
+import Etable from "../../../../../common/Etable";
+import {updateSelectedItem} from '../../../../../utils'
+import request from '../../../../../utils/request'
 
-export default class RoleManage extends React.Component {
+export default class AddRole extends React.Component {
     params = {
         page: 1,
         pageSize: 10,
+        total:0,
     }
     data = [
         {
             type: 'input',
             initialValue: '',
             label: '角色名称',
-            placeholder: '请输入角色名称',
+            placeholder: '111',
             field: 'rolename',
             width: '130px'
         }
@@ -67,7 +68,8 @@ export default class RoleManage extends React.Component {
         this.requestList()
     }
     createRole = () => {
-        this.props.history.push({'pathname':"/user/permission/role/add",params:true,from: this.props.location.pathname});
+        debugger
+        // this.props.history.push({ pathname: "/user/permission/addrole"});
     }
     handleSearch = (data) => {
         //日期转换
@@ -80,6 +82,7 @@ export default class RoleManage extends React.Component {
 
     //请求列表
     requestList() {
+        debugger
         request({
             url: '/user/list',
             type: 'get',
