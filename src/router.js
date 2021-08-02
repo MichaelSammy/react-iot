@@ -50,23 +50,23 @@ const routes = [
                         pathName: 'user-manage',
                         component: UserManage,
                         name: '用户管理',
-                        icon:'iconxiangmu'
+                        icon:'iconxiangmu',
                     },
-                    {
-                        path: '/user/permission/role',
-                        pathName: 'role-manage',
-                        component: RoleManage,
-                        name: '角色管理',
-                        icon: 'iconxiangmu'
-                    },
+                    //最细化的组件需要放置最上面，确保Switch 路由匹配时可以解析到对应的组件
                     {
                         path: '/user/permission/role/add',
                         pathName: 'role/add',
                         component: addRole,
                         name: '角色添加',
                         icon: 'iconxiangmu',
-                        exact: true,
                         show:false
+                    },
+                    {
+                        path: '/user/permission/role',
+                        pathName: 'role-manage',
+                        component: RoleManage,
+                        name: '角色管理',
+                        icon: 'iconxiangmu',
                     },
                     // {
                     //     path: '/user/permission/menu',

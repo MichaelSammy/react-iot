@@ -61,10 +61,14 @@ class User extends React.Component {
         }
 
         const { permissionList, name } = this.props.state
-        const path = this.props.location.pathname
+        var path = this.props.location.pathname
         const defaultOpenKeys = filterRoutes(path)
 
         const breadList = recursionRouterTwo(defaultOpenKeys,permissionList)
+        //此处用于路由表单时，左侧菜单默认选中菜单路径
+        // var temp=path.split('/');
+        // var tampp='/'+temp[1]+'/'+temp[2]+'/'+temp[3];
+        // path=path.split('/').length>=5?tampp:path
         return (
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -93,7 +97,6 @@ class User extends React.Component {
                         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
                         <Switch>
                             {permissionList.map((value, key) => {
-                                console.log(value)
                                 return (
                                     <Route
                                         routes={value}
