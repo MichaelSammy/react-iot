@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import zhCN from 'antd/lib/locale/zh_CN';
 // import './index.css';
-
+import {ConfigProvider} from 'antd';
 import './stylus/index.less'
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -12,11 +12,13 @@ import {HashRouter, Route} from 'react-router-dom'
 
 const Main = () =>{
     return (
-        <Provider store={store}>
-            <HashRouter basename='/'>
-                <Route path={`/`} component={App}></Route>
-            </HashRouter>
-        </Provider>
+        <ConfigProvider locale={zhCN}>
+            <Provider store={store}>
+                <HashRouter basename='/'>
+                    <Route path={`/`} component={App}></Route>
+                </HashRouter>
+            </Provider>
+        </ConfigProvider>
     )
 }
 

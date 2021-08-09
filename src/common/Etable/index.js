@@ -7,7 +7,7 @@ class Etable extends React.Component {
     }
     onRowClick = (index,record)=>{
         /**
-         * @param {* 勾选的类型} type radio是单选
+         * @param {* 勾选的类型} type radio是单选,check:支持多选
          */
         const type = this.props.type
         if(type=== 'radio'){
@@ -28,7 +28,7 @@ class Etable extends React.Component {
             this.onSelectChange(selectedRowKeys,selectedRows)
         }
 
-        
+
     }
     render(){
 
@@ -57,7 +57,7 @@ class Etable extends React.Component {
 
 
         return (
-            <Table 
+            <Table
                 dataSource={this.props.dataSource}//表格内容
                 columns={this.props.columns}//表头数据
                 pagination={pagination}//分页
@@ -69,4 +69,4 @@ class Etable extends React.Component {
 
 }
 
-export default Etable 
+export default Etable

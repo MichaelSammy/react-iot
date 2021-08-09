@@ -53,12 +53,15 @@ export const permissionAction = (path) =>{
             res.data.data.push('index')
             res.data.data.push('role/add')
             const permissionList = recursionRouter(res.data.data,allList)
+          // var data={"code":1,"data":{"avatar":"https://randy168.com/1533262153771.gif","name":"admin","roles":["admin"],"data":["index","order-manage","order-list","product-manage","product-list","review-manage","return-goods","goods","goods-list","goods-classify","permission","user-manage","role-manage","menu-manage"]}};
+          //   const permissionList = recursionRouter(data.data.data,allList)
             console.log('permissionList-start');
             console.log(permissionList);
             console.log('permissionList-end');
             const defaultOpenKeys = filterRoutes(path)
             const currentList = recursionRouterThree(defaultOpenKeys,permissionList)
             const action = doAuthChangeAction.permissionChange(permissionList,currentList,res.data.avatar,res.data.name)
+            // const action = doAuthChangeAction.permissionChange(permissionList,currentList,data.data.avatar,data.data.name)
             dispatch(action)
 
 

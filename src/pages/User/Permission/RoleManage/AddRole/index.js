@@ -4,267 +4,109 @@ import BaseForm from '../../../../../common/BaseForm'
 import Etable from "../../../../../common/Etable";
 import {updateSelectedItem} from '../../../../../utils'
 import request from '../../../../../utils/request'
+import './index.less'
 
+const FormItem = Form.Item
 export default class AddRole extends React.Component {
-    params = {
-        page: 1,
-        pageSize: 10,
-        total:0,
-    }
-    data = [
-        {
-            type: 'input',
-            initialValue: '',
-            label: '角色名称',
-            placeholder: '111',
-            field: 'rolename',
-            width: '130px'
-        }
-    ]
+    formRefUser = React.createRef();
     state = {
-        rowSelection: {
-            selectedRowKeys: [],
-            selectedRows: [],
-        },
-        pagination: {
-            showSizeChanger: true,
-            showQuickJumper: true,
-            hideOnSinglePage: false,
-            pageSizeOptions: ['10', '20', '30'],
-            // defaultCurrent: 1,
-            pageSize:this.params.pageSize,
-            current:this.params.page,
-            total: this.params.total,
-            onChange:(page,pageSize)=>this.changePage(page,pageSize),
-            showTotal: (total) => `共${total}条`,
-        },
-        type: 'radio',
-        list: [],
-        roleVisible: false,
-        perVisible: false,
-        authVisible: false,
-        checkedKeys: [],
-        targetKeys: [],
-        detail: {},
-        title: ''
+        detail: {}
     }
-    changePage=(page,pageSize)=>{
-        // debugger
-        this.params.page=page;
-        this.params.pageSize=pageSize;
-        this.setState({
-            pagination:{
-                current: page,
-                pageSize:pageSize,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                hideOnSinglePage: false,
-                pageSizeOptions: ['10', '20', '30'],
-                total: this.params.total,
-                onChange:(page,pageSize)=>this.changePage(page,pageSize),
-                showTotal: (total) => `共${total}条`,
-            }
-        })
-        this.requestList()
-    }
-    createRole = () => {
-        debugger
-        // this.props.history.push({ pathname: "/user/permission/addrole"});
-    }
-    handleSearch = (data) => {
-        //日期转换
-        // data.beginTime= data.beginTime.format("YYYY-MM-DD HH:mm:ss");
-        console.log(data)
-    }
+
     componentDidMount() {
-        this.requestList()
+
     }
 
-    //请求列表
-    requestList() {
+    handleSubmit = async () => {
         debugger
-        request({
-            url: '/user/list',
-            type: 'get',
-            params: {
-                page:  this.params.page,
-                pageSize: this.params.pageSize
-            }
-        }).then(res => {
-            if (res.code === 1) {
-                // let dataSource = res.data.map((item, index) => {
-                //     item.key = index;
-                //     return item;
-                // });
-                this.params.total=12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
-                    item.key = index;
-                    return item;
-                });
-                this.setState({
-                    dataSource
-                })
-            }
+        const form = this.formRefUser.current
+        form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
+            console.log('成功')
+            console.log(values)
+        }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
+            console.log('失败')
+            console.log(errInfo)
         })
     }
-
-    userRole = () => {
-
+    handleCancel=()=>{
+        this.props.history.push({'pathname':"/user/permission/role",params:true,from: this.props.location.pathname});
     }
-    deleteRole = () => {
-
-    }
-
     render() {
-        const columns = [
-            {
-                title: '角色名称',
-                dataIndex: 'roleName',
-                align: 'center'
-            },
-            {
-                title: '归属机构',
-                dataIndex: 'officeName',
-                align: 'center',
-            },
-            {
-                title: '创建人',
-                dataIndex: 'createUser',
-                align: 'center',
-            },
-            {
-                title: '创建时间',
-                dataIndex: 'createTime',
-                align: 'center',
-            },
-            {
-                title: '备注',
-                dataIndex: 'remark',
-                align: 'center',
-            },
-            {
-                title: '操作',
-                align: 'center',
-                render: (item) => {
-                    return (
-                        <div>
-                            <Button size="small" type="primary" onClick={this.userRole.bind(this, item)}
-                                    style={{marginRight: '10px'}}>编辑</Button>
-                            <Button size="small" type="primary" onClick={this.deleteRole.bind(this, item)}>删除</Button>
-                        </div>
-                    )
-                }
-            }
-        ];
+        const formItemLayout = {
+            labelCol: {span: 5},
+            wrapperCol: {span: 16}
+        }
+        const detail = {
+            loginName: '',
+            name: '',
+            mobile: '',
+            address: '',
+            email: ''
+        }
         return (
             <div>
-                <Card>
-                    <BaseForm
-                        data={this.data}
-                        handleSearch={this.handleSearch}
-                    />
-                </Card>
-                <Card style={{margin: '10px 0'}}>
-                    <Button type="primary" onClick={this.createRole}>新增角色</Button>
-                </Card>
-                <Card>
-                    <Etable
-                        that={this}
-                        dataSource={this.state.dataSource}
-                        columns={columns}
-                        rowSelection={this.state.rowSelection}
-                        updateSelectedItem={updateSelectedItem.bind(this)}
-                        pagination={this.state.pagination}
-                        type={this.state.type}
-                    >
-                    </Etable>
-                </Card>
+                {/*<Card>*/}
+                <Form ref={this.formRefUser}>
+                    <FormItem label="登录名"
+                              name="loginName"
+                              initialValue={detail.loginName}
+                              rules={[
+                                  {
+                                      required: true,
+                                      message: '请输入登录名'
+                                  },
+                              ]}{...formItemLayout}>
+                        <Input type="text" placeholder="登录名"/>
+                    </FormItem>
+                    <FormItem label="真实姓名"
+                              name="name"
+                              initialValue={detail.name}
+                              rules={[
+                                  {
+                                      required: true,
+                                      message: '请输入真实姓名'
+                                  },
+                              ]}{...formItemLayout}>
+                        <Input type="text" placeholder="真实姓名"/>
+                    </FormItem>
+                    <FormItem label="联系电话" name="mobile"
+                              initialValue={detail.mobile}
+                              rules={[
+                                  {
+                                      required: true,
+                                      message: '请输入联系电话'
+                                  },
+                              ]}{...formItemLayout}>
+                        <Input type="text" placeholder="联系电话"/>
+                    </FormItem>
+                    <FormItem label="联系地址" name="address"
+                              initialValue={detail.address}
+                              rules={[
+                                  {
+                                      required: true,
+                                      message: '请输入联系地址'
+                                  },
+                              ]}{...formItemLayout}>
+                        <Input type="text" placeholder="联系地址"/>
+                    </FormItem>
+                    <FormItem label="电子邮箱" name="email"
+                              initialValue={detail.email}
+                              rules={[
+                                  {
+                                      required: true,
+                                      message: '请输入电子邮箱'
+                                  },
+                              ]}{...formItemLayout}>
+                        <Input type="text" placeholder="电子邮箱"/>
+                    </FormItem>
+
+                </Form>
+                <div className='option-button'>
+                    <Button size="small" type="primary" onClick={this.handleSubmit.bind(this)}
+                            style={{marginRight: '10px'}}>提交</Button>
+                    <Button size="small" type="primary" onClick={this.handleCancel.bind(this)}>取消</Button>
+                </div>
+                {/*</Card>*/}
             </div>
         )
     }

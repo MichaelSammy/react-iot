@@ -71,23 +71,25 @@ class User extends React.Component {
         // path=path.split('/').length>=5?tampp:path
         return (
             <Layout style={{ minHeight: '100vh' }}>
-                <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-                    <div className="logo" />
-
-                    <Menu onClick={this.menuClick} theme="dark" defaultOpenKeys={defaultOpenKeys} selectedKeys={[path]} mode="inline">
-                        {
-                            getMenuItem(permissionList)
-                        }
-                    </Menu>
-                </Sider>
-                <Layout>
-                    <Header style={{ background: '#fff', padding: 0 }}>
-                        {/* <img src={avatar} alt=""/> */}
-                        <span className="logoutIcon" onClick={this.logOut}>
+                <Header style={{ background: '#fff', padding: 0 }}>
+                    {/* <img src={avatar} alt=""/> */}
+                    <span className="logoutIcon" onClick={this.logOut}>
                             < PoweroffOutlined></PoweroffOutlined>
                         </span>
-                        <span className="loginUser">{name}</span>
-                    </Header>
+                    <span className="loginUser">{name}</span>
+                </Header>
+
+                <Layout>
+                    <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+                        <div className="logo" />
+
+                        <Menu onClick={this.menuClick} theme="dark" defaultOpenKeys={defaultOpenKeys} selectedKeys={[path]} mode="inline">
+                            {
+                                getMenuItem(permissionList)
+                            }
+                        </Menu>
+                    </Sider>
+                <Layout>
                     <Content style={{ margin: '0 16px' }}>
                         <Breadcrumb style={{ margin: '16px 0' }}>
                             {
@@ -112,7 +114,9 @@ class User extends React.Component {
                         </Switch>
                         </div>
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>Ant Design ©2019</Footer>
+                    <Footer style={{ textAlign: 'center' ,minHeight: 20 }}></Footer>
+                </Layout>
+
                 </Layout>
             </Layout>
         )
