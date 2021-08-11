@@ -2,7 +2,7 @@ import React from 'react'
 import {getOptionsList} from '../../utils'
 import {Input, Select, Form, Button, DatePicker} from 'antd'
 import {FormInstance} from 'antd/lib/form';
-
+const { Search } = Input;
 const FormItem = Form.Item
 
 class BaseForm extends React.Component {
@@ -11,15 +11,24 @@ class BaseForm extends React.Component {
         const data = this.props.data;
         const list = [];
         data.forEach((item, index) => {
-            const {type, field, label, initialValue, width, placeholder, showTime} = item;
+            const {type, field, label, initialValue, width,bordered, placeholder, showTime} = item;
             switch (type) {
                 case 'input':
                     const inputItem = <FormItem key={field} name={field} label={label} initialValue={initialValue}>
                         {
-                            <Input style={{width}} type="text" placeholder={placeholder}/>
+                            <Input style={{width}} type="text" placeholder={placeholder} bordered={bordered} onSearch={this.onSearch}/>
                         }
                     </FormItem>
                     list.push(inputItem);
+                    break;
+                case 'search':
+                    const searchItem = <FormItem key={field} name={field} label={label} initialValue={initialValue}>
+                        {
+                            <Search style={{width}} type="text" placeholder={placeholder} bordered={bordered} allowClear
+                                   onSearch={this.onSearch}/>
+                        }
+                    </FormItem>
+                    list.push(searchItem);
                     break;
                 case 'select':
                     const selectItem = <FormItem key={field} name={field} label={label} initialValue={initialValue}>
@@ -51,15 +60,18 @@ class BaseForm extends React.Component {
     handleFilterSubmit = (values) => {
         this.props.handleSearch(values);
     }
-
+    onSearch=()=>{
+        console.log('123')
+    }
     render() {
         return (
             <Form onFinish={this.handleFilterSubmit} ref={this.formRef} layout='inline'>
                 {this.creatFormList()}
-                <FormItem>
+                { this.props.show!=false&& <FormItem >
                     <Button type="primary" htmlType="submit" style={{margin: '0 20px'}}>查询</Button>
                     <Button onClick={this.reset}>重置</Button>
                 </FormItem>
+                }
             </Form>
         )
     }

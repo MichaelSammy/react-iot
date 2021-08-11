@@ -52,6 +52,8 @@ export const permissionAction = (path) =>{
             const allList = routes[2].children
             res.data.data.push('index')
             res.data.data.push('role/add')
+            res.data.data.push('product-manage')
+            res.data.data.push('device')
             const permissionList = recursionRouter(res.data.data,allList)
           // var data={"code":1,"data":{"avatar":"https://randy168.com/1533262153771.gif","name":"admin","roles":["admin"],"data":["index","order-manage","order-list","product-manage","product-list","review-manage","return-goods","goods","goods-list","goods-classify","permission","user-manage","role-manage","menu-manage"]}};
           //   const permissionList = recursionRouter(data.data.data,allList)

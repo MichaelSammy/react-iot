@@ -1,12 +1,16 @@
-import {PoweroffOutlined} from '@ant-design/icons';
+import {PoweroffOutlined,BellOutlined} from '@ant-design/icons';
 import React from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
-import './index.less'
+// import indexModule from './inde.module.less'
+import   './index.less'
 import NotFound from '../NotFound'
 import connect from '../../utils/connect'
 import { getMenuItem, getBreadItem, filterRoutes } from '../../utils'
 import { Layout, Menu, Breadcrumb } from 'antd'
 import { recursionRouterTwo } from '../../utils/recursion-router'
+import logo from '../../assets/images/logo.png'
+import defaultUser from '../../assets/images/defaultUser.png'
+import BaseForm from "../../common/BaseForm";
 const { Header, Content, Footer, Sider } = Layout
 
 @connect
@@ -16,7 +20,17 @@ class User extends React.Component {
         collapsed: false,
         list:[123]
     };
-
+    data = [
+        {
+            type: 'search',
+            initialValue: '',
+            label: '',
+            placeholder: '查询',
+            field: 'username',
+            width: '336px',
+            bordered:false,
+        }
+    ]
     onCollapse = collapsed => {
         this.setState({ collapsed });
     };
@@ -70,27 +84,43 @@ class User extends React.Component {
         // var tampp='/'+temp[1]+'/'+temp[2]+'/'+temp[3];
         // path=path.split('/').length>=5?tampp:path
         return (
-            <Layout style={{ minHeight: '100vh' }}>
-                <Header style={{ background: '#fff', padding: 0 }}>
-                    {/* <img src={avatar} alt=""/> */}
+            <Layout style={{ minHeight: '100vh',background: '#fff' }} >
+                {/*固定头部导航栏*/}
+                <Header style={{ background: '#fff', padding: 0,position: 'fixed', zIndex: 1, width: '100%'  }}>
+                     <img src={logo} style={{height:25,width:150,marginLeft:20}} alt=""/>
                     <span className="logoutIcon" onClick={this.logOut}>
-                            < PoweroffOutlined></PoweroffOutlined>
+                         <img src={defaultUser} style={{height:36,width:36}}  alt=""/>
+                            {/*< PoweroffOutlined></PoweroffOutlined>*/}
                         </span>
                     <span className="loginUser">{name}</span>
+                    <span className="lingdangIcon">
+                             <BellOutlined />
+                    </span>
+                    <span className="docCenter">文档中心</span>
+                    <span className='title-search'>
+                    <BaseForm
+                        data={this.data}
+                        show={false}
+                    />
+                    </span>
                 </Header>
 
                 <Layout>
-                    <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-                        <div className="logo" />
-
-                        <Menu onClick={this.menuClick} theme="dark" defaultOpenKeys={defaultOpenKeys} selectedKeys={[path]} mode="inline">
+                    {/*collapsible:Sider不可以被收起*/}
+                    <Sider style={{
+                      /*固定左侧菜单栏*/
+                        background: '#F5F5F5', overflow: 'auto', height: '90vh', position: 'fixed', left: 0,top:'10vh'}}
+                         collapsible={false} collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+                        {/*去掉Sider中的logo*/}
+                        {/*<div className="logo" />*/}
+                        <Menu id='menubar' onClick={this.menuClick} style={{background: '#F5F5F5'}} defaultOpenKeys={defaultOpenKeys} selectedKeys={[path]} mode="inline">
                             {
                                 getMenuItem(permissionList)
                             }
                         </Menu>
                     </Sider>
-                <Layout>
-                    <Content style={{ margin: '0 16px' }}>
+                <Layout style={{ marginLeft: 200,marginTop:'10vh'}}>
+                    <Content style={{ margin: '0 16px',overflow: 'initial'}}>
                         <Breadcrumb style={{ margin: '16px 0' }}>
                             {
                                 getBreadItem(breadList)
@@ -114,7 +144,7 @@ class User extends React.Component {
                         </Switch>
                         </div>
                     </Content>
-                    <Footer style={{ textAlign: 'center' ,minHeight: 20 }}></Footer>
+                    {/*<Footer style={{ textAlign: 'center' ,minHeight: 20 }}></Footer>*/}
                 </Layout>
 
                 </Layout>

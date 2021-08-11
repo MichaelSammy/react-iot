@@ -17,7 +17,7 @@ export const getMenuItem = list => {
                     key={item.path}
                     title={
                         <span>
-                           <IconFont style={{ fontSize: '16px', color: '#6d3' }} type={item.icon} />
+                           <IconFont style={{ fontSize: '16px'}} type={item.icon} />
                             <span>{item.name}</span>
                         </span>
                     }
@@ -30,7 +30,7 @@ export const getMenuItem = list => {
                  item.show!=false &&
                 <MenuItem key={item.path}>
                     <Link to={item.path}>
-                        <IconFont type={item.icon} style={{ fontSize: '16px', color: '#6d3' }}/>
+                        <IconFont type={item.icon} style={{ fontSize: '16px' }}/>
                         <span>{item.name}</span>
                     </Link>
                 </MenuItem>

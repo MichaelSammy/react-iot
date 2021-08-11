@@ -5,6 +5,7 @@ import AsyncComponent from './utils/asyncComponent'
 import UserManage from './pages/User/Permission/UserManage'
 import RoleManage from './pages/User/Permission/RoleManage'
 import addRole from './pages/User/Permission/RoleManage/AddRole'
+import ProductManage from './pages/Device/ProductManage'
 const Home = AsyncComponent(()=>import('./pages/Home'))
 const Login = AsyncComponent(()=>import('./pages/Login'))
 const User = AsyncComponent(()=>import('./pages/User'))
@@ -29,7 +30,6 @@ const routes = [
         path: '/user',
         component: User,
         requiresAuth: true, //需要登陆后才能跳转的页面
-
         children:[
             {
                 path: '/user/index',
@@ -75,6 +75,22 @@ const routes = [
                     //     name: '菜单管理',
                     //     icon: 'eye'
                     // }
+                ]
+            },
+            {
+                path: '/user/device',
+                component: SecondLevelComponent,
+                pathName: 'device',
+                name: '设备管理',
+                icon:'iconxiangmu',
+                children: [
+                    {
+                        path: '/user/device/product',
+                        pathName: 'product-manage',
+                        component: ProductManage,
+                        name: '产品管理',
+                        icon:'iconxiangmu',
+                    }
                 ]
             }
         ]
