@@ -18,7 +18,6 @@ export default class AddRole extends React.Component {
     }
 
     handleSubmit = async () => {
-        debugger
         const form = this.formRefUser.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             console.log('成功')

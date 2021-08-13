@@ -1,13 +1,15 @@
 import React from "react";
-import {Card, Modal, Form, Input, Button} from "antd";
+import {Card, Modal, Form, Input, Button, List, Breadcrumb} from "antd";
 import BaseForm from '../../../common/BaseForm'
-import Etable from "../../../common/Etable";
-import {updateSelectedItem} from '../../../utils'
+import EditProduct from './EditProduct'
+import IconFont from '../../../utils/IconFont';
 import request from '../../../utils/request'
+import './index.less'
+import {filterRoutes, getBreadItem} from "../../../utils";
+import {recursionRouterTwo} from "../../../utils/recursion-router";
 
 const FormItem = Form.Item
 export default class Permission extends React.Component {
-    // formRefUser = React.createRef();
     onRef = (ref) => {
         this.child = ref
     }
@@ -17,12 +19,12 @@ export default class Permission extends React.Component {
     }
     data = [
         {
-            type: 'input',
+            type: 'search',
             initialValue: '',
             label: '',
             placeholder: '请输入搜索内容',
             field: 'username',
-            width: '130px'
+            width: '300px'
         }
     ]
     state = {
@@ -73,116 +75,160 @@ export default class Permission extends React.Component {
         })
     }
 
-    //编辑用户
-    userEdit = (item) => {
-        this.setState({
-            detail: item,
-            roleVisible: true,
-            title: '编辑用户'
-        })
-    }
-    //重置密码
-    resetPassword = (values) => {
-        const _this = this
-        const _values=values
-        Modal.confirm({
-            title: '提示',
-            content: '确认要重置密码吗?',
-            okText: '确认',
-            cancelText: '取消',
-            onOk: _this.doResetPassword(_values)
-        });
-    }
-    //确认重置
-    doResetPassword = (_values) => {
-        console.log(_values)
-    }
     saveUserSubmit = () => {
         this.child.handleSubmit();
     }
-    resetUserFrom = () =>{
-            this.setState({
-                roleVisible: false
-            })
+    resetUserFrom = () => {
+        this.setState({
+            roleVisible: false
+        })
         this.child.resetUserFrom()
     }
-
+    createProduct = () => {
+        this.props.history.push({'pathname': "/user/device/product/add", params: true});
+    }
+    editProduct = () => {
+        this.setState({
+            detail: {
+                loginName: '',
+                name: '',
+                mobile: '',
+                address: '',
+                email: ''
+            },
+            roleVisible: true,
+            title: '编辑'
+        })
+    }
+    showProductInfo=()=>{
+        this.props.history.push({'pathname': "/user/device/product/info", params: true});
+    }
     render() {
-        const columns = [
+        const list = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
+            id: '4',
+            value: 'cyan'
+        }, {id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
+            id: '4',
+            value: 'cyan'
+        }];
+        const breadList = [
             {
-                title: '角色ID',
-                dataIndex: 'id'
-            },
-            {
-                title: '登录名',
-                dataIndex: 'loginName'
-            },
-            {
-                title: '真实姓名',
-                dataIndex: 'name'
-            },
-            {
-                title: '联系电话',
-                dataIndex: 'mobile'
-            },
-            {
-                title: '权限',
-                dataIndex: 'erpMemberRoles',
-                render: (list) => {
-                    return list.map(item => {
-                        return item.roleName
-                    }).join(",")
-                }
-            },
-            {
-                title: '联系地址',
-                dataIndex: 'address'
-            },
-            {
-                title: '操作',
-                render: (item) => {
-                    return (
-                        <div>
-                            <Button size="small" type="primary" onClick={this.userEdit.bind(this, item)}
-                                    style={{marginRight: '10px'}}>编辑</Button>
-                            <Button size="small" type="primary" onClick={this.resetPassword.bind(this,item)}>重置密码</Button>
-                        </div>
-                    )
-                }
+                "path": "/user/device",
+                "pathName": "device",
+                "name": "设备管理",
+                "icon": "iconxiangmu",
+                "children": [
+                    {
+                        "path": "/user/device/product",
+                        "pathName": "product-manage",
+                        "name": "产品管理",
+                        "icon": "iconxiangmu",
+                        "children": null,
+                        "redirect": null
+                    }
+                ],
+                "redirect": "/user/device/product"
             }
-        ];
+        ]
         return (
+
             <div>
-                {/*<Card>*/}
-                    <BaseForm
-                        data={this.data}
-                        show={false}
-                        handleSearch={this.handleSearch}
-                    />
-                {/*</Card>*/}
-                {/*<Card>*/}
-                    {/*<Etable*/}
-                        {/*that={this}*/}
-                        {/*dataSource={this.state.dataSource}*/}
-                        {/*columns={columns}*/}
-                        {/*rowSelection={this.state.rowSelection}*/}
-                        {/*updateSelectedItem={updateSelectedItem.bind(this)}*/}
-                        {/*pagination={this.state.pagination}*/}
-                        {/*type={this.state.type}*/}
-                    {/*>*/}
-                    {/*</Etable>*/}
-                {/*</Card>*/}
+                <Breadcrumb style={{margin: '16px 16px'}}>
+                    {
+                        getBreadItem(breadList)
+                    }
+                </Breadcrumb>
+                <div style={{
+                    display: 'flex',
+                    float: 'right',
+                    width: '100%',
+                    height: '40px',
+                    margin: '10px',
+                    justifyContent: 'flex-end'
+                }}>
+                    <div style={{float: 'left'}}>
+                        <BaseForm
+                            data={this.data}
+                            show={false}
+                            handleSearch={this.handleSearch}
+                        />
+                    </div>
+                    <div style={{float: 'left'}}>
+                        <Button type="primary" onClick={this.createProduct}>创建产品</Button>
+                    </div>
+                </div>
+                <div style={{clear: 'both'}}></div>
+                <List
+                    grid={{
+                        gutter: 26,
+                        xs: 1,
+                        sm: 2,
+                        md: 4,
+                        lg: 4,
+                        xl: 3,
+                        xxl: 3,
+                    }}
+                    dataSource={list}
+                    renderItem={item => (
+                        <List.Item>
+                            <div className="card-tag">标准产品</div>
+                            <div style={{
+                                height: '220px',
+                                background: '#FFFFFF',
+                                boxShadow: '0px 2px 10px 0px rgba(189, 189, 189, 0.5)'
+                            }}>
+                                <div className='card-title-info'>
+                                    <div>
+                                        <span className='title-font' onClick={this.showProductInfo}>S270B</span>
+                                        <span className="split-symbol"> / </span>
+                                        <span className='title-font'>S270B</span>
+                                    </div>
+                                    <div className='card-title-option'><span onClick={this.editProduct}>
+                                  <IconFont style={{fontSize: '20px', color: '#89A0C2'}} type='icon-xiugai1'/></span>
+                                        <span> <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
+                                                         type='icon-xiugai1'/></span>
+                                        <span> <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
+                                                         type='icon-xiugai1'/></span></div>
+                                </div>
+                                <div className='row-split-line'></div>
+                                <div className='card-content-into'>
+                                    <div className='card-content-left'>
+                                        <div className='card-content-left-info'>
+                                            <div>
+                                                <div>节点类型：设备</div>
+                                                <div>连网方式：wifi</div>
+                                            </div>
+                                            <div>
+                                                <div>接入方式：直连</div>
+                                                <div>通讯协议：MQTT</div>
+                                            </div>
+                                        </div>
+                                        <div className='card-create-time'>创建时间：2018/12/20 09:43:33</div>
+                                    </div>
+                                    <div className='column-spilt-line'></div>
+                                    <div className='card-content-right'>
+                                        <div className='device-count-num'>852<span
+                                            style={{fontSize: '14px', fontWeight: '500'}}>个</span></div>
+                                        <div className='device-count-desc'>设备总数</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </List.Item>
+                    )}
+                />,
                 {
                     this.state.roleVisible &&
                     <Modal
                         title={this.state.title}
                         visible={this.state.roleVisible}
-                        okText="保存"
-                        cancelText="取消"
-                        onOk={this.saveUserSubmit}
                         onCancel={this.resetUserFrom}
+                        onOk={this.saveUserSubmit}
+                        footer={[
+                            <Button key="submit" type="primary" onClick={this.saveUserSubmit}>确定</Button>,
+                            <Button key="back" onClick={this.resetUserFrom}>取消</Button>
+                        ]}
                     >
-                        <CreatUser
+                        <EditProduct
                             detail={this.state.detail}
                             onRef={this.onRef}
                         />
@@ -193,92 +239,3 @@ export default class Permission extends React.Component {
     }
 }
 
-//创建角色
-class CreatUser extends React.Component {
-    formRefUser = React.createRef();
-
-    componentDidMount() {
-        this.props.onRef(this)
-    }
-
-    handleSubmit = async () => {
-        const form = this.formRefUser.current
-        form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
-            console.log('成功')
-            console.log(values)
-        }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
-            console.log('失败')
-            console.log(errInfo)
-        })
-    }
-    resetUserFrom=()=>{
-        const form = this.formRefUser.current;
-        form.resetFields();
-    }
-    render() {
-        const formItemLayout = {
-            labelCol: {span: 5},
-            wrapperCol: {span: 16}
-        }
-        const detail = this.props.detail
-
-        return (
-            <Form ref={this.formRefUser}>
-                <FormItem label="登录名"
-                          name="loginName"
-                          initialValue={detail.loginName}
-                          rules={[
-                              {
-                                  required: true,
-                                  message: '请输入登录名'
-                              },
-                          ]}{...formItemLayout}>
-                    <Input type="text" placeholder="登录名"/>
-                </FormItem>
-                <FormItem label="真实姓名"
-                          name="name"
-                          initialValue={detail.name}
-                          rules={[
-                              {
-                                  required: true,
-                                  message: '请输入真实姓名'
-                              },
-                          ]}{...formItemLayout}>
-                    <Input type="text" placeholder="真实姓名"/>
-                </FormItem>
-                <FormItem label="联系电话" name="mobile"
-                          initialValue={detail.mobile}
-                          rules={[
-                              {
-                                  required: true,
-                                  message: '请输入联系电话'
-                              },
-                          ]}{...formItemLayout}>
-                    <Input type="text" placeholder="联系电话"/>
-                </FormItem>
-                <FormItem label="联系地址" name="address"
-                          initialValue={detail.address}
-                          rules={[
-                              {
-                                  required: true,
-                                  message: '请输入联系地址'
-                              },
-                          ]}{...formItemLayout}>
-                    <Input type="text" placeholder="联系地址"/>
-                </FormItem>
-                <FormItem label="电子邮箱" name="email"
-                          initialValue={detail.email}
-                          rules={[
-                              {
-                                  required: true,
-                                  message: '请输入电子邮箱'
-                              },
-                          ]}{...formItemLayout}>
-                    <Input type="text" placeholder="电子邮箱"/>
-                </FormItem>
-            </Form>
-        )
-    }
-}
-
-// CreatUser = Form.create()(CreatUser)
