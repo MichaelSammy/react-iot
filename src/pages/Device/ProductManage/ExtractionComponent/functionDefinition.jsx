@@ -184,7 +184,6 @@ class FunctionDefinition extends React.Component {
         title: ''
     }
     changePage = (page, pageSize) => {
-        // debugger
         this.params.page = page;
         this.params.pageSize = pageSize;
         this.setState({

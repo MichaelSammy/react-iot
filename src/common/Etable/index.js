@@ -40,11 +40,11 @@ class Etable extends React.Component {
 
         //是否需要勾选
         let rowSelection = this.props.rowSelection
-        rowSelection.type = this.props.type==='radio'?'radio':'checkbox'
         let onRow
         if(!rowSelection){
             rowSelection = null
         }else{
+            rowSelection.type = this.props.type==='radio'?'radio':'checkbox'
             rowSelection.onChange = this.onSelectChange;
             onRow = (record,index) =>{
                 return {

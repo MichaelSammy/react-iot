@@ -31,9 +31,9 @@ class BaseForm extends React.Component {
                     list.push(searchItem);
                     break;
                 case 'select':
-                    const selectItem = <FormItem key={field} name={field} label={label} initialValue={initialValue}>
+                    const selectItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue}>
                         {
-                            <Select style={{width}}>
+                            <Select style={{width}} placeholder={placeholder}>
                                 {getOptionsList(item.list)}
                             </Select>
                         }
@@ -41,7 +41,7 @@ class BaseForm extends React.Component {
                     list.push(selectItem);
                     break;
                 case 'chooseTime':
-                    const beginTimeItem = <FormItem key={field} name={field} label={label} initialValue={initialValue}>
+                    const beginTimeItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue}>
                         {
                             <DatePicker showTime={showTime} style={{width}} placeholder={placeholder}
                                         format="YYYY-MM-DD HH:mm:ss"/>

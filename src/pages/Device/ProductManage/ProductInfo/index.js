@@ -11,6 +11,7 @@ import EditProduct from "../EditProduct";
 import './index.less'
 import FunctionDefinition from "../ExtractionComponent/functionDefinition";
 import DataSubscribe from "../ExtractionComponent/dataSubscribe";
+import DataAnalysis from "../ExtractionComponent/dataAnalysis";
 
 const {TabPane} = Tabs;
 const FormItem = Form.Item
@@ -197,7 +198,7 @@ export default class Permission extends React.Component {
                         <FunctionDefinition></FunctionDefinition>
                     </TabPane>
                     <TabPane tab="数据解析" key="2">
-                        Content of Tab Pane 2
+                       <DataAnalysis></DataAnalysis>
                     </TabPane>
                     <TabPane tab="Topic列表" key="3">
                         Content of Tab Pane 3

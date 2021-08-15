@@ -48,7 +48,6 @@ export default class RoleManage extends React.Component {
         title: ''
     }
     changePage=(page,pageSize)=>{
-        // debugger
         this.params.page=page;
         this.params.pageSize=pageSize;
         this.setState({
