@@ -87,6 +87,7 @@ class User extends React.Component {
         var temp = path.split('/');
         var tampp = '/' + temp[1] + '/' + temp[2] + '/' + temp[3];
         path = path.split('/').length >= 5 ? tampp : path
+        debugger
         return (
             <Layout style={{minHeight: '100vh', background: '#fff'}}>
                 {/*固定头部导航栏*/}

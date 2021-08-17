@@ -46,14 +46,14 @@ const routes = [
                 component: SecondLevelComponent,
                 pathName: 'permission',
                 name: '权限管理',
-                icon: 'iconxiangmu',
+                icon: 'icon-xiugai1',
                 children: [
                     {
                         path: '/user/permission/user',
                         pathName: 'user-manage',
                         component: UserManage,
                         name: '用户管理',
-                        icon: 'iconxiangmu',
+                        icon: 'icon-xiugai1',
                     },
                     //最细化的组件需要放置最上面，确保Switch 路由匹配时可以解析到对应的组件
                     {
@@ -61,7 +61,7 @@ const routes = [
                         pathName: 'role/add',
                         component: addRole,
                         name: '角色添加',
-                        icon: 'iconxiangmu',
+                        icon: 'icon-xiugai1',
                         show: false
                     },
 
@@ -70,7 +70,7 @@ const routes = [
                         pathName: 'role-manage',
                         component: RoleManage,
                         name: '角色管理',
-                        icon: 'iconxiangmu',
+                        icon: 'icon-xiugai1',
                     },
                     // {
                     //     path: '/user/permission/menu',
@@ -85,15 +85,15 @@ const routes = [
                 path: '/user/device',
                 component: SecondLevelComponent,
                 pathName: 'device',
-                name: '设备管理',
-                icon: 'iconxiangmu',
+                name: '设备接入与管理',
+                icon: 'icon-xiugai1',
                 children: [
                     {
                         path: '/user/device/product/add',
                         pathName: 'add-device',
                         component: addDevice,
                         name: '创建产品',
-                        icon: 'iconxiangmu',
+                        icon: 'icon-xiugai1',
                         show: false
                     },
                     {
@@ -101,7 +101,7 @@ const routes = [
                         pathName: 'product-info',
                         component: productInfo,
                         name: '产品详情',
-                        icon: 'iconxiangmu',
+                        icon: 'icon-xiugai1',
                         show: false
                     },
                     {
@@ -109,7 +109,7 @@ const routes = [
                         pathName: 'product-manage',
                         component: ProductManage,
                         name: '产品管理',
-                        icon: 'iconxiangmu',
+                        icon: 'icon-xiugai1',
                     }
                 ]
             }

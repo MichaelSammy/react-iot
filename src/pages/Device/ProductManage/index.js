@@ -133,11 +133,20 @@ export default class Permission extends React.Component {
         return (
 
             <div>
-                <Breadcrumb style={{margin: '16px 16px'}}>
+
+                <div className='product-list-title-background'>
+                    {/*<div>*/}
+                <Breadcrumb>
                     {
                         getBreadItem(breadList)
                     }
                 </Breadcrumb>
+                    <div className="product-big-title">产品管理</div>
+                    <div className="product-list-title-desc">产品是一组具有相同功能定义的设备集合，创建产品是使用平台的第一步快速创建产品后可定义产品物模型、添加对应设备。</div>
+                    <div className="product-show-doc">查看文档</div>
+
+                </div>
+                <div className="product-list-card">
                 <div style={{
                     display: 'flex',
                     float: 'right',
@@ -158,6 +167,9 @@ export default class Permission extends React.Component {
                     </div>
                 </div>
                 <div style={{clear: 'both'}}></div>
+                    <div>
+
+                        <div>左</div>
                 <List
                     grid={{
                         gutter: 26,
@@ -215,7 +227,10 @@ export default class Permission extends React.Component {
                             </div>
                         </List.Item>
                     )}
-                />,
+                />
+                        <div>右</div>
+                    </div>
+                </div>,
                 {
                     this.state.roleVisible &&
                     <Modal
@@ -234,6 +249,7 @@ export default class Permission extends React.Component {
                         />
                     </Modal>
                 }
+
             </div>
         )
     }
