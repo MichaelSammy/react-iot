@@ -2,7 +2,7 @@ import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Breadcrumb} from "antd";
 import {getBreadItem, updateSelectedItem} from '../../../../utils'
 import './index.less'
-
+import SelectProductCategory from  "../ExtractionComponent/selectProductCategory";
 const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -11,7 +11,9 @@ export default class AddRole extends React.Component {
     state = {
         detail: {}
     }
-
+    onRef = (ref) => {
+        this.child = ref
+    }
     componentDidMount() {
 
     }
@@ -36,7 +38,9 @@ export default class AddRole extends React.Component {
             from: this.props.location.pathname
         });
     }
-
+    selectProductCategory=()=>{
+        this.child.showDrawer()
+    }
     render() {
         const formItemLayout = {
             labelCol: {span: 2},
@@ -129,7 +133,7 @@ export default class AddRole extends React.Component {
                                       message: '请选择标准品类'
                                   },
                               ]}{...formItemLayout}>
-                        <Select placeholder="请选择标准品类">
+                        <Select placeholder="请选择标准品类" onClick={this.selectProductCategory}>
                             {nameList.map((item) => (
                                 <Option value={item.id} key={item.id}>
                                     {item.value}
@@ -329,7 +333,8 @@ export default class AddRole extends React.Component {
                     <Button size="small" type="primary" onClick={this.handleSubmit.bind(this)}
                             style={{marginRight: '10px'}}>提交</Button>
                     <Button size="small" type="primary" onClick={this.handleCancel.bind(this)}>取消</Button>
-                </div>
+                </div>,
+                <SelectProductCategory  title='选择产品类别'  onRef={this.onRef}></SelectProductCategory>
             </div>
         )
     }

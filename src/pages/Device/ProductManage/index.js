@@ -147,14 +147,7 @@ export default class Permission extends React.Component {
 
                 </div>
                 <div className="product-list-card">
-                <div style={{
-                    display: 'flex',
-                    float: 'right',
-                    width: '100%',
-                    height: '40px',
-                    margin: '10px',
-                    justifyContent: 'flex-end'
-                }}>
+                <div className="product-list-card-search">
                     <div style={{float: 'left'}}>
                         <BaseForm
                             data={this.data}
@@ -163,16 +156,16 @@ export default class Permission extends React.Component {
                         />
                     </div>
                     <div style={{float: 'left'}}>
-                        <Button type="primary" onClick={this.createProduct}>创建产品</Button>
+                        <div className="product-list-page-crete-product" type="primary" onClick={this.createProduct}>创建产品</div>
                     </div>
                 </div>
                 <div style={{clear: 'both'}}></div>
                     <div>
 
-                        <div>左</div>
+                        {/*<div>左</div>*/}
                 <List
                     grid={{
-                        gutter: 26,
+                        gutter: 13  ,
                         xs: 1,
                         sm: 2,
                         md: 4,
@@ -184,11 +177,7 @@ export default class Permission extends React.Component {
                     renderItem={item => (
                         <List.Item>
                             <div className="card-tag">标准产品</div>
-                            <div style={{
-                                height: '220px',
-                                background: '#FFFFFF',
-                                boxShadow: '0px 2px 10px 0px rgba(189, 189, 189, 0.5)'
-                            }}>
+                            <div className="card-info-height">
                                 <div className='card-title-info'>
                                     <div>
                                         <span className='title-font' onClick={this.showProductInfo}>S270B</span>
@@ -228,7 +217,7 @@ export default class Permission extends React.Component {
                         </List.Item>
                     )}
                 />
-                        <div>右</div>
+                        {/*<div>右</div>*/}
                     </div>
                 </div>,
                 {

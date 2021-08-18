@@ -121,7 +121,7 @@ class User extends React.Component {
                     {/*collapsible:Sider不可以被收起*/}
                     <Sider style={{
                         /*固定左侧菜单栏*/
-                        background: '#F5F5F5', overflow: 'auto', height: '90vh', position: 'fixed', left: 0, top: '10vh'
+                        background: '#F5F5F5', overflow: 'auto', height: '92vh', position: 'fixed', left: 0, top: '8vh'
                     }}
                            collapsible={false} collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
                         {/*去掉Sider中的logo*/}
@@ -133,8 +133,8 @@ class User extends React.Component {
                             }
                         </Menu>
                     </Sider>
-                    <Layout style={{marginLeft: 200, marginTop: '10vh'}}>
-                        <Content style={{margin: '0 16px', overflow: 'initial'}}>
+                    <Layout style={{marginLeft: 200, marginTop: '8vh'}}>
+                        <Content style={{overflow: 'initial'}}>
                             {/*<Breadcrumb style={{ margin: '16px 16px' }}>*/}
                             {/*{*/}
                             {/*getBreadItem(breadList)*/}

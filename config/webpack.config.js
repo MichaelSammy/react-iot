@@ -143,25 +143,24 @@ module.exports = function (webpackEnv) {
     ].filter(Boolean);
     /**为less-loader添加配置项，启动javascript**/
       if (preProcessor) {
-          if (preProcessor === 'less-loader') {
-              loaders.push({
-                  loader: require.resolve(preProcessor),
+          let loader = require.resolve(preProcessor)
+          if (preProcessor === "less-loader") {
+              loader = {
+                  loader,
                   options: {
-                      sourceMap: isEnvProduction && shouldUseSourceMap,
                       lessOptions: {
+                          modifyVars: {
+                              'primary-color': '#000000',
+                              'link-color': '#1DA57A',
+                              'border-radius-base': '0px',
+                              'border-radius': '0px',
+                          },
                           javascriptEnabled: true,
                       }
-                  },
-              });
-          }else{
-              loaders.push({
-                  loader: require.resolve(preProcessor),
-                  options: {
-                      sourceMap: isEnvProduction && shouldUseSourceMap,
-                  },
-              });
+                  }
+              }
           }
-
+          loaders.push(loader);
       }
     return loaders;
   };
@@ -479,7 +478,7 @@ module.exports = function (webpackEnv) {
               test: cssRegex,
               exclude: cssModuleRegex,
               use: getStyleLoaders({
-                importLoaders: 1,
+                importLoaders: 2,
                 sourceMap: isEnvProduction
                   ? shouldUseSourceMap
                   : isEnvDevelopment,
@@ -495,7 +494,7 @@ module.exports = function (webpackEnv) {
             {
               test: cssModuleRegex,
               use: getStyleLoaders({
-                importLoaders: 1,
+                importLoaders: 2,
                 sourceMap: isEnvProduction
                   ? shouldUseSourceMap
                   : isEnvDevelopment,
@@ -546,17 +545,34 @@ module.exports = function (webpackEnv) {
               {
                   test: lessRegex,
                   exclude: lessModuleRegex,
-                  use: getStyleLoaders({ importLoaders: 2 }, 'less-loader'),
+                  use: getStyleLoaders({ importLoaders: 1,
+                          modules: false,},
+                      'less-loader',
+                      {
+                      lessOptions: {
+                          modifyVars: { 'primary-color': '#1DA57A',
+                              'border-radius-base':'10px'},
+                          javascriptEnabled: true,
+                      }
+                  }),
+
               },
               {
                   test: lessModuleRegex,
                   use: getStyleLoaders(
                       {
-                          importLoaders: 2,
-                          modules: true,
+                          importLoaders: 1,
+                          modules: false,
                           getLocalIdent: getCSSModuleLocalIdent,
                       },
-                      'less-loader'
+                      'less-loader',
+                      {
+                          lessOptions: {
+                              javascriptEnabled: true,
+                              modifyVars: { 'primary-color': '#1DA57A',
+                              'border-radius-base':'0px'},
+                          }
+                      }
                   ),
               },
             // "file" loader makes sure those assets get served by WebpackDevServer.
