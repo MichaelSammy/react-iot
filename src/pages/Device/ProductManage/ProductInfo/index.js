@@ -12,12 +12,16 @@ import './index.less'
 import FunctionDefinition from "../ExtractionComponent/functionDefinition";
 import DataSubscribe from "../ExtractionComponent/dataSubscribe";
 import DataAnalysis from "../ExtractionComponent/dataAnalysis";
+import AddCustomFeatures from "../ExtractionComponent/addCustomFeatures";
 
 const {TabPane} = Tabs;
 const FormItem = Form.Item
 export default class Permission extends React.Component {
     onRef = (ref) => {
         this.child = ref
+    }
+    addCustomFeaturesRef = (ref) => {
+        this.addCustomFeaturesRefChild = ref
     }
     state = {
         rowSelection: {
@@ -65,6 +69,10 @@ export default class Permission extends React.Component {
             roleVisible: false
         })
         this.child.resetUserFrom()
+    }
+    addCustomFeatures= () => {
+        debugger
+        this.addCustomFeaturesRefChild.showDrawer()
     }
     editTag = () => {
 
@@ -195,7 +203,7 @@ export default class Permission extends React.Component {
                 </Card>
                 <Tabs className="product-info-tabs" type="card">
                     <TabPane tab="功能定义" key="1">
-                        <FunctionDefinition></FunctionDefinition>
+                        <FunctionDefinition  addCustomFeatures={this.addCustomFeatures}></FunctionDefinition>
                     </TabPane>
                     <TabPane tab="数据解析" key="2">
                        <DataAnalysis></DataAnalysis>
@@ -224,7 +232,8 @@ export default class Permission extends React.Component {
                             onRef={this.onRef}
                         />
                     </Modal>
-                }
+                },
+                <AddCustomFeatures  onRef={this.addCustomFeaturesRef}></AddCustomFeatures>
             </div>
         )
     }

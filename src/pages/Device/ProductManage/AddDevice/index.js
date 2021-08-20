@@ -44,7 +44,7 @@ export default class AddRole extends React.Component {
     render() {
         const formItemLayout = {
             labelCol: {span: 2},
-            wrapperCol: {span: 10}
+            wrapperCol: {span: 8}
         }
         const detail = {
             loginName: '',

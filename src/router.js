@@ -38,55 +38,62 @@ const routes = [
                 path: '/user/index',
                 pathName: 'index',
                 component: Index,
-                name: '首页',
-                icon: 'iconrenwuguanli1'
+                name: '设备运行监控',
+                icon: 'icon-shebeiyunhangjiankong'
             },
             {
-                path: '/user/permission',
-                component: SecondLevelComponent,
-                pathName: 'permission',
-                name: '权限管理',
-                icon: 'icon-xiugai1',
-                children: [
-                    {
-                        path: '/user/permission/user',
-                        pathName: 'user-manage',
-                        component: UserManage,
-                        name: '用户管理',
-                        icon: 'icon-xiugai1',
-                    },
-                    //最细化的组件需要放置最上面，确保Switch 路由匹配时可以解析到对应的组件
-                    {
-                        path: '/user/permission/role/add',
-                        pathName: 'role/add',
-                        component: addRole,
-                        name: '角色添加',
-                        icon: 'icon-xiugai1',
-                        show: false
-                    },
-
-                    {
-                        path: '/user/permission/role',
-                        pathName: 'role-manage',
-                        component: RoleManage,
-                        name: '角色管理',
-                        icon: 'icon-xiugai1',
-                    },
-                    // {
-                    //     path: '/user/permission/menu',
-                    //     pathName: 'menu-manage',
-                    //     component: MenuManage,
-                    //     name: '菜单管理',
-                    //     icon: 'eye'
-                    // }
-                ]
+                path: '/user/index',
+                pathName: 'index',
+                component: Index,
+                name: '运维工作台',
+                icon: 'icon-yunweigongzuotai'
             },
+            // {
+            //     path: '/user/permission',
+            //     component: SecondLevelComponent,
+            //     pathName: 'permission',
+            //     name: '权限管理',
+            //     icon: 'icon-xiugai1',
+            //     children: [
+            //         {
+            //             path: '/user/permission/user',
+            //             pathName: 'user-manage',
+            //             component: UserManage,
+            //             name: '用户管理',
+            //             icon: 'icon-xiugai1',
+            //         },
+            //         //最细化的组件需要放置最上面，确保Switch 路由匹配时可以解析到对应的组件
+            //         {
+            //             path: '/user/permission/role/add',
+            //             pathName: 'role/add',
+            //             component: addRole,
+            //             name: '角色添加',
+            //             icon: 'icon-xiugai1',
+            //             show: false
+            //         },
+            //
+            //         {
+            //             path: '/user/permission/role',
+            //             pathName: 'role-manage',
+            //             component: RoleManage,
+            //             name: '角色管理',
+            //             icon: 'icon-xiugai1',
+            //         },
+            //         // {
+            //         //     path: '/user/permission/menu',
+            //         //     pathName: 'menu-manage',
+            //         //     component: MenuManage,
+            //         //     name: '菜单管理',
+            //         //     icon: 'eye'
+            //         // }
+            //     ]
+            // },
             {
                 path: '/user/device',
                 component: SecondLevelComponent,
                 pathName: 'device',
                 name: '设备接入与管理',
-                icon: 'icon-xiugai1',
+                icon: 'icon-shebeijieruyuguanli',
                 children: [
                     {
                         path: '/user/device/product/add',
@@ -110,7 +117,26 @@ const routes = [
                         component: ProductManage,
                         name: '产品管理',
                         icon: 'icon-xiugai1',
-                    }
+                    },
+                    {
+                        path: '/user/device/group',
+                        pathName: 'device-group',
+                        component: ProductManage,
+                        name: '设备分组',
+                    },
+                    {
+                        path: '/user/device/managent',
+                        pathName: 'device-manage',
+                        component: ProductManage,
+                        name: '设备管理',
+                    },
+
+                    {
+                        path: '/user/device/plugin',
+                        pathName: 'plugin-manage',
+                        component: ProductManage,
+                        name: '插件管理',
+                    },
                 ]
             }
         ]

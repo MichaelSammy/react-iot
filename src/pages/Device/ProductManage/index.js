@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, Modal, Form, Input, Button, List, Breadcrumb} from "antd";
+import {Card, Modal, Form, Input, Button, List, Breadcrumb, Pagination} from "antd";
 import BaseForm from '../../../common/BaseForm'
 import EditProduct from './EditProduct'
 import IconFont from '../../../utils/IconFont';
@@ -25,6 +25,15 @@ export default class Permission extends React.Component {
             placeholder: '请输入搜索内容',
             field: 'username',
             width: '300px'
+        },
+        {
+            type: 'select',
+            // initialValue: '',
+            label: '',
+            placeholder: '请选择产品标签',
+            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            field: 'power',
+            width: '150px'
         }
     ]
     state = {
@@ -100,17 +109,15 @@ export default class Permission extends React.Component {
             title: '编辑'
         })
     }
-    showProductInfo=()=>{
+    showProductInfo = () => {
         this.props.history.push({'pathname': "/user/device/product/info", params: true});
     }
+
     render() {
         const list = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
             id: '4',
             value: 'cyan'
-        }, {id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
-            id: '4',
-            value: 'cyan'
-        }];
+        }, {id: '1', value: 'gold'}, {id: '2', value: 'lime'}];
         const breadList = [
             {
                 "path": "/user/device",
@@ -136,90 +143,108 @@ export default class Permission extends React.Component {
 
                 <div className='product-list-title-background'>
                     {/*<div>*/}
-                <Breadcrumb>
-                    {
-                        getBreadItem(breadList)
-                    }
-                </Breadcrumb>
+                    <Breadcrumb>
+                        {
+                            getBreadItem(breadList)
+                        }
+                    </Breadcrumb>
                     <div className="product-big-title">产品管理</div>
-                    <div className="product-list-title-desc">产品是一组具有相同功能定义的设备集合，创建产品是使用平台的第一步快速创建产品后可定义产品物模型、添加对应设备。</div>
+                    <div className="product-list-title-desc">产品是一组具有相同功能定义的设备集合，创建产品是使用平台的第一步快速创建产品后可定义产品物模型、添加对应设备。
+                    </div>
                     <div className="product-show-doc">查看文档</div>
 
                 </div>
                 <div className="product-list-card">
-                <div className="product-list-card-search">
-                    <div style={{float: 'left'}}>
-                        <BaseForm
-                            data={this.data}
-                            show={false}
-                            handleSearch={this.handleSearch}
-                        />
+                    <div className="product-list-card-search">
+                        <div style={{float: 'left'}}>
+                            <BaseForm
+                                data={this.data}
+                                show={false}
+                                handleSearch={this.handleSearch}
+                            />
+                        </div>
+                        <div style={{float: 'left'}}>
+                            <div className="product-list-page-crete-product" type="primary"
+                                 onClick={this.createProduct}>创建产品
+                            </div>
+                        </div>
                     </div>
-                    <div style={{float: 'left'}}>
-                        <div className="product-list-page-crete-product" type="primary" onClick={this.createProduct}>创建产品</div>
-                    </div>
-                </div>
-                <div style={{clear: 'both'}}></div>
+                    <div style={{clear: 'both'}}></div>
                     <div>
-
-                        {/*<div>左</div>*/}
-                <List
-                    grid={{
-                        gutter: 13  ,
-                        xs: 1,
-                        sm: 2,
-                        md: 4,
-                        lg: 4,
-                        xl: 3,
-                        xxl: 3,
-                    }}
-                    dataSource={list}
-                    renderItem={item => (
-                        <List.Item>
-                            <div className="card-tag">标准产品</div>
-                            <div className="card-info-height">
-                                <div className='card-title-info'>
-                                    <div>
-                                        <span className='title-font' onClick={this.showProductInfo}>S270B</span>
-                                        <span className="split-symbol"> / </span>
-                                        <span className='title-font'>S270B</span>
-                                    </div>
-                                    <div className='card-title-option'><span onClick={this.editProduct}>
-                                  <IconFont style={{fontSize: '20px', color: '#89A0C2'}} type='icon-xiugai1'/></span>
-                                        <span> <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
-                                                         type='icon-xiugai1'/></span>
-                                        <span> <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
-                                                         type='icon-xiugai1'/></span></div>
-                                </div>
-                                <div className='row-split-line'></div>
-                                <div className='card-content-into'>
-                                    <div className='card-content-left'>
-                                        <div className='card-content-left-info'>
+                        <div className="product-left-arrow">
+                            <IconFont style={{fontSize: '20px', color: '#ffffff'}}
+                                      type='icon-jiantou-zuo'/>
+                        </div>
+                        <div className="product-right-arrow">
+                            <IconFont style={{fontSize: '20px', color: '#ffffff'}}
+                                      type='icon-jiantou-you'/>
+                        </div>
+                        <List
+                            grid={{
+                                gutter: 13,
+                                xs: 1,
+                                sm: 2,
+                                md: 4,
+                                lg: 4,
+                                xl: 3,
+                                xxl: 3,
+                            }}
+                            dataSource={list}
+                            renderItem={item => (
+                                <List.Item>
+                                    <div className="card-tag">标准产品</div>
+                                    <div className="card-info-height">
+                                        <div className='card-title-info'>
                                             <div>
-                                                <div>节点类型：设备</div>
-                                                <div>连网方式：wifi</div>
+                                                <span className='title-font' onClick={this.showProductInfo}>S270B</span>
+                                                <span className="split-symbol"> / </span>
+                                                <span className='title-font'>S270B</span>
                                             </div>
-                                            <div>
-                                                <div>接入方式：直连</div>
-                                                <div>通讯协议：MQTT</div>
+                                            <div className='card-title-option'><span onClick={this.editProduct}>
+                                  <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
+                                            type='icon-a-bianjicopy'/></span>
+                                                <span> <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
+                                                                 type='icon-a-shanchucopy'/></span>
+                                                <span> <IconFont style={{fontSize: '20px', color: '#009C49'}}
+                                                                 type='icon-a-fabucopy'/></span></div>
+                                        </div>
+                                        <div className='row-split-line'></div>
+                                        <div className='card-content-into'>
+                                            <div className='card-content-left'>
+                                                <div className='card-content-left-info'>
+                                                    <div>
+                                                        <div>节点类型：设备</div>
+                                                        <div>连网方式：wifi</div>
+                                                    </div>
+                                                    <div>
+                                                        <div>接入方式：直连</div>
+                                                        <div>通讯协议：MQTT</div>
+                                                    </div>
+                                                </div>
+                                                <div className='card-create-time'>创建时间：2018/12/20 09:43:33</div>
+                                            </div>
+                                            <div className='column-spilt-line'></div>
+                                            <div className='card-content-right'>
+                                                <div className='device-count-num'>852<span
+                                                    style={{fontSize: '14px', fontWeight: '500'}}>个</span></div>
+                                                <div className='device-count-desc'>设备总数</div>
                                             </div>
                                         </div>
-                                        <div className='card-create-time'>创建时间：2018/12/20 09:43:33</div>
                                     </div>
-                                    <div className='column-spilt-line'></div>
-                                    <div className='card-content-right'>
-                                        <div className='device-count-num'>852<span
-                                            style={{fontSize: '14px', fontWeight: '500'}}>个</span></div>
-                                        <div className='device-count-desc'>设备总数</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </List.Item>
-                    )}
-                />
-                        {/*<div>右</div>*/}
+                                </List.Item>
+                            )}
+                        />
+                        <Pagination
+                            style={{textAlign: "center"}}
+                            total={85}
+                            showSizeChanger
+                            showQuickJumper
+                            showTotal={total => `共 ${total} 条`}
+                        />
+
                     </div>
-                </div>,
+                </div>
+                ,
                 {
                     this.state.roleVisible &&
                     <Modal

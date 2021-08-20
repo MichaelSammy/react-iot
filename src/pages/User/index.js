@@ -11,7 +11,7 @@ import {recursionRouterTwo} from '../../utils/recursion-router'
 import logo from '../../assets/images/logo.png'
 import defaultUser from '../../assets/images/defaultUser.png'
 import BaseForm from "../../common/BaseForm";
-
+import IconFont from '../../utils/IconFont';
 const {Header, Content, Footer, Sider} = Layout
 
 @connect
@@ -96,17 +96,20 @@ class User extends React.Component {
                     padding: 0,
                     position: 'fixed',
                     zIndex: 1,
+                    height:'50px',
+                    lineHeight:'50px',
                     width: '100%',
                     boxShadow: '0px 0px 10px 0px rgba(200, 200, 200, 0.5)'
                 }}>
                     <img src={logo} style={{height: 25, width: 150, marginLeft: 20}} alt=""/>
                     <span className="logoutIcon" onClick={this.logOut}>
-                         <img src={defaultUser} style={{height: 36, width: 36}} alt=""/>
+                         <img src={defaultUser} style={{height: 30, width: 30}} alt=""/>
                         {/*< PoweroffOutlined></PoweroffOutlined>*/}
                         </span>
                     <span className="loginUser">{name}</span>
                     <span className="lingdangIcon">
-                             <BellOutlined/>
+                             {/*<BellOutlined/>*/}
+                        <IconFont  type='icon-lingdang'/>
                     </span>
                     <span className="docCenter">文档中心</span>
                     <span className='title-search'>
@@ -121,26 +124,26 @@ class User extends React.Component {
                     {/*collapsible:Sider不可以被收起*/}
                     <Sider style={{
                         /*固定左侧菜单栏*/
-                        background: '#F5F5F5', overflow: 'auto', height: '92vh', position: 'fixed', left: 0, top: '8vh'
+                        background: '#F5F5F5', overflow: 'auto', height: '92vh', position: 'fixed', left: 0, top: '50px'
                     }}
                            collapsible={false} collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
                         {/*去掉Sider中的logo*/}
                         {/*<div className="logo" />*/}
-                        <Menu id='menubar' onClick={this.menuClick} style={{background: '#F5F5F5'}}
+                        <Menu id='menubar' onClick={this.menuClick} style={{background: '#F5F5F5',padding: '10px 0px'}}
                               defaultOpenKeys={defaultOpenKeys} selectedKeys={[path]} mode="inline">
                             {
                                 getMenuItem(permissionList)
                             }
                         </Menu>
                     </Sider>
-                    <Layout style={{marginLeft: 200, marginTop: '8vh'}}>
+                    <Layout style={{marginLeft: 200, marginTop: '50px'}}>
                         <Content style={{overflow: 'initial'}}>
                             {/*<Breadcrumb style={{ margin: '16px 16px' }}>*/}
                             {/*{*/}
                             {/*getBreadItem(breadList)*/}
                             {/*}*/}
                             {/*</Breadcrumb>*/}
-                            <div style={{padding: 0, background: '#fff', minHeight: 360}}>
+                            <div style={{padding: 0, background: '#fff', minHeight: 360,minWidth:'1070px'}}>
                                 <Switch>
                                     {permissionList.map((value, key) => {
                                         return (

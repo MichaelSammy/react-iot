@@ -17,7 +17,10 @@ class FunctionDefinition extends React.Component {
         // this.props.onRef(this);
         this.requestList();
     }
-
+    callBackFatherMethod = () => {
+        debugger
+        this.props.addCustomFeatures();
+    }
     userRole = () => {
         alert(2)
     }
@@ -260,7 +263,7 @@ class FunctionDefinition extends React.Component {
                         <div className="add-stand-function" style={{marginRight: "10px"}}><IconFont
                             type='icon-xiugai1'/>添加标准功能点
                         </div>
-                        <div className="add-stand-function"><IconFont type='icon-xiugai1'/>添加自定义功能点</div>
+                        <div className="add-stand-function" onClick={this.callBackFatherMethod}><IconFont type='icon-xiugai1'/>添加自定义功能点</div>
                     </div>
                 </div>
                 <div className="function-search-from">

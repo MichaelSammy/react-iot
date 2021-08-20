@@ -170,7 +170,7 @@ data-analysis-tab-select-shell div{
   height: 40px;
 }
 .product-list-title-background{
-  background-image:url('../../../assets/images/productTitleBg.png');
+  background:url('../../../assets/images/productTitleBg.png')  no-repeat 100%;
   height: 200px;
   display: flex;
   flex-flow: column;
@@ -178,7 +178,7 @@ data-analysis-tab-select-shell div{
   justify-content: space-between;
   padding: 30px;
   color: #FFFFFF;
-  background-size: 100% 100%;
+  background-size: cover;
   background-repeat: no-repeat;
 }
 .product-list-title-background .ant-breadcrumb,
@@ -226,7 +226,39 @@ data-analysis-tab-select-shell div{
   line-height: 45px;
 }
 .product-list-card{
-  padding: 0px 30px;
+  padding: 0px 3%;
+}
+.product-right-arrow{
+  margin-top:13%;
+  float: right;
+  margin-right: -2.5%;
+  height: 58px;
+  line-height: 58px;
+  background: #C1C1C1;
+  border-radius: 0px 9px 9px 0px;
+  opacity: 0.49;
+  width: 20px;
+  //margin-left: 1%;
+  cursor: pointer;
+}
+.product-left-arrow{
+  margin-top:13%;
+  float: left;
+  margin-left: -2.5%;
+  height: 58px;
+  line-height: 58px;
+  background: #C1C1C1;
+  color: #ffffff;
+  border-radius: 9px 0px 0px 9px;
+  opacity: 0.49;
+  width: 20px;
+  //margin-right: 1%;
+  cursor: pointer;
+}
+.product-left-arrow:hover,
+.product-right-arrow:hover{
+  background: #E5EBF4;
+  opacity:1;
 }
 .product-list-card-search{
   display:flex;
