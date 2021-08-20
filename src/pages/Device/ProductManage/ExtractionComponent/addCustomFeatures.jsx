@@ -16,7 +16,6 @@ class AddCustomFeatures extends React.Component {
         detail: {}
     }
     showDrawer = () => {
-        debugger
         this.setState({
             visible: true,
         });

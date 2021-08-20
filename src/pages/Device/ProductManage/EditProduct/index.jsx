@@ -44,7 +44,7 @@ class EditProduct extends React.Component {
                                   message: '请输入产品名称'
                               },
                           ]}{...formItemLayout}>
-                    <Input type="text" placeholder="登录名"/>
+                    <Input type="text" placeholder="请输入产品名称"/>
                 </FormItem>
                 <FormItem label="产品描述"
                           name="loginName"

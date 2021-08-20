@@ -31,7 +31,7 @@ class BaseForm extends React.Component {
                     list.push(searchItem);
                     break;
                 case 'select':
-                    const selectItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue}>
+                    const selectItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue} onClick={this.clickSelect}>
                         {
                             <Select style={{width}} placeholder={placeholder}>
                                 {getOptionsList(item.list)}
@@ -62,6 +62,10 @@ class BaseForm extends React.Component {
     }
     onSearch=()=>{
         console.log('123')
+    }
+    clickSelect=()=>{
+        console.log('123')
+        this.props.clickSelect&&this.props.clickSelect()
     }
     render() {
         return (

@@ -13,6 +13,7 @@ import FunctionDefinition from "../ExtractionComponent/functionDefinition";
 import DataSubscribe from "../ExtractionComponent/dataSubscribe";
 import DataAnalysis from "../ExtractionComponent/dataAnalysis";
 import AddCustomFeatures from "../ExtractionComponent/addCustomFeatures";
+import AddLabel from "../ExtractionComponent/addLabel";
 
 const {TabPane} = Tabs;
 const FormItem = Form.Item
@@ -22,6 +23,9 @@ export default class Permission extends React.Component {
     }
     addCustomFeaturesRef = (ref) => {
         this.addCustomFeaturesRefChild = ref
+    }
+    addLabelRef = (ref) => {
+        this.addLabelRefChild = ref
     }
     state = {
         rowSelection: {
@@ -60,7 +64,12 @@ export default class Permission extends React.Component {
     componentDidMount() {
         // this.requestList()
     }
-
+    addTag = () => {
+        this.addLabelRefChild.addTag()
+    }
+    editTag = (item) => {
+        this.addLabelRefChild.editTag(item)
+    }
     saveUserSubmit = () => {
         this.child.handleSubmit();
     }
@@ -71,15 +80,9 @@ export default class Permission extends React.Component {
         this.child.resetUserFrom()
     }
     addCustomFeatures= () => {
-        debugger
         this.addCustomFeaturesRefChild.showDrawer()
     }
-    editTag = () => {
 
-    }
-    addTag = () => {
-
-    }
     editProduct = () => {
         this.setState({
             detail: {
@@ -139,11 +142,21 @@ export default class Permission extends React.Component {
         ]
         return (
             <div>
-                <Breadcrumb style={{margin: '16px 16px'}}>
-                    {
-                        getBreadItem(breadList)
-                    }
-                </Breadcrumb>
+                <div className='product-list-title-background'>
+                    <Breadcrumb>
+                        {
+                            getBreadItem(breadList)
+                        }
+                    </Breadcrumb>
+                    <div className="product-big-title">产品详情</div>
+                    <div className="product-list-title-desc">产品是一组具有相同功能定义的设备集合，创建产品是使用平台的第一步快速创建产品后可定义产品物模型、添加对应设备。
+                    </div>
+                    <div>
+                        <div className="product-show-doc">查看文档</div>
+                        <div className="product-show-doc">自动注册-已开启</div>
+                        <div className="product-show-doc">生态接入认证</div>
+                    </div>
+                </div>
                 <div style={{clear: 'both'}}></div>
                 <Card className='product-card-info'>
                     <div>
@@ -155,8 +168,8 @@ export default class Permission extends React.Component {
                             <div>
                                 <div className='card-title'>
                                     <span className='title-desc'>产品信息</span>
-                                    <IconFont style={{fontSize: '15px', color: '#89A0C2', marginRight: '10px'}}
-                                              type='icon-xiugai1'/>
+                                    <IconFont style={{fontSize: '15px', color: '#2979E7', marginRight: '7px'}}
+                                              type='icon-a-bianjicopy'/>
                                     <span className='edit-card-title-option' onClick={this.editProduct}> 编辑</span>
                                 </div>
                                 <div className='product-release'>发布</div>
@@ -234,6 +247,7 @@ export default class Permission extends React.Component {
                     </Modal>
                 },
                 <AddCustomFeatures  onRef={this.addCustomFeaturesRef}></AddCustomFeatures>
+                <AddLabel onRef={this.addLabelRef}></AddLabel>
             </div>
         )
     }

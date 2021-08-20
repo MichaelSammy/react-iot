@@ -7,11 +7,15 @@ import request from '../../../utils/request'
 import './index.less'
 import {filterRoutes, getBreadItem} from "../../../utils";
 import {recursionRouterTwo} from "../../../utils/recursion-router";
+import AddLabel from "./ExtractionComponent/addLabel";
 
 const FormItem = Form.Item
 export default class Permission extends React.Component {
     onRef = (ref) => {
         this.child = ref
+    }
+    addLabelRef = (ref) => {
+        this.addLabelRefChild = ref
     }
     params = {
         page: 1,
@@ -57,7 +61,9 @@ export default class Permission extends React.Component {
         // data.beginTime= data.beginTime.format("YYYY-MM-DD HH:mm:ss");
         console.log(data)
     }
-
+    clickSelect= (data) => {
+        this.addLabelRefChild.filterTag()
+    }
     componentDidMount() {
         this.requestList()
     }
@@ -151,8 +157,9 @@ export default class Permission extends React.Component {
                     <div className="product-big-title">产品管理</div>
                     <div className="product-list-title-desc">产品是一组具有相同功能定义的设备集合，创建产品是使用平台的第一步快速创建产品后可定义产品物模型、添加对应设备。
                     </div>
+                    <div>
                     <div className="product-show-doc">查看文档</div>
-
+                    </div>
                 </div>
                 <div className="product-list-card">
                     <div className="product-list-card-search">
@@ -161,6 +168,7 @@ export default class Permission extends React.Component {
                                 data={this.data}
                                 show={false}
                                 handleSearch={this.handleSearch}
+                                clickSelect={this.clickSelect}
                             />
                         </div>
                         <div style={{float: 'left'}}>
@@ -263,7 +271,7 @@ export default class Permission extends React.Component {
                         />
                     </Modal>
                 }
-
+                <AddLabel onRef={this.addLabelRef}></AddLabel>
             </div>
         )
     }

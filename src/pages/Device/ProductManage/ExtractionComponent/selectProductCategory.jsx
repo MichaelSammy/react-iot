@@ -12,7 +12,6 @@ const FormItem = Form.Item
 class SelectProductCategory extends React.Component {
 
     showDrawer = () => {
-        debugger
         this.setState({
             visible: true,
         });
@@ -38,13 +37,11 @@ class SelectProductCategory extends React.Component {
         pageSize: 10,
     }
     state = {
-        rowSelection: {
-            selectedRowKeys: [],
-            selectedRows: [],
-        },
+        rowSelection: false,
         visible: false,
         pagination: {
             showSizeChanger: true,
+            type: '',
             showQuickJumper: true,
             hideOnSinglePage: false,
             pageSizeOptions: ['10', '20', '30'],
@@ -55,7 +52,6 @@ class SelectProductCategory extends React.Component {
             onChange:(page,pageSize)=>this.changePage(page,pageSize),
             showTotal: (total) => `共${total}条`,
         },
-        type: 'radio',
         list: [],
         roleVisible: false,
         perVisible: false,
@@ -170,20 +166,6 @@ class SelectProductCategory extends React.Component {
                         createTime: '2021-07-26 16:56:21',
                         'remark': '备注'
                     },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
                 ];
                 dataSource = dataSource.map((item, index) => {
                     item.key = index;
@@ -214,11 +196,6 @@ class SelectProductCategory extends React.Component {
             width: '100%'
         }
     ]
-    state = {
-        detail: {},
-        title: ''
-    }
-
     render() {
         const columns = [
             {
@@ -239,12 +216,12 @@ class SelectProductCategory extends React.Component {
             {
                 title: '操作',
                 align: 'left',
+                width:'180px',
                 render: (item) => {
                     return (
-                        <div>
-                            <div size="small" type="primary" onClick={this.selectProduct.bind(this, item)}
-                                    style={{marginRight: '10px'}}>选择</div>
-                            <div size="small" type="primary" onClick={this.showMode.bind(this, item)}>查看标准物模型</div>
+                        <div className="function-table-option-buttion">
+                            <div className="option-button" onClick={this.selectProduct.bind(this, item)}>选择</div>
+                            <div className="option-button" onClick={this.showMode.bind(this, item)}>查看标准物模型</div>
                         </div>
                     )
                 }

@@ -18,7 +18,6 @@ class FunctionDefinition extends React.Component {
         this.requestList();
     }
     callBackFatherMethod = () => {
-        debugger
         this.props.addCustomFeatures();
     }
     userRole = () => {
@@ -258,12 +257,12 @@ class FunctionDefinition extends React.Component {
                 <div className='product-function-mode-manager'>
                     <div className="product-function-mode-title">物模型管理</div>
                     <div className="product-mode-right-option">
-                        <div className="batch-delete"><IconFont type='icon-xiugai1'/>批量删除</div>
-                        <div className="import-mode"><IconFont type='icon-xiugai1'/>导入物模型</div>
+                        <div className="batch-delete"><IconFont type='icon-a-shanchucopy' className="icon-font-offset-px"/>批量删除</div>
+                        <div className="import-mode"><IconFont type='icon-daochuwumoxing'  className="icon-font-offset-px"/>导入物模型</div>
                         <div className="add-stand-function" style={{marginRight: "10px"}}><IconFont
-                            type='icon-xiugai1'/>添加标准功能点
+                            type='icon-a-hao'  className="icon-font-offset-px"/>添加标准功能点
                         </div>
-                        <div className="add-stand-function" onClick={this.callBackFatherMethod}><IconFont type='icon-xiugai1'/>添加自定义功能点</div>
+                        <div className="add-stand-function" onClick={this.callBackFatherMethod}><IconFont type='icon-a-hao'  className="icon-font-offset-px"/>添加自定义功能点</div>
                     </div>
                 </div>
                 <div className="function-search-from">

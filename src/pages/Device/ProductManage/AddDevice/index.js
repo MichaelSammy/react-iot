@@ -3,6 +3,7 @@ import {Card, Modal, Form, Input, Button, Select, Radio, Breadcrumb} from "antd"
 import {getBreadItem, updateSelectedItem} from '../../../../utils'
 import './index.less'
 import SelectProductCategory from  "../ExtractionComponent/selectProductCategory";
+import device from '../../../../assets/images/device.jpg'
 const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -176,13 +177,15 @@ export default class AddRole extends React.Component {
                               ]}{...formItemLayout}>
                         {/*<Radio.Group>*/}
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                            {nodeList.map((item) => (
+                            {nodeList.map((item,index) => (
                                 <div style={{
                                     width: '145px',
                                     height: '80px',
-                                    background: '#FFFFFF',
                                     border: '1px solid #D8D8D8',
-                                    float: 'left'
+                                    float: 'left',
+                                    marginRight:"15px",
+                                    backgroundImage:'url('+device+')',
+                                    backgroundSize: '100% 100%'
                                 }}></div>
                             ))}
                         </div>
