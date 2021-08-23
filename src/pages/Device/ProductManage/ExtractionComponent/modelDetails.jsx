@@ -1,19 +1,16 @@
 import React from "react";
-import {Card, Modal, Form, Input, Button, Select, Radio,Drawer} from "antd";
+import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import IconFont from "../../../../utils/IconFont";
 import BaseForm from "../../../../common/BaseForm";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
-import ModelDetails from  "../ExtractionComponent/modelDetails";
 import request from "../../../../utils/request";
 import './../index.less'
 
 const FormItem = Form.Item
 
-class SelectProductCategory extends React.Component {
-    modelDetailsRef= (ref) => {
-        this.modelDetailsChildRef = ref
-    }
+class ModelDetails extends React.Component {
+
     showDrawer = () => {
         this.setState({
             visible: true,
@@ -25,16 +22,12 @@ class SelectProductCategory extends React.Component {
             visible: false,
         });
     };
-    selectProduct= () => {
 
-    }
-    showMode= () => {
-        this.modelDetailsChildRef.showDrawer()
-    }
     componentDidMount() {
         this.props.onRef(this);
         this.requestList()
     }
+
     params = {
         page: 1,
         pageSize: 10,
@@ -49,10 +42,10 @@ class SelectProductCategory extends React.Component {
             hideOnSinglePage: false,
             pageSizeOptions: ['10', '20', '30'],
             // defaultCurrent: 1,
-            pageSize:this.params.pageSize,
-            current:this.params.page,
+            pageSize: this.params.pageSize,
+            current: this.params.page,
             total: this.params.total,
-            onChange:(page,pageSize)=>this.changePage(page,pageSize),
+            onChange: (page, pageSize) => this.changePage(page, pageSize),
             showTotal: (total) => `共${total}条`,
         },
         list: [],
@@ -64,31 +57,32 @@ class SelectProductCategory extends React.Component {
         detail: {},
         title: ''
     }
-    changePage=(page,pageSize)=>{
-        this.params.page=page;
-        this.params.pageSize=pageSize;
+    changePage = (page, pageSize) => {
+        this.params.page = page;
+        this.params.pageSize = pageSize;
         this.setState({
-            pagination:{
+            pagination: {
                 current: page,
-                pageSize:pageSize,
+                pageSize: pageSize,
                 showSizeChanger: true,
                 showQuickJumper: true,
                 hideOnSinglePage: false,
                 pageSizeOptions: ['10', '20', '30'],
                 total: this.params.total,
-                onChange:(page,pageSize)=>this.changePage(page,pageSize),
+                onChange: (page, pageSize) => this.changePage(page, pageSize),
                 showTotal: (total) => `共${total}条`,
             }
         })
         this.requestList()
     }
+
     //请求列表
     requestList() {
         request({
             url: '/user/list',
             type: 'get',
             params: {
-                page:  this.params.page,
+                page: this.params.page,
                 pageSize: this.params.pageSize
             }
         }).then(res => {
@@ -97,7 +91,7 @@ class SelectProductCategory extends React.Component {
                 //     item.key = index;
                 //     return item;
                 // });
-                this.params.total=12;
+                this.params.total = 12;
                 let dataSource = [
                     {
                         roleName: '超级管理员',
@@ -180,63 +174,41 @@ class SelectProductCategory extends React.Component {
             }
         })
     }
-    data = [
-        {
-            type: 'select',
-            // initialValue: '',
-            label: '',
-            placeholder: '模拟类型：自定义',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
-            width: '100%'
-        },
-        {
-            type: 'search',
-            initialValue: '',
-            label: '',
-            placeholder: '请输入搜索内容',
-            field: 'username',
-            width: '100%'
-        }
-    ]
+
+    data = []
+
     render() {
         const columns = [
             {
-                title: '产品类别',
+                title: '功能类型',
                 dataIndex: 'roleName',
                 align: 'left'
             },
             {
-                title: '行业名称',
+                title: '功能名称',
+                dataIndex: 'roleName',
+                align: 'left'
+            },
+            {
+                title: '标识符',
                 dataIndex: 'officeName',
                 align: 'left',
             },
             {
-                title: '应用场景',
+                title: '数据类型',
                 dataIndex: 'createUser',
                 align: 'left',
-            },
-            {
-                title: '操作',
-                align: 'left',
-                width:'180px',
-                render: (item) => {
-                    return (
-                        <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.selectProduct.bind(this, item)}>选择</div>
-                            <div className="option-button" onClick={this.showMode.bind(this, item)}>查看标准物模型</div>
-                        </div>
-                    )
-                }
             }
         ];
         return (
-            <div>
+            <div style={{marginRight: '560px', position: 'absolute'}}>
                 <Drawer
-                    title={this.props.title}
+                    title='标准物模型定义详情'
                     width={560}
+                    style={{marginRight: '560px', position: 'absolute'}}
                     onClose={this.onClose}
                     visible={this.state.visible}
+                    placement={'right'}
                     footer={
                         <div className="product-drawer-close">
                             <div onClick={this.onClose} type="primary">
@@ -245,12 +217,6 @@ class SelectProductCategory extends React.Component {
                         </div>
                     }
                 >
-                    <div className="product-drawer-topic-info">若无满足条件的产品模版，您可以选择其他类别。同时可通过主页面右下角的用户建议功能，将新产品类别反馈给我们。</div>
-                    <BaseForm
-                        data={this.data}
-                        handleSearch={this.handleSearch}
-                        show={false}
-                    />
                     <Etable
                         that={this}
                         dataSource={this.state.dataSource}
@@ -262,10 +228,9 @@ class SelectProductCategory extends React.Component {
                     >
                     </Etable>
                 </Drawer>
-                <ModelDetails  onRef={this.modelDetailsRef} style={{marginRight:'560px',position:'absolute'}}></ModelDetails>
             </div>
         )
     }
 }
 
-export default SelectProductCategory
+export default ModelDetails

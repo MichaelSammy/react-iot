@@ -6,22 +6,25 @@ import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
 import './../index.less'
+import DefineTopicClass from "./defineTopicClass";
+import EditProduct from "../EditProduct";
 
 const {TextArea} = Input
 const FormItem = Form.Item
 
-class FunctionDefinition extends React.Component {
+class DefineTopicList extends React.Component {
     // formRefUser = React.createRef();
+    onRef = (ref) => {
+        this.child = ref
+    }
 
     componentDidMount() {
-        // this.props.onRef(this);
+
         this.requestList();
     }
-    callBackFatherMethod = () => {
-        this.props.addCustomFeatures();
-    }
-    callBackAddStandardFeatures = () => {
-        this.props.addStandardFeatures();
+
+    addDefineTopicClass = () => {
+
     }
     userRole = () => {
         alert(2)
@@ -139,6 +142,15 @@ class FunctionDefinition extends React.Component {
         })
     }
 
+    saveUserSubmit = () => {
+        this.child.handleSubmit();
+    }
+    resetUserFrom = () => {
+        this.setState({
+            roleVisible: false
+        })
+        this.child.resetUserFrom()
+    }
     data = [
         {
             type: 'select',
@@ -162,11 +174,15 @@ class FunctionDefinition extends React.Component {
         page: 1,
         pageSize: 5
     }
+    addDefineTopicClass = () => {
+        this.setState({
+            detail: {},
+            roleVisible: true,
+            title: '定义Topic类'
+        })
+    }
     state = {
-        rowSelection: {
-            selectedRowKeys: [],
-            selectedRows: [],
-        },
+        rowSelection: false,
         pagination: {
             showSizeChanger: true,
             showQuickJumper: true,
@@ -178,7 +194,7 @@ class FunctionDefinition extends React.Component {
             onChange: (page, pageSize) => this.changePage(page, pageSize),
             showTotal: (total) => `共${total}条`,
         },
-        type: 'checkbox',
+        type: '',
         list: [],
         roleVisible: false,
         perVisible: false,
@@ -210,33 +226,18 @@ class FunctionDefinition extends React.Component {
     render() {
         const columns = [
             {
-                title: '功能类型',
+                title: '订阅类型',
                 dataIndex: 'roleName',
                 align: 'left'
             },
             {
-                title: '功能名称',
+                title: '订阅消息',
                 dataIndex: 'officeName',
                 align: 'left',
             },
             {
-                title: '标识符',
+                title: '创建时间',
                 dataIndex: 'createUser',
-                align: 'left',
-            },
-            {
-                title: '数据类型',
-                dataIndex: 'createTime',
-                align: 'left',
-            },
-            {
-                title: '数据值定义',
-                dataIndex: 'remark',
-                align: 'left',
-            },
-            {
-                title: '读写类型',
-                dataIndex: 'remark',
                 align: 'left',
             },
             {
@@ -245,11 +246,7 @@ class FunctionDefinition extends React.Component {
                 render: (item) => {
                     return (
                         <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.userRole.bind(this, item)}>查看</div>
-                            <div className="split"></div>
                             <div className="option-button" onClick={this.userRole.bind(this, item)}>编辑</div>
-                            <div className="split"></div>
-                            <div className="option-button" onClick={this.deleteRole.bind(this, item)}>删除</div>
                         </div>
                     )
                 }
@@ -257,24 +254,7 @@ class FunctionDefinition extends React.Component {
         ];
         return (
             <div>
-                <div className='product-function-mode-manager'>
-                    <div className="product-function-mode-title">物模型管理</div>
-                    <div className="product-mode-right-option">
-                        <div className="batch-delete"><IconFont type='icon-a-shanchucopy' className="icon-font-offset-px"/>批量删除</div>
-                        <div className="import-mode"><IconFont type='icon-daochuwumoxing'  className="icon-font-offset-px"/>导入物模型</div>
-                        <div className="add-stand-function" style={{marginRight: "10px"}} onClick={this.callBackAddStandardFeatures}><IconFont
-                            type='icon-jiahao'  className="icon-font-offset-px"/>添加标准功能点
-                        </div>
-                        <div className="add-stand-function" onClick={this.callBackFatherMethod}><IconFont type='icon-jiahao'  className="icon-font-offset-px"/>添加自定义功能点</div>
-                    </div>
-                </div>
-                <div className="function-search-from">
-                    <BaseForm
-                        data={this.data}
-                        handleSearch={this.handleSearch}
-                        show={false}
-                    />
-                </div>
+                <div className="add-topic-class" onClick={this.addDefineTopicClass}>定义Topic类</div>
                 <Etable
                     that={this}
                     dataSource={this.state.dataSource}
@@ -284,10 +264,25 @@ class FunctionDefinition extends React.Component {
                     pagination={this.state.pagination}
                     type={this.state.type}
                 >
-                </Etable>
+                </Etable>,
+                {
+                    this.state.roleVisible &&
+                    <Modal
+                        title={this.state.title}
+                        visible={this.state.roleVisible}
+                        onCancel={this.resetUserFrom}
+                        onOk={this.saveUserSubmit}
+                        footer={[
+                            <Button key="submit" type="primary" onClick={this.saveUserSubmit}>确定</Button>,
+                            <Button key="back" onClick={this.resetUserFrom}>取消</Button>
+                        ]}
+                    >
+                        <DefineTopicClass detail={this.state.detail} onRef={this.onRef}> </DefineTopicClass>
+                    </Modal>
+                }
             </div>
         )
     }
 }
 
-export default FunctionDefinition;
+export default DefineTopicList;

@@ -13,7 +13,9 @@ import FunctionDefinition from "../ExtractionComponent/functionDefinition";
 import DataSubscribe from "../ExtractionComponent/dataSubscribe";
 import DataAnalysis from "../ExtractionComponent/dataAnalysis";
 import AddCustomFeatures from "../ExtractionComponent/addCustomFeatures";
+import AddStandardFeatures from "../ExtractionComponent/addStandardFeatures";
 import AddLabel from "../ExtractionComponent/addLabel";
+import TopicListTab from "../ExtractionComponent/topicListTab";
 
 const {TabPane} = Tabs;
 const FormItem = Form.Item
@@ -23,6 +25,9 @@ export default class Permission extends React.Component {
     }
     addCustomFeaturesRef = (ref) => {
         this.addCustomFeaturesRefChild = ref
+    }
+    addStandardFeaturesRef = (ref) => {
+        this.addStandardFeaturesRefChild = ref
     }
     addLabelRef = (ref) => {
         this.addLabelRefChild = ref
@@ -81,6 +86,9 @@ export default class Permission extends React.Component {
     }
     addCustomFeatures= () => {
         this.addCustomFeaturesRefChild.showDrawer()
+    }
+    addStandardFeatures= () => {
+        this.addStandardFeaturesRefChild.showDrawer()
     }
 
     editProduct = () => {
@@ -216,13 +224,13 @@ export default class Permission extends React.Component {
                 </Card>
                 <Tabs className="product-info-tabs" type="card">
                     <TabPane tab="功能定义" key="1">
-                        <FunctionDefinition  addCustomFeatures={this.addCustomFeatures}></FunctionDefinition>
+                        <FunctionDefinition  addCustomFeatures={this.addCustomFeatures} addStandardFeatures={this.addStandardFeatures}></FunctionDefinition>
                     </TabPane>
                     <TabPane tab="数据解析" key="2">
                        <DataAnalysis></DataAnalysis>
                     </TabPane>
                     <TabPane tab="Topic列表" key="3">
-                        Content of Tab Pane 3
+                      <TopicListTab></TopicListTab>
                     </TabPane>
                     <TabPane tab="数据订阅" key="5">
                        <DataSubscribe></DataSubscribe>
@@ -247,6 +255,7 @@ export default class Permission extends React.Component {
                     </Modal>
                 },
                 <AddCustomFeatures  onRef={this.addCustomFeaturesRef}></AddCustomFeatures>
+                <AddStandardFeatures  onRef={this.addStandardFeaturesRef}></AddStandardFeatures>
                 <AddLabel onRef={this.addLabelRef}></AddLabel>
             </div>
         )

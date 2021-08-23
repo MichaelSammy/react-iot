@@ -10,19 +10,14 @@ import './../index.less'
 const {TextArea} = Input
 const FormItem = Form.Item
 
-class FunctionDefinition extends React.Component {
+class ModelCommTopic extends React.Component {
     // formRefUser = React.createRef();
 
     componentDidMount() {
         // this.props.onRef(this);
         this.requestList();
     }
-    callBackFatherMethod = () => {
-        this.props.addCustomFeatures();
-    }
-    callBackAddStandardFeatures = () => {
-        this.props.addStandardFeatures();
-    }
+
     userRole = () => {
         alert(2)
     }
@@ -163,10 +158,7 @@ class FunctionDefinition extends React.Component {
         pageSize: 5
     }
     state = {
-        rowSelection: {
-            selectedRowKeys: [],
-            selectedRows: [],
-        },
+        rowSelection: false,
         pagination: {
             showSizeChanger: true,
             showQuickJumper: true,
@@ -178,7 +170,7 @@ class FunctionDefinition extends React.Component {
             onChange: (page, pageSize) => this.changePage(page, pageSize),
             showTotal: (total) => `共${total}条`,
         },
-        type: 'checkbox',
+        type: '',
         list: [],
         roleVisible: false,
         perVisible: false,
@@ -210,33 +202,18 @@ class FunctionDefinition extends React.Component {
     render() {
         const columns = [
             {
-                title: '功能类型',
+                title: '订阅类型',
                 dataIndex: 'roleName',
                 align: 'left'
             },
             {
-                title: '功能名称',
+                title: '订阅消息',
                 dataIndex: 'officeName',
                 align: 'left',
             },
             {
-                title: '标识符',
+                title: '创建时间',
                 dataIndex: 'createUser',
-                align: 'left',
-            },
-            {
-                title: '数据类型',
-                dataIndex: 'createTime',
-                align: 'left',
-            },
-            {
-                title: '数据值定义',
-                dataIndex: 'remark',
-                align: 'left',
-            },
-            {
-                title: '读写类型',
-                dataIndex: 'remark',
                 align: 'left',
             },
             {
@@ -245,11 +222,7 @@ class FunctionDefinition extends React.Component {
                 render: (item) => {
                     return (
                         <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.userRole.bind(this, item)}>查看</div>
-                            <div className="split"></div>
                             <div className="option-button" onClick={this.userRole.bind(this, item)}>编辑</div>
-                            <div className="split"></div>
-                            <div className="option-button" onClick={this.deleteRole.bind(this, item)}>删除</div>
                         </div>
                     )
                 }
@@ -257,24 +230,6 @@ class FunctionDefinition extends React.Component {
         ];
         return (
             <div>
-                <div className='product-function-mode-manager'>
-                    <div className="product-function-mode-title">物模型管理</div>
-                    <div className="product-mode-right-option">
-                        <div className="batch-delete"><IconFont type='icon-a-shanchucopy' className="icon-font-offset-px"/>批量删除</div>
-                        <div className="import-mode"><IconFont type='icon-daochuwumoxing'  className="icon-font-offset-px"/>导入物模型</div>
-                        <div className="add-stand-function" style={{marginRight: "10px"}} onClick={this.callBackAddStandardFeatures}><IconFont
-                            type='icon-jiahao'  className="icon-font-offset-px"/>添加标准功能点
-                        </div>
-                        <div className="add-stand-function" onClick={this.callBackFatherMethod}><IconFont type='icon-jiahao'  className="icon-font-offset-px"/>添加自定义功能点</div>
-                    </div>
-                </div>
-                <div className="function-search-from">
-                    <BaseForm
-                        data={this.data}
-                        handleSearch={this.handleSearch}
-                        show={false}
-                    />
-                </div>
                 <Etable
                     that={this}
                     dataSource={this.state.dataSource}
@@ -290,4 +245,4 @@ class FunctionDefinition extends React.Component {
     }
 }
 
-export default FunctionDefinition;
+export default ModelCommTopic;

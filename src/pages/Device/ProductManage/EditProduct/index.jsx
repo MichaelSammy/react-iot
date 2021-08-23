@@ -28,13 +28,13 @@ class EditProduct extends React.Component {
 
     render() {
         const formItemLayout = {
-            labelCol: {span: 5},
+            labelCol: {span: 10},
             wrapperCol: {span: 16}
         }
         const detail = this.props.detail
 
         return (
-            <Form ref={this.formRefUser}>
+            <Form ref={this.formRefUser} layout="vertical">
                 <FormItem label="产品名称"
                           name="loginName"
                           initialValue={detail.loginName}
