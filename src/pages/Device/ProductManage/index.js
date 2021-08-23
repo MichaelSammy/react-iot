@@ -172,9 +172,9 @@ export default class Permission extends React.Component {
                             />
                         </div>
                         <div style={{float: 'left'}}>
-                            <div className="product-list-page-crete-product" type="primary"
+                            <Button  type="primary"
                                  onClick={this.createProduct}>创建产品
-                            </div>
+                            </Button>
                         </div>
                     </div>
                     <div style={{clear: 'both'}}></div>

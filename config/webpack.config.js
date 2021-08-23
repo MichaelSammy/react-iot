@@ -150,10 +150,8 @@ module.exports = function (webpackEnv) {
                   options: {
                       lessOptions: {
                           modifyVars: {
-                              'primary-color': '#000000',
-                              'link-color': '#1DA57A',
-                              'border-radius-base': '0px',
-                              'border-radius': '0px',
+                              'primary-color': '#2979E7',//主题颜色
+                              'border-radius-base':'0px'//组件/浮层圆角
                           },
                           javascriptEnabled: true,
                       }
@@ -416,7 +414,8 @@ module.exports = function (webpackEnv) {
                 ],
 
                 plugins: [
-                  [
+                    ["import", {"libraryName": "antd", "libraryDirectory":"es", "style": true}],
+                    [
                     require.resolve('babel-plugin-named-asset-import'),
                     {
                       loaderMap: {
@@ -549,11 +548,11 @@ module.exports = function (webpackEnv) {
                           modules: false,},
                       'less-loader',
                       {
-                      lessOptions: {
-                          modifyVars: { 'primary-color': '#1DA57A',
-                              'border-radius-base':'10px'},
-                          javascriptEnabled: true,
-                      }
+                      // lessOptions: {
+                      //     modifyVars: { 'primary-color': '#1DA57A',
+                      //         'border-radius-base':'10px'},
+                      //     javascriptEnabled: true,
+                      // }
                   }),
 
               },
@@ -566,13 +565,13 @@ module.exports = function (webpackEnv) {
                           getLocalIdent: getCSSModuleLocalIdent,
                       },
                       'less-loader',
-                      {
-                          lessOptions: {
-                              javascriptEnabled: true,
-                              modifyVars: { 'primary-color': '#1DA57A',
-                              'border-radius-base':'0px'},
-                          }
-                      }
+                      // {
+                      //     lessOptions: {
+                      //         javascriptEnabled: true,
+                      //         modifyVars: { 'primary-color': '#1DA57A',
+                      //         'border-radius-base':'0px'},
+                      //     }
+                      // }
                   ),
               },
             // "file" loader makes sure those assets get served by WebpackDevServer.
