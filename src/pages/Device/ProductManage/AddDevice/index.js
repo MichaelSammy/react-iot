@@ -4,13 +4,17 @@ import {getBreadItem, updateSelectedItem} from '../../../../utils'
 import './index.less'
 import SelectProductCategory from  "../ExtractionComponent/selectProductCategory";
 import device from '../../../../assets/images/device.jpg'
+import IconFont from "../../../../utils/IconFont";
 const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
 export default class AddRole extends React.Component {
     formRefUser = React.createRef();
     state = {
-        detail: {}
+        detail: {},
+        showOption:false,
+        showOtherOpion:true,
+        closeOtherOpion:false,
     }
     onRef = (ref) => {
         this.child = ref
@@ -20,7 +24,18 @@ export default class AddRole extends React.Component {
     }
 
     showOtherOpion = () => {
-        alert('11')
+        this.setState({
+            showOtherOpion: !this.state.showOtherOpion,
+            closeOtherOpion: !this.state.closeOtherOpion,
+            showOption:!this.state.showOption,
+        })
+    }
+    closeOtherOpion= () => {
+        this.setState({
+            showOtherOpion: !this.state.showOtherOpion,
+            closeOtherOpion: !this.state.closeOtherOpion,
+            showOption:!this.state.showOption,
+        })
     }
     handleSubmit = async () => {
         const form = this.formRefUser.current
@@ -41,6 +56,9 @@ export default class AddRole extends React.Component {
     }
     selectProductCategory=()=>{
         this.child.showDrawer()
+    }
+    goBackProductList= () => {
+        this.props.history.go(-1)
     }
     render() {
         const formItemLayout = {
@@ -97,6 +115,8 @@ export default class AddRole extends React.Component {
                         getBreadItem(breadList)
                     }
                 </Breadcrumb>
+                <div className="product-add-page-title">  <IconFont onClick={this.goBackProductList} className="product-info-go-back-list" type='icon-jiantou-zuo'/>创建产品</div>
+                <div style={{clear: 'both'}}></div>
                 <Form ref={this.formRefUser}>
                     <FormItem label="产品名称"
                               name="loginName"
@@ -271,66 +291,73 @@ export default class AddRole extends React.Component {
                             ))}
                         </Select>
                     </FormItem>
-                    <FormItem label="加密方式"
-                              name="name"
-                              rules={[
-                                  {
-                                      required: false,
-                                      message: '请选择加密方式'
-                                  },
-                              ]}{...formItemLayout}>
-                        <Select placeholder="请选择加密方式">
-                            {nameList.map((item) => (
-                                <Option value={item.id} key={item.id}>
-                                    {item.value}
-                                </Option>
-                            ))}
-                        </Select>
-                    </FormItem>
-                    <FormItem label="产品型号"
-                              name="loginName"
-                              initialValue={detail.loginName}
-                              rules={[
-                                  {
-                                      required: false,
-                                      message: '请输入产品型号'
-                                  },
-                              ]}{...formItemLayout}>
-                        <Input type="text" placeholder="请输入产品型号"/>
-                    </FormItem>
-                    <FormItem label="产品厂商"
-                              name="name"
-                              rules={[
-                                  {
-                                      required: false,
-                                      message: '请选择产品厂商'
-                                  },
-                              ]}{...formItemLayout}>
-                        <Select placeholder="请选择产品厂商">
-                            {nameList.map((item) => (
-                                <Option value={item.id} key={item.id}>
-                                    {item.value}
-                                </Option>
-                            ))}
-                        </Select>
-                    </FormItem>
-                    <FormItem label="产品描述"
-                              name="loginName"
-                              initialValue={detail.loginName}
-                              rules={[
-                                  {
-                                      required: false,
-                                      message: '请输入产品描述'
-                                  },
-                              ]}{...formItemLayout}>
-                        <TextArea id='textAreaId' rows={5} maxLength={100} showCount placeholder="请输入产品描述"></TextArea>
-                    </FormItem>
-                    <div onClick={this.showOtherOpion}
-                         style={{paddingLeft: '16px', color: '#2979E7', cursor: 'pointer'}}>更多信息
+                    <div className={this.state.showOption==true?'word-style':'word-style-hide'}>
+                        <FormItem label="加密方式"
+                                  name="name"
+                                  rules={[
+                                      {
+                                          required: false,
+                                          message: '请选择加密方式'
+                                      },
+                                  ]}{...formItemLayout}>
+                            <Select placeholder="请选择加密方式">
+                                {nameList.map((item) => (
+                                    <Option value={item.id} key={item.id}>
+                                        {item.value}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </FormItem>
+                        <FormItem label="产品型号"
+                                  name="loginName"
+                                  initialValue={detail.loginName}
+                                  rules={[
+                                      {
+                                          required: false,
+                                          message: '请输入产品型号'
+                                      },
+                                  ]}{...formItemLayout}>
+                            <Input type="text" placeholder="请输入产品型号"/>
+                        </FormItem>
+                        <FormItem label="产品厂商"
+                                  name="name"
+                                  rules={[
+                                      {
+                                          required: false,
+                                          message: '请选择产品厂商'
+                                      },
+                                  ]}{...formItemLayout}>
+                            <Select placeholder="请选择产品厂商">
+                                {nameList.map((item) => (
+                                    <Option value={item.id} key={item.id}>
+                                        {item.value}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </FormItem>
+                        <FormItem label="产品描述"
+                                  name="loginName"
+                                  initialValue={detail.loginName}
+                                  rules={[
+                                      {
+                                          required: false,
+                                          message: '请输入产品描述'
+                                      },
+                                  ]}{...formItemLayout}>
+                            <TextArea id='textAreaId' rows={5} maxLength={100} showCount placeholder="请输入产品描述"></TextArea>
+                        </FormItem>
                     </div>
-                    <div onClick={this.showOtherOpion}
-                         style={{paddingLeft: '16px', color: '#2979E7', cursor: 'pointer'}}>收起
+                    {this.state.showOtherOpion&&
+                      <div onClick={this.showOtherOpion} className="product-add-more-info">
+                        <IconFont  className="product-info-go-back-list" type='icon-zhankaijiantou'/>
+                        更多信息
                     </div>
+                    }
+                    {this.state.closeOtherOpion && <div onClick={this.closeOtherOpion} className="product-add-more-info">
+                        <IconFont className="product-info-go-back-list" type='icon-shouhuijiantou'/>
+                        收起
+                    </div>
+                    }
                 </Form>
                 <div className='option-button'>
                     <Button size="small" type="primary" onClick={this.handleSubmit.bind(this)}

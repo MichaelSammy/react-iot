@@ -163,8 +163,8 @@ data-analysis-tab-select-shell div {
 .data-analysis-code-area {
   height: 283px;
   background: #F4F4F4;
-  padding-top: 18px;
-  border: 1px solid #D8D8D8;
+  border-right: 1px solid #D8D8D8;
+  border-left: 1px solid #D8D8D8;
   padding-left: 64px;
 }
 
@@ -184,14 +184,16 @@ data-analysis-tab-select-shell div {
 
 .data-analysis-result-search {
   float: left;
-  margin: 15px 15px;
+  padding: 15px 15px;
   width: 100%;
+  border-left: 1px solid #D8D8D8;
+  border-right: 1px solid #D8D8D8;
 }
 
 .data-analysis-result-input {
   height: 283px;
   background: #F4F4F4;
-  border: 1px solid #D8D8D8;
+  //border: 1px solid #D8D8D8;
 }
 
 .data-analysis-result-selected {
@@ -214,7 +216,15 @@ data-analysis-tab-select-shell div {
   background-size: cover;
   background-repeat: no-repeat;
 }
-
+.product-add-page-title{
+  margin-bottom: 16px;
+  margin-left: 16px;
+  font-size: 32px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 600;
+  color: #1A1A1A;
+  line-height: 45px;
+}
 .product-list-title-background .ant-breadcrumb,
 .product-list-title-background .ant-breadcrumb a,
 .product-list-title-background .ant-breadcrumb-separator {
@@ -266,7 +276,9 @@ data-analysis-tab-select-shell div {
   font-weight: 600;
   line-height: 45px;
 }
-
+.product-info-go-back-list{
+  cursor: pointer;
+}
 .product-list-card {
   padding: 0px 3%;
 }
@@ -349,6 +361,7 @@ data-analysis-tab-select-shell div {
   font-weight: 400;
   color: #666666;
   line-height: 20px;
+  margin-bottom: 10px;
 }
 
 .add-topic-class {
@@ -377,4 +390,10 @@ data-analysis-tab-select-shell div {
   line-height: 20px;
   padding: 12px;
   margin-bottom: 24px;
+}
+#selectProductCategory .ant-form-item-control-input{
+  margin-bottom: 16px !important;
+}
+#selectProductCategory .ant-form-inline .ant-form-item{
+  width: 100% !important;
 }

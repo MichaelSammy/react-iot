@@ -151,7 +151,21 @@ module.exports = function (webpackEnv) {
                       lessOptions: {
                           modifyVars: {
                               'primary-color': '#2979E7',//主题颜色
-                              'border-radius-base':'0px'//组件/浮层圆角
+                              'border-radius-base':'0px',//组件/浮层圆角
+                              'text-color': '#1A1A1A',//文本字体颜色
+                              //mode
+                              'modal-body-padding':'10px 22px',
+                              'modal-header-border-color-split':'#d9d9d9',
+                              'modal-footer-border-color-split':'unset',
+                              'modal-footer-padding-vertical': '10px',
+                              'modal-footer-padding-horizontal': '22px',
+                              'modal-header-padding-vertical':'16px',
+                              'modal-header-padding-horizontal':'22px',
+                              //drawer
+                              'drawer-header-padding':'16px 22px',
+                              'drawer-body-padding': '10px 22px',
+                              'drawer-footer-padding-vertical':'16px',
+                              'drawer-footer-padding-horizontal':'22px',
                           },
                           javascriptEnabled: true,
                       }

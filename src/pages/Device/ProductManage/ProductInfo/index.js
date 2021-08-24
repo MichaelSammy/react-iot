@@ -69,6 +69,9 @@ export default class Permission extends React.Component {
     componentDidMount() {
         // this.requestList()
     }
+    goBackProductList= () => {
+        this.props.history.go(-1)
+    }
     addTag = () => {
         this.addLabelRefChild.addTag()
     }
@@ -156,7 +159,7 @@ export default class Permission extends React.Component {
                             getBreadItem(breadList)
                         }
                     </Breadcrumb>
-                    <div className="product-big-title">产品详情</div>
+                    <div className="product-big-title">  <IconFont onClick={this.goBackProductList} className="product-info-go-back-list" type='icon-jiantou-zuo'/>产品详情</div>
                     <div className="product-list-title-desc">产品是一组具有相同功能定义的设备集合，创建产品是使用平台的第一步快速创建产品后可定义产品物模型、添加对应设备。
                     </div>
                     <div>

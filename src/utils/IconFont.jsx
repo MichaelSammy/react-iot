@@ -2,7 +2,7 @@ import {createFromIconfontCN} from '@ant-design/icons';
 
 const IconFont = createFromIconfontCN({
     // scriptUrl: '//at.alicdn.com/t/font_1147303_77h2u9oubvl.js',
-    scriptUrl: '//at.alicdn.com/t/font_2743321_s8fv9ggz7y.js',
+    scriptUrl: '//at.alicdn.com/t/font_2743321_msgh4w7ifxc.js',
     // scriptUrl的值是从阿里图标库中复制过来的，每次添加了图标都要重新复制新的链接
 });
 

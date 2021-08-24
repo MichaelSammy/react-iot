@@ -115,6 +115,9 @@ export default class Permission extends React.Component {
             title: '编辑'
         })
     }
+    deleteProduct= () => {
+
+    }
     showProductInfo = () => {
         this.props.history.push({'pathname': "/user/device/product/info", params: true});
     }
@@ -211,7 +214,7 @@ export default class Permission extends React.Component {
                                             <div className='card-title-option'><span onClick={this.editProduct}>
                                   <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
                                             type='icon-a-bianjicopy'/></span>
-                                                <span> <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
+                                                <span onClick={this.deleteProduct}> <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
                                                                  type='icon-a-shanchucopy'/></span>
                                                 <span> <IconFont style={{fontSize: '20px', color: '#009C49'}}
                                                                  type='icon-a-fabucopy'/></span></div>

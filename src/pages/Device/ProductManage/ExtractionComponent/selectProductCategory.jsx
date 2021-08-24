@@ -188,7 +188,7 @@ class SelectProductCategory extends React.Component {
             placeholder: '模拟类型：自定义',
             list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
             field: 'power',
-            width: '100%'
+            // width: '516px',
         },
         {
             type: 'search',
@@ -196,7 +196,7 @@ class SelectProductCategory extends React.Component {
             label: '',
             placeholder: '请输入搜索内容',
             field: 'username',
-            width: '100%'
+            // width: '100vw',
         }
     ]
     render() {
@@ -219,7 +219,7 @@ class SelectProductCategory extends React.Component {
             {
                 title: '操作',
                 align: 'left',
-                width:'180px',
+                width:'200px',
                 render: (item) => {
                     return (
                         <div className="function-table-option-buttion">
@@ -244,13 +244,16 @@ class SelectProductCategory extends React.Component {
                             </div>
                         </div>
                     }
+                    id='selectProductCategory'
                 >
                     <div className="product-drawer-topic-info">若无满足条件的产品模版，您可以选择其他类别。同时可通过主页面右下角的用户建议功能，将新产品类别反馈给我们。</div>
+                    <div style={{width:'100%'}}>
                     <BaseForm
                         data={this.data}
                         handleSearch={this.handleSearch}
                         show={false}
                     />
+                    </div>
                     <Etable
                         that={this}
                         dataSource={this.state.dataSource}

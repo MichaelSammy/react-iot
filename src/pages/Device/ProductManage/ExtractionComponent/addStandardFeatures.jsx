@@ -5,7 +5,6 @@ import './../index.less'
 class AddStandardFeatures extends React.Component {
 
     showDrawer = () => {
-        debugger
         this.setState({
             visible: true,
         });
