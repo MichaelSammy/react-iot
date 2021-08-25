@@ -7,17 +7,26 @@
   width: 20%;
   float: left;
   text-align: center;
+  display: flex;
+  margin-top: 7px;
 }
 .product-image img{
   width: 200px;
-  height: 124px;
+  height: 119px;
+  float: left;
+  padding-right: 20px;
 }
 .icon-img-edit{
   font-size: 15px;
-  color: rgb(137, 160, 194);
-  margin-right: 25px;
-  float: right;
-  margin-top: -15px;
+  color: #fff;
+  margin-left: 150px;
+  margin-top: 90px;
+  width: 26px;
+  height: 26px;
+  background: #C8DFFF;
+  border-radius: 9px 0px 0px 0px;
+  position: absolute;
+  cursor: pointer;
 }
 .product-info-filed{
   width: 80%;
@@ -94,10 +103,16 @@
   cursor: pointer;
 }
 .product-info-tabs{
-  margin: 10px  30px 0px;
+  margin: 10px  30px 0px !important;
 }
-.ant-tabs-card  .ant-tabs-nav .ant-tabs-tab-active{
-  border-top: 2px solid #2979E7;
+#product-info-tabs-id  .ant-tabs-nav .ant-tabs-tab-active{
+  border-top: 2px solid #2979E7 !important;
+}
+#product-info-tabs-id-child  .ant-tabs-nav .ant-tabs-tab-active{
+  border: 1px solid #2979E7 !important;
+}
+#product-info-tabs-id-child {
+ margin:10px  0px 0px !important;
 }
 .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab{
   transition: unset !important;
@@ -147,4 +162,9 @@
 }
 .function-search-from{
   padding: 10px 0px;
+}
+.tag-title{
+  float: unset;
+  margin-bottom: 10px;
+  margin-top: 25px;
 }

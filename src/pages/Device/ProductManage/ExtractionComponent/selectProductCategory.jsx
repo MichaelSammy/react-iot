@@ -246,7 +246,16 @@ class SelectProductCategory extends React.Component {
                     }
                     id='selectProductCategory'
                 >
-                    <div className="product-drawer-topic-info">若无满足条件的产品模版，您可以选择其他类别。同时可通过主页面右下角的用户建议功能，将新产品类别反馈给我们。</div>
+                    <div className="product-drawer-topic-info">
+                        <div style={{width: '7%', float: 'left'}}>
+                            <IconFont style={{fontSize: '20px', color: '#2979E7'}}
+                                      type='icon-gantanhao'/>
+                        </div>
+                        <div style={{width: '93%', float: 'right', wordBreak: 'break-all'}}>
+                            若无满足条件的产品模版，您可以选择其他类别。同时可通过主页面右下角的用户建议功能，将新产品类别反馈给我们。
+                        </div>
+
+                    </div>
                     <div style={{width:'100%'}}>
                     <BaseForm
                         data={this.data}

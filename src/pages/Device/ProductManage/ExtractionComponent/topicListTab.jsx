@@ -45,7 +45,7 @@ class TopicListTab extends React.Component {
         }];
         return (
             <div>
-                <Tabs className="product-info-tabs" type="card">
+                <Tabs id="product-info-tabs-id-child" className="product-info-tabs" type="card">
                     <TabPane tab="基础通信 Topic" key="1">
                         <BasicCommTopic></BasicCommTopic>
                     </TabPane>

@@ -272,6 +272,7 @@ class DefineTopicList extends React.Component {
                         visible={this.state.roleVisible}
                         onCancel={this.resetUserFrom}
                         onOk={this.saveUserSubmit}
+                        centered
                         footer={[
                             <Button key="submit" type="primary" onClick={this.saveUserSubmit}>确定</Button>,
                             <Button key="back" onClick={this.resetUserFrom}>取消</Button>

@@ -6,7 +6,7 @@ import Etable from "../../../../common/Etable";
 import request from '../../../../utils/request'
 import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../../utils";
 import {recursionRouterTwo} from "../../../../utils/recursion-router";
-import defaultUser from '../../../../assets/images/defaultUser.png'
+import deviceDefaultImg from '../../../../assets/images/deviceDefaultImg.jpg'
 import EditProduct from "../EditProduct";
 import './index.less'
 import FunctionDefinition from "../ExtractionComponent/functionDefinition";
@@ -159,7 +159,7 @@ export default class Permission extends React.Component {
                             getBreadItem(breadList)
                         }
                     </Breadcrumb>
-                    <div className="product-big-title">  <IconFont onClick={this.goBackProductList} className="product-info-go-back-list" type='icon-jiantou-zuo'/>产品详情</div>
+                    <div className="product-big-title">  <IconFont onClick={this.goBackProductList} className="product-info-go-back-list" type='icon-fanhuijiantou'/>产品详情</div>
                     <div className="product-list-title-desc">产品是一组具有相同功能定义的设备集合，创建产品是使用平台的第一步快速创建产品后可定义产品物模型、添加对应设备。
                     </div>
                     <div>
@@ -172,8 +172,10 @@ export default class Permission extends React.Component {
                 <Card className='product-card-info'>
                     <div>
                         <div className='product-image'>
-                            <img src={defaultUser} alt=""/>
-                            <IconFont className='icon-img-edit' type='icon-xiugai1'/>
+                            <img src={deviceDefaultImg} alt=""/>
+                            <span className='icon-img-edit'>
+                            <IconFont  type='icon-a-bianjicopy'/>
+                            </span>
                         </div>
                         <div className='product-info-filed'>
                             <div>
@@ -208,7 +210,13 @@ export default class Permission extends React.Component {
                                 </div>
                             </div>
                             <div style={{padding: '10px 0px'}}>
-                                <div style={{float: 'left', margin: '5px 0px'}}>标签：</div>
+                                <div className='card-title tag-title' style={{float:'unset'}}>
+                                    <span className='title-desc'>标签信息</span>
+                                    <IconFont style={{fontSize: '15px', color: '#2979E7', marginRight: '7px'}}
+                                              type='icon-a-bianjicopy'/>
+                                    <span className='edit-card-title-option' onClick={this.editProduct}> 编辑</span>
+                                </div>
+                                <div style={{float: 'left', margin: '5px 0px'}}>产品标签：</div>
                                 <div className='product-tag-list'>
                                     <div className='tag-name'>ncknsac</div>
                                     <div className='tag-name'>ncknsac</div>
@@ -225,7 +233,7 @@ export default class Permission extends React.Component {
                     </div>
 
                 </Card>
-                <Tabs className="product-info-tabs" type="card">
+                <Tabs id="product-info-tabs-id" className="product-info-tabs" type="card">
                     <TabPane tab="功能定义" key="1">
                         <FunctionDefinition  addCustomFeatures={this.addCustomFeatures} addStandardFeatures={this.addStandardFeatures}></FunctionDefinition>
                     </TabPane>
@@ -246,6 +254,7 @@ export default class Permission extends React.Component {
                         visible={this.state.roleVisible}
                         onCancel={this.resetUserFrom}
                         onOk={this.saveUserSubmit}
+                        centered
                         footer={[
                             <Button key="submit" type="primary" onClick={this.saveUserSubmit}>确定</Button>,
                             <Button key="back" onClick={this.resetUserFrom}>取消</Button>

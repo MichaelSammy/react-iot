@@ -216,8 +216,7 @@ export default class Permission extends React.Component {
                                             type='icon-a-bianjicopy'/></span>
                                                 <span onClick={this.deleteProduct}> <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
                                                                  type='icon-a-shanchucopy'/></span>
-                                                <span> <IconFont style={{fontSize: '20px', color: '#009C49'}}
-                                                                 type='icon-a-fabucopy'/></span></div>
+                                                <span className="product-card-status"> 已发布</span></div>
                                         </div>
                                         <div className='row-split-line'></div>
                                         <div className='card-content-into'>
@@ -237,7 +236,7 @@ export default class Permission extends React.Component {
                                             <div className='column-spilt-line'></div>
                                             <div className='card-content-right'>
                                                 <div className='device-count-num'>852<span
-                                                    style={{fontSize: '14px', fontWeight: '500'}}>个</span></div>
+                                                    style={{fontSize: '14px', fontWeight: '500'}}></span></div>
                                                 <div className='device-count-desc'>设备总数</div>
                                             </div>
                                         </div>
@@ -263,6 +262,7 @@ export default class Permission extends React.Component {
                         visible={this.state.roleVisible}
                         onCancel={this.resetUserFrom}
                         onOk={this.saveUserSubmit}
+                        centered
                         footer={[
                             <Button key="submit" type="primary" onClick={this.saveUserSubmit}>确定</Button>,
                             <Button key="back" onClick={this.resetUserFrom}>取消</Button>

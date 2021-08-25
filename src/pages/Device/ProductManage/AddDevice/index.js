@@ -4,6 +4,8 @@ import {getBreadItem, updateSelectedItem} from '../../../../utils'
 import './index.less'
 import SelectProductCategory from  "../ExtractionComponent/selectProductCategory";
 import device from '../../../../assets/images/device.jpg'
+import gateway from '../../../../assets/images/gateway.jpg'
+import childDevice from '../../../../assets/images/childDevice.jpg'
 import IconFont from "../../../../utils/IconFont";
 const {Option} = Select
 const {TextArea} = Input
@@ -115,7 +117,7 @@ export default class AddRole extends React.Component {
                         getBreadItem(breadList)
                     }
                 </Breadcrumb>
-                <div className="product-add-page-title">  <IconFont onClick={this.goBackProductList} className="product-info-go-back-list" type='icon-jiantou-zuo'/>创建产品</div>
+                <div className="product-add-page-title">  <IconFont onClick={this.goBackProductList} className="product-info-go-back-list" type='icon-fanhuijiantou'/>创建产品</div>
                 <div style={{clear: 'both'}}></div>
                 <Form ref={this.formRefUser}>
                     <FormItem label="产品名称"
@@ -191,22 +193,29 @@ export default class AddRole extends React.Component {
                         // initialValue={detail.mobile}
                               rules={[
                                   {
-                                      required: false,
+                                      required: true,
                                       message: '请选择节点类型'
                                   },
                               ]}{...formItemLayout}>
                         {/*<Radio.Group>*/}
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             {nodeList.map((item,index) => (
-                                <div style={{
-                                    width: '145px',
+                                <div style={{ width: '32%',
                                     height: '80px',
-                                    border: '1px solid #D8D8D8',
-                                    float: 'left',
-                                    marginRight:"15px",
-                                    backgroundImage:'url('+device+')',
-                                    backgroundSize: '100% 100%'
-                                }}></div>
+                                    border: '1px solid #D8D8D8',}}>
+                                    <div style={{
+                                        width: '80%',
+                                        height: '78px',
+                                        float: 'left',
+                                        backgroundImage:'url('+(item.id=='1'?device:(item.id=='2'?gateway:childDevice))+')',
+                                        // backgroundSize: '100% 100%',
+                                    }}></div>
+                                    <div style={{textAlign: 'right',
+                                        float:'left',
+                                        width: '20%',
+                                        lineHeight: '78px'}}>{item.id=='1'?'设备':(item.id=='2'?'网关':'子设备')}</div>
+                                </div>
+
                             ))}
                         </div>
                         {/*</Radio.Group>*/}
@@ -215,7 +224,7 @@ export default class AddRole extends React.Component {
                               name="name"
                               rules={[
                                   {
-                                      required: false,
+                                      required: true,
                                       message: '请选择认证方式'
                                   },
                               ]}{...formItemLayout}>
@@ -231,7 +240,7 @@ export default class AddRole extends React.Component {
                               name="name"
                               rules={[
                                   {
-                                      required: false,
+                                      required: true,
                                       message: '请选择安全类型'
                                   },
                               ]}{...formItemLayout}>
@@ -247,7 +256,7 @@ export default class AddRole extends React.Component {
                               name="name"
                               rules={[
                                   {
-                                      required: false,
+                                      required: true,
                                       message: '请选择连网方式'
                                   },
                               ]}{...formItemLayout}>
@@ -263,7 +272,7 @@ export default class AddRole extends React.Component {
                               name="name"
                               rules={[
                                   {
-                                      required: false,
+                                      required: true,
                                       message: '请选择通讯协议'
                                   },
                               ]}{...formItemLayout}>
@@ -279,7 +288,7 @@ export default class AddRole extends React.Component {
                               name="name"
                               rules={[
                                   {
-                                      required: false,
+                                      required: true,
                                       message: '请选择数据格式'
                                   },
                               ]}{...formItemLayout}>
@@ -296,7 +305,7 @@ export default class AddRole extends React.Component {
                                   name="name"
                                   rules={[
                                       {
-                                          required: false,
+                                          required: true,
                                           message: '请选择加密方式'
                                       },
                                   ]}{...formItemLayout}>
@@ -313,7 +322,7 @@ export default class AddRole extends React.Component {
                                   initialValue={detail.loginName}
                                   rules={[
                                       {
-                                          required: false,
+                                          required: true,
                                           message: '请输入产品型号'
                                       },
                                   ]}{...formItemLayout}>

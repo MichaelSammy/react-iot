@@ -23,6 +23,17 @@ class FunctionDefinition extends React.Component {
     callBackAddStandardFeatures = () => {
         this.props.addStandardFeatures();
     }
+    batchDelete = () => {
+        const _this = this
+        Modal.confirm({
+            title: '提示',
+            content: '是否批量删除?',
+            cancelText: '取消',
+            okText: '确认',
+            centered:true,
+            onOk: '调用接口'
+        });
+    }
     userRole = () => {
         alert(2)
     }
@@ -260,7 +271,7 @@ class FunctionDefinition extends React.Component {
                 <div className='product-function-mode-manager'>
                     <div className="product-function-mode-title">物模型管理</div>
                     <div className="product-mode-right-option">
-                        <div className="batch-delete"><IconFont type='icon-a-shanchucopy' className="icon-font-offset-px"/>批量删除</div>
+                        <div className="batch-delete" onClick={this.batchDelete}><IconFont type='icon-a-shanchucopy' className="icon-font-offset-px"/>批量删除</div>
                         <div className="import-mode"><IconFont type='icon-daochuwumoxing'  className="icon-font-offset-px"/>导入物模型</div>
                         <div className="add-stand-function" style={{marginRight: "10px"}} onClick={this.callBackAddStandardFeatures}><IconFont
                             type='icon-jiahao'  className="icon-font-offset-px"/>添加标准功能点

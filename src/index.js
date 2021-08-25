@@ -12,7 +12,7 @@ import {HashRouter, Route} from 'react-router-dom'
 
 const Main = () =>{
     return (
-        <ConfigProvider locale={zhCN}>
+        <ConfigProvider locale={zhCN} autoInsertSpaceInButton={false}>
             <Provider store={store}>
                 <HashRouter basename='/'>
                     <Route path={`/`} component={App}></Route>

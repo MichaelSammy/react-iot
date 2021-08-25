@@ -77,6 +77,7 @@ class AddLabel extends React.Component {
                 <Modal
                     title={this.state.title}
                     visible={this.state.roleVisible}
+                    centered
                     okText="保存"
                     cancelText="取消"
                     onOk={this.saveUserSubmit}
