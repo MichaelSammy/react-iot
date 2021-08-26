@@ -368,7 +368,7 @@ export default class AddRole extends React.Component {
                     </div>
                     }
                 </Form>
-                <div className='option-button'>
+                <div className='add-product-option-button'>
                     <Button size="small" type="primary" onClick={this.handleSubmit.bind(this)}
                             style={{marginRight: '10px'}}>提交</Button>
                     <Button size="small" type="primary" onClick={this.handleCancel.bind(this)}>取消</Button>
