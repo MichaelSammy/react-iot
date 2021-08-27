@@ -2,6 +2,7 @@ import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
 import IconFont from "../../../../utils/IconFont";
 import BaseForm from "../../../../common/BaseForm";
+import BaseModel from "../../../../common/BaseModel";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
@@ -24,15 +25,9 @@ class FunctionDefinition extends React.Component {
         this.props.addStandardFeatures();
     }
     batchDelete = () => {
-        const _this = this
-        Modal.confirm({
-            title: '提示',
-            content: '是否批量删除?',
-            cancelText: '取消',
-            okText: '确认',
-            centered:true,
-            onOk: '调用接口'
-        });
+        this.setState({
+            visibleBaseModel:true
+        })
     }
     userRole = () => {
         alert(2)
@@ -194,10 +189,21 @@ class FunctionDefinition extends React.Component {
         roleVisible: false,
         perVisible: false,
         authVisible: false,
+        visibleBaseModel:false,
         checkedKeys: [],
         targetKeys: [],
         detail: {},
         title: ''
+    }
+    submitOk=()=>{
+        this.setState({
+            visibleBaseModel:false
+        })
+    }
+    submitCancle=()=>{
+        this.setState({
+            visibleBaseModel:false
+        })
     }
     changePage = (page, pageSize) => {
         this.params.page = page;
@@ -296,6 +302,12 @@ class FunctionDefinition extends React.Component {
                     type={this.state.type}
                 >
                 </Etable>
+                <BaseModel that={this}
+                           visible={this.state.visibleBaseModel}
+                           submitOk={this.submitOk}
+                           submitCancle={this.submitCancle}
+                           content={'是否批量删除！'}
+                ></BaseModel>
             </div>
         )
     }

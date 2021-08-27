@@ -3,9 +3,9 @@ import {Card, Modal, Form, Input, Button, Select, Radio, Breadcrumb} from "antd"
 import {getBreadItem, updateSelectedItem} from '../../../../utils'
 import './index.less'
 import SelectProductCategory from  "../ExtractionComponent/selectProductCategory";
-import device from '../../../../assets/images/device.jpg'
-import gateway from '../../../../assets/images/gateway.jpg'
-import childDevice from '../../../../assets/images/childDevice.jpg'
+import device from '../../../../assets/images/device.png'
+import gateway from '../../../../assets/images/gateway.png'
+import childDevice from '../../../../assets/images/childDevice.png'
 import IconFont from "../../../../utils/IconFont";
 const {Option} = Select
 const {TextArea} = Input
@@ -61,6 +61,9 @@ export default class AddRole extends React.Component {
     }
     goBackProductList= () => {
         this.props.history.go(-1)
+    }
+    selectDeviceType= (item,index) => {
+
     }
     render() {
         const formItemLayout = {
@@ -119,7 +122,7 @@ export default class AddRole extends React.Component {
                 </Breadcrumb>
                 <div className="product-add-page-title">  <IconFont onClick={this.goBackProductList} className="product-info-go-back-list" type='icon-fanhuijiantou'/>创建产品</div>
                 <div style={{clear: 'both'}}></div>
-                <Form ref={this.formRefUser}>
+                <Form ref={this.formRefUser} style={{width:'1150px',marginBottom:'10vh'}}>
                     <FormItem label="产品名称"
                               name="loginName"
                               initialValue={detail.loginName}
@@ -199,21 +202,33 @@ export default class AddRole extends React.Component {
                               ]}{...formItemLayout}>
                         {/*<Radio.Group>*/}
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                            {nodeList.map((item,index) => (
-                                <div style={{ width: '32%',
+                            {nodeList.map((item, index) => (
+                                <div style={{
+                                    width: '32%',
                                     height: '80px',
-                                    border: '1px solid #D8D8D8',}}>
+                                    border: '1px solid #2979E7',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    cursor:'pointer'
+                                }} onClick={this.selectDeviceType.bind(item)}>
                                     <div style={{
-                                        width: '80%',
-                                        height: '78px',
+                                        width: '90px',
+                                        height: '80px',
                                         float: 'left',
-                                        backgroundImage:'url('+(item.id=='1'?device:(item.id=='2'?gateway:childDevice))+')',
-                                        // backgroundSize: '100% 100%',
+                                        backgroundImage: 'url(' + (item.id == '1' ? device : (item.id == '2' ? gateway : childDevice)) + ')',
+                                        backgroundRepeat: 'no-repeat'
                                     }}></div>
-                                    <div style={{textAlign: 'right',
-                                        float:'left',
-                                        width: '20%',
-                                        lineHeight: '78px'}}>{item.id=='1'?'设备':(item.id=='2'?'网关':'子设备')}</div>
+                                    <div style={{
+                                        textAlign: 'left',
+                                        float: 'left',
+                                        width: '50px',
+                                        lineHeight: '80px'
+                                    }}>{item.id == '1' ? '设备' : (item.id == '2' ? '网关' : '子设备')}
+                                    </div>
+                                    <div ref={'abc'+index} className='select-device-type'>
+                                        <IconFont  className="select-device-type-icon" type='icon-duihao'/>
+                                    </div>
                                 </div>
 
                             ))}
@@ -369,9 +384,11 @@ export default class AddRole extends React.Component {
                     }
                 </Form>
                 <div className='add-product-option-button'>
-                    <Button size="small" type="primary" onClick={this.handleSubmit.bind(this)}
+                    <div style={{marginLeft:'16px'}}>
+                    <Button  type="primary" onClick={this.handleSubmit.bind(this)}
                             style={{marginRight: '10px'}}>提交</Button>
-                    <Button size="small" type="primary" onClick={this.handleCancel.bind(this)}>取消</Button>
+                    <Button  type="" onClick={this.handleCancel.bind(this)}>取消</Button>
+                    </div>
                 </div>,
                 <SelectProductCategory  title='选择产品类别'  onRef={this.onRef}></SelectProductCategory>
             </div>
