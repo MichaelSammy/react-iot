@@ -21,7 +21,7 @@ class EditProduct extends React.Component {
             console.log(errInfo)
         })
     }
-    resetUserFrom = () => {
+    closeSubmit = () => {
         const form = this.fromModeRef.current;
         form.resetFields();
     }

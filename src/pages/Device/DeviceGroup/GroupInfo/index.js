@@ -123,7 +123,7 @@ export default class Permission extends React.Component {
                                     <span className='title-desc'>标签信息</span>
                                     <IconFont style={{fontSize: '15px', color: '#2979E7', marginRight: '7px'}}
                                               type='icon-a-bianjicopy'/>
-                                    <span className='edit-card-title-option' onClick={this.editProduct}> 编辑</span>
+                                    <span className='edit-card-title-option' onClick={this.editTag}> 编辑</span>
                                 </div>
                                 <div style={{float: 'left', margin: '5px 0px'}}>分组标签：</div>
                                 <div className='product-tag-list'>

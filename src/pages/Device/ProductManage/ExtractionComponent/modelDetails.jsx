@@ -1,7 +1,6 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import IconFont from "../../../../utils/IconFont";
-import BaseForm from "../../../../common/BaseForm";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
@@ -10,23 +9,6 @@ import './../index.less'
 const FormItem = Form.Item
 
 class ModelDetails extends React.Component {
-
-    showDrawer = () => {
-        this.setState({
-            visible: true,
-        });
-    };
-
-    onClose = () => {
-        this.setState({
-            visible: false,
-        });
-    };
-
-    componentDidMount() {
-        this.props.onRef(this);
-        this.requestList()
-    }
 
     params = {
         page: 1,
@@ -49,14 +31,26 @@ class ModelDetails extends React.Component {
             showTotal: (total) => `共${total}条`,
         },
         list: [],
-        roleVisible: false,
-        perVisible: false,
-        authVisible: false,
-        checkedKeys: [],
-        targetKeys: [],
         detail: {},
         title: ''
     }
+    showDrawer = () => {
+        this.setState({
+            visible: true,
+        });
+    };
+
+    onClose = () => {
+        this.setState({
+            visible: false,
+        });
+    };
+
+    componentDidMount() {
+        this.props.onRef(this);
+        this.requestList()
+    }
+
     changePage = (page, pageSize) => {
         this.params.page = page;
         this.params.pageSize = pageSize;

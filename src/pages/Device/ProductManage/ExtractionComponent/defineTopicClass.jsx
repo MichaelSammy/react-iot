@@ -8,17 +8,15 @@ const FormItem = Form.Item
 
 class DefineTopicClass extends React.Component {
     fromModeRef = React.createRef();
-
-    componentDidMount() {
-        this.props.onRef(this)
-    }
-
     state = {
         detail: {
             loginName: "",
         }
     }
-    handleSubmit = async () => {
+    componentDidMount() {
+        this.props.onRef(this)
+    }
+    saveSubmit = async () => {
         const form = this.fromModeRef.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             console.log('成功')
@@ -28,7 +26,7 @@ class DefineTopicClass extends React.Component {
             console.log(errInfo)
         })
     }
-    resetUserFrom = () => {
+    closeSubmit = () => {
         const form = this.fromModeRef.current;
         form.resetFields();
     }

@@ -188,7 +188,7 @@ class GroupSubscrList extends React.Component {
             visibleBaseModel: false
         })
     }
-    submitCancle = () => {
+    submitCancel = () => {
         this.setState({
             visibleBaseModel: false
         })
@@ -282,7 +282,7 @@ class GroupSubscrList extends React.Component {
                 <BaseModel that={this}
                            visible={this.state.visibleBaseModel}
                            submitOk={this.submitOk}
-                           submitCancle={this.submitCancle}
+                           submitCancel={this.submitCancel}
                            content={this.state.baseModelContent}
                 ></BaseModel>
                 <AddSubscription onRef={this.addAddSubscrRef} title='新增订阅'></AddSubscription>

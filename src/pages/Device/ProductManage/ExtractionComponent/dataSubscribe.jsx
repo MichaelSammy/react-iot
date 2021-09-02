@@ -1,7 +1,6 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
 import IconFont from "../../../../utils/IconFont";
-import BaseForm from "../../../../common/BaseForm";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
@@ -12,19 +11,55 @@ const FormItem = Form.Item
 
 class DataSubscribe extends React.Component {
     // fromModeRef = React.createRef();
-
+    params = {
+        page: 1,
+        pageSize: 5
+    }
+    data = [
+        {
+            type: 'select',
+            initialValue: '1',
+            placeholder: '',
+            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            field: 'power',
+            width: '130px'
+        },
+        {
+            type: 'search',
+            initialValue: '',
+            label: '',
+            placeholder: '查询',
+            field: 'username',
+            width: '336px',
+            bordered: true,
+        }
+    ]
+    state = {
+        rowSelection:false,
+        pagination: {
+            showSizeChanger: true,
+            showQuickJumper: true,
+            hideOnSinglePage: false,
+            pageSizeOptions: ['10', '20', '30'],
+            pageSize: this.params.pageSize,
+            current: this.params.page,
+            total: this.params.total,
+            onChange: (page, pageSize) => this.changePage(page, pageSize),
+            showTotal: (total) => `共${total}条`,
+        },
+        type: '',
+        list: [],
+        detail: {},
+        title: ''
+    }
     componentDidMount() {
         // this.props.onRef(this);
         this.requestList();
     }
 
-    userRole = () => {
+    editDataSubscribe = () => {
         alert(2)
     }
-    deleteRole = () => {
-        alert(1)
-    }
-
     //请求列表
     requestList() {
         request({
@@ -133,53 +168,6 @@ class DataSubscribe extends React.Component {
             }
         })
     }
-
-    data = [
-        {
-            type: 'select',
-            initialValue: '1',
-            placeholder: '',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
-            width: '130px'
-        },
-        {
-            type: 'search',
-            initialValue: '',
-            label: '',
-            placeholder: '查询',
-            field: 'username',
-            width: '336px',
-            bordered: true,
-        }
-    ]
-    params = {
-        page: 1,
-        pageSize: 5
-    }
-    state = {
-        rowSelection:false,
-        pagination: {
-            showSizeChanger: true,
-            showQuickJumper: true,
-            hideOnSinglePage: false,
-            pageSizeOptions: ['10', '20', '30'],
-            pageSize: this.params.pageSize,
-            current: this.params.page,
-            total: this.params.total,
-            onChange: (page, pageSize) => this.changePage(page, pageSize),
-            showTotal: (total) => `共${total}条`,
-        },
-        type: '',
-        list: [],
-        roleVisible: false,
-        perVisible: false,
-        authVisible: false,
-        checkedKeys: [],
-        targetKeys: [],
-        detail: {},
-        title: ''
-    }
     changePage = (page, pageSize) => {
         this.params.page = page;
         this.params.pageSize = pageSize;
@@ -222,7 +210,7 @@ class DataSubscribe extends React.Component {
                 render: (item) => {
                     return (
                         <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.userRole.bind(this, item)}>编辑</div>
+                            <div className="option-button" onClick={this.editDataSubscribe.bind(this, item)}>编辑</div>
                         </div>
                     )
                 }

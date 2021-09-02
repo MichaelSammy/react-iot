@@ -13,7 +13,52 @@ const FormItem = Form.Item
 
 class FunctionDefinition extends React.Component {
     // fromModeRef = React.createRef();
-
+    params = {
+        page: 1,
+        pageSize: 5
+    }
+    data = [
+        {
+            type: 'select',
+            initialValue: '1',
+            placeholder: '',
+            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            field: 'power',
+            width: '130px'
+        },
+        {
+            type: 'search',
+            initialValue: '',
+            label: '',
+            placeholder: '查询',
+            field: 'username',
+            width: '336px',
+            bordered: true,
+        }
+    ]
+    state = {
+        rowSelection: {
+            selectedRowKeys: [],
+            selectedRows: [],
+        },
+        pagination: {
+            showSizeChanger: true,
+            showQuickJumper: true,
+            hideOnSinglePage: false,
+            pageSizeOptions: ['10', '20', '30'],
+            pageSize: this.params.pageSize,
+            current: this.params.page,
+            total: this.params.total,
+            onChange: (page, pageSize) => this.changePage(page, pageSize),
+            showTotal: (total) => `共${total}条`,
+        },
+        type: 'checkbox',
+        list: [],
+        visibleBaseModel:false,
+        baseModelContent:'',
+        detail: {},
+        title: ''
+    }
     componentDidMount() {
         // this.props.onRef(this);
         this.requestList();
@@ -30,10 +75,13 @@ class FunctionDefinition extends React.Component {
             baseModelContent:'是否批量删除？'
         })
     }
-    userRole = () => {
+    showFunctionDefinition = () => {
         alert(2)
     }
-    deleteRole=()=>{
+    editFunctionDefinition = () => {
+        alert(1)
+    }
+    deleteFunctionDefinition=()=>{
         this.setState({
             visibleBaseModel:true,
             baseModelContent:'是否删除？'
@@ -147,64 +195,12 @@ class FunctionDefinition extends React.Component {
             }
         })
     }
-
-    data = [
-        {
-            type: 'select',
-            initialValue: '1',
-            placeholder: '',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
-            width: '130px'
-        },
-        {
-            type: 'search',
-            initialValue: '',
-            label: '',
-            placeholder: '查询',
-            field: 'username',
-            width: '336px',
-            bordered: true,
-        }
-    ]
-    params = {
-        page: 1,
-        pageSize: 5
-    }
-    state = {
-        rowSelection: {
-            selectedRowKeys: [],
-            selectedRows: [],
-        },
-        pagination: {
-            showSizeChanger: true,
-            showQuickJumper: true,
-            hideOnSinglePage: false,
-            pageSizeOptions: ['10', '20', '30'],
-            pageSize: this.params.pageSize,
-            current: this.params.page,
-            total: this.params.total,
-            onChange: (page, pageSize) => this.changePage(page, pageSize),
-            showTotal: (total) => `共${total}条`,
-        },
-        type: 'checkbox',
-        list: [],
-        roleVisible: false,
-        perVisible: false,
-        authVisible: false,
-        visibleBaseModel:false,
-        baseModelContent:'',
-        checkedKeys: [],
-        targetKeys: [],
-        detail: {},
-        title: ''
-    }
     submitOk=()=>{
         this.setState({
             visibleBaseModel:false
         })
     }
-    submitCancle=()=>{
+    submitCancel=()=>{
         this.setState({
             visibleBaseModel:false
         })
@@ -266,11 +262,11 @@ class FunctionDefinition extends React.Component {
                 render: (item) => {
                     return (
                         <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.userRole.bind(this, item)}>查看</div>
+                            <div className="option-button" onClick={this.showFunctionDefinition.bind(this, item)}>查看</div>
                             <div className="split"></div>
-                            <div className="option-button" onClick={this.userRole.bind(this, item)}>编辑</div>
+                            <div className="option-button" onClick={this.editFunctionDefinition.bind(this, item)}>编辑</div>
                             <div className="split"></div>
-                            <div className="option-button" onClick={this.deleteRole.bind(this, item)}>删除</div>
+                            <div className="option-button" onClick={this.deleteFunctionDefinition.bind(this, item)}>删除</div>
                         </div>
                     )
                 }
@@ -309,7 +305,7 @@ class FunctionDefinition extends React.Component {
                 <BaseModel that={this}
                            visible={this.state.visibleBaseModel}
                            submitOk={this.submitOk}
-                           submitCancle={this.submitCancle}
+                           submitCancel={this.submitCancel}
                            content={this.state.baseModelContent}
                 ></BaseModel>
             </div>

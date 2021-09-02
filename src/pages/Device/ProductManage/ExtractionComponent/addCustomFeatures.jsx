@@ -1,11 +1,9 @@
 import React from "react";
-import {Card, Modal, Form, Input, Button, Select, Radio,Drawer} from "antd";
+import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import IconFont from "../../../../utils/IconFont";
-import BaseForm from "../../../../common/BaseForm";
-import Etable from "../../../../common/Etable";
-import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
 import './../index.less'
+
 const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -13,22 +11,33 @@ const FormItem = Form.Item
 class AddCustomFeatures extends React.Component {
     fromModeRef = React.createRef();
     state = {
-        detail: {}
+        detail: {},
+        visible: false,
     }
     showDrawer = () => {
         this.setState({
             visible: true,
         });
     };
-
+    onSubmit = async () => {
+        const form = this.fromModeRef.current
+        form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
+            console.log('成功')
+            console.log(values)
+            this.onClose()
+        }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
+            console.log('失败')
+            console.log(errInfo)
+        })
+    }
     onClose = () => {
         this.setState({
             visible: false,
         });
+        const form = this.fromModeRef.current;
+        form.resetFields();
     };
-    state = {
-        visible: false,
-    }
+
     componentDidMount() {
         this.props.onRef(this);
         this.requestList()
@@ -39,9 +48,7 @@ class AddCustomFeatures extends React.Component {
     }
 
     render() {
-        const formItemLayout = {
-
-        }
+        const formItemLayout = {}
         const detail = {
             loginName: '',
             name: '',
@@ -49,9 +56,6 @@ class AddCustomFeatures extends React.Component {
             address: '',
             email: ''
         }
-        const typeList = [{id: '1', value: '标准类别'}, {id: '2', value: '自定义类别'}];
-        const accessList = [{id: '1', value: '设备接入'}, {id: '2', value: '平台接入'}];
-        const nodeList = [{id: '1', value: '设备'}, {id: '2', value: '网关'}, {id: '3', value: '子设备'}];
         const nameList = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
             id: '4',
             value: 'cyan'
@@ -69,7 +73,7 @@ class AddCustomFeatures extends React.Component {
                                 textAlign: 'right',
                             }}
                         >
-                            <Button onClick={this.onClose} type="primary" style={{ marginRight: 8 }}>
+                            <Button onClick={this.onSubmit} type="primary" style={{marginRight: 8}}>
                                 添加
                             </Button>
                             <Button onClick={this.onClose}>
@@ -134,20 +138,21 @@ class AddCustomFeatures extends React.Component {
                                 ))}
                             </Select>
                         </FormItem>
-                        <FormItem label="定义取值范围"  name="name"  rules={[{ required: true }]} style={{ marginBottom: 0 }}>
+                        <FormItem label="定义取值范围" name="name" rules={[{required: true, message: ' '}]}
+                                  style={{marginBottom: 0}}>
                             <FormItem
                                 name="name"
-                                rules={[{ required: true }]}
-                                style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+                                rules={[{required: true, message: '请输入最小值'}]}
+                                style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
                             >
-                                <Input placeholder="最小值" />
+                                <Input placeholder="最小值"/>
                             </FormItem>
                             <FormItem
                                 name="name"
-                                rules={[{ required: true }]}
-                                style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
+                                rules={[{required: true, message: '请输入最大值'}]}
+                                style={{display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px'}}
                             >
-                                <Input placeholder="最大值" />
+                                <Input placeholder="最大值"/>
                             </FormItem>
                         </FormItem>
                         <FormItem label="步长"
@@ -207,7 +212,8 @@ class AddCustomFeatures extends React.Component {
                                           message: '请输入描述信息'
                                       },
                                   ]}{...formItemLayout}>
-                            <TextArea id='textAreaId' rows={5} maxLength={100} showCount placeholder="请输入描述信息"></TextArea>
+                            <TextArea id='textAreaId' rows={5} maxLength={100} showCount
+                                      placeholder="请输入描述信息"></TextArea>
                         </FormItem>
                     </Form>
                 </Drawer>

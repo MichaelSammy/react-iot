@@ -1,12 +1,9 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, List, Breadcrumb, Tabs} from "antd";
-import BaseForm from '../../../../common/BaseForm'
 import BaseModel from '../../../../common/BaseModel'
 import IconFont from '../../../../utils/IconFont';
-import Etable from "../../../../common/Etable";
 import request from '../../../../utils/request'
 import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../../utils";
-import {recursionRouterTwo} from "../../../../utils/recursion-router";
 import deviceDefaultImg from '../../../../assets/images/deviceDefaultImg.jpg'
 import EditProduct from "../EditProduct";
 import './index.less'
@@ -21,55 +18,13 @@ import TopicListTab from "../ExtractionComponent/topicListTab";
 const {TabPane} = Tabs;
 const FormItem = Form.Item
 export default class Permission extends React.Component {
-    onRef = (ref) => {
-        this.child = ref
-    }
-    addCustomFeaturesRef = (ref) => {
-        this.addCustomFeaturesRefChild = ref
-    }
-    addStandardFeaturesRef = (ref) => {
-        this.addStandardFeaturesRefChild = ref
-    }
-    addLabelRef = (ref) => {
-        this.addLabelRefChild = ref
-    }
     state = {
-        rowSelection: {
-            selectedRowKeys: [],
-            selectedRows: [],
-        },
         list: [],
-        roleVisible: false,
-        perVisible: false,
-        authVisible: false,
-        checkedKeys: [],
-        targetKeys: [],
+        editProductVisible: false,
         detail: {},
         title: '',
-        visibleBaseModel:false,
-        baseModelContent:'',
-    }
-    submitOk=()=>{
-        this.setState({
-            visibleBaseModel:false
-        })
-    }
-    submitCancle=()=>{
-        this.setState({
-            visibleBaseModel:false
-        })
-    }
-    releaseProduct= () => {
-        this.setState({
-            visibleBaseModel:true,
-            baseModelContent:'是否发布该产品？'
-        })
-    }
-    unpublishProduct= () => {
-        this.setState({
-            visibleBaseModel:true,
-            baseModelContent:'是否取消发布该产品？'
-        })
+        visibleBaseModel: false,
+        baseModelContent: '',
     }
     data = [
         {
@@ -90,11 +45,45 @@ export default class Permission extends React.Component {
             bordered: true,
         }
     ]
-
-    componentDidMount() {
+    onRef = (ref) => {
+        this.child = ref
+    }
+    addCustomFeaturesRef = (ref) => {
+        this.addCustomFeaturesRefChild = ref
+    }
+    addStandardFeaturesRef = (ref) => {
+        this.addStandardFeaturesRefChild = ref
+    }
+    addLabelRef = (ref) => {
+        this.addLabelRefChild = ref
+    }
+    submitOk = () => {
+        this.setState({
+            visibleBaseModel: false
+        })
+    }
+    submitCancel = () => {
+        this.setState({
+            visibleBaseModel: false
+        })
+    }
+    releaseProduct = () => {
+        this.setState({
+            visibleBaseModel: true,
+            baseModelContent: '是否发布该产品？'
+        })
+    }
+    unpublishProduct = () => {
+        this.setState({
+            visibleBaseModel: true,
+            baseModelContent: '是否取消发布该产品？'
+        })
+    }
+   componentDidMount() {
         // this.requestList()
     }
-    goBackPreviousPage= () => {
+
+    goBackPreviousPage = () => {
         this.props.history.go(-1)
     }
     addTag = () => {
@@ -103,19 +92,19 @@ export default class Permission extends React.Component {
     editTag = (item) => {
         this.addLabelRefChild.editTag(item)
     }
-    saveUserSubmit = () => {
+    saveSubmit = () => {
         this.child.handleSubmit();
     }
-    resetUserFrom = () => {
+    closeSubmit = () => {
         this.setState({
-            roleVisible: false
+            editProductVisible: false
         })
-        this.child.resetUserFrom()
+        this.child.closeSubmit()
     }
-    addCustomFeatures= () => {
+    addCustomFeatures = () => {
         this.addCustomFeaturesRefChild.showDrawer()
     }
-    addStandardFeatures= () => {
+    addStandardFeatures = () => {
         this.addStandardFeaturesRefChild.showDrawer()
     }
 
@@ -128,7 +117,7 @@ export default class Permission extends React.Component {
                 address: '',
                 email: ''
             },
-            roleVisible: true,
+            editProductVisible: true,
             title: '编辑'
         })
     }
@@ -140,13 +129,6 @@ export default class Permission extends React.Component {
     }
 
     render() {
-        const list = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
-            id: '4',
-            value: 'cyan'
-        }, {id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
-            id: '4',
-            value: 'cyan'
-        }];
         const breadList = [
             {
                 "path": "/user/device",
@@ -184,7 +166,10 @@ export default class Permission extends React.Component {
                             getBreadItem(breadList)
                         }
                     </Breadcrumb>
-                    <div className="product-big-title">  <IconFont onClick={this.goBackPreviousPage} className="product-info-go-back-list" type='icon-fanhuijiantou'/>产品详情</div>
+                    <div className="product-big-title"><IconFont onClick={this.goBackPreviousPage}
+                                                                 className="product-info-go-back-list"
+                                                                 type='icon-fanhuijiantou'/>产品详情
+                    </div>
                     <div className="product-list-title-desc">产品是一组具有相同功能定义的设备集合，创建产品是使用平台的第一步快速创建产品后可定义产品物模型、添加对应设备。
                     </div>
                     <div>
@@ -199,7 +184,7 @@ export default class Permission extends React.Component {
                         <div className='product-image'>
                             <img src={deviceDefaultImg} alt=""/>
                             <span className='icon-img-edit'>
-                            <IconFont  type='icon-a-bianjicopy'/>
+                            <IconFont type='icon-a-bianjicopy'/>
                             </span>
                         </div>
                         <div className='product-info-filed'>
@@ -211,7 +196,8 @@ export default class Permission extends React.Component {
                                     <span className='edit-card-title-option' onClick={this.editProduct}> 编辑</span>
                                 </div>
                                 <div className='product-release' onClick={this.releaseProduct}>发布</div>
-                                {   this.state.visibleBaseModel!=false&&<div className='product-release' onClick={this.unpublishProduct}>取消发布</div>}
+                                {this.state.visibleBaseModel != false &&
+                                <div className='product-release' onClick={this.unpublishProduct}>取消发布</div>}
                             </div>
                             <div className='card-top-spilt-line'></div>
                             <div>
@@ -236,11 +222,11 @@ export default class Permission extends React.Component {
                                 </div>
                             </div>
                             <div style={{padding: '10px 0px'}}>
-                                <div className='card-title tag-title' style={{float:'unset'}}>
+                                <div className='card-title tag-title' style={{float: 'unset'}}>
                                     <span className='title-desc'>标签信息</span>
                                     <IconFont style={{fontSize: '15px', color: '#2979E7', marginRight: '7px'}}
                                               type='icon-a-bianjicopy'/>
-                                    <span className='edit-card-title-option' onClick={this.editProduct}> 编辑</span>
+                                    <span className='edit-card-title-option' onClick={this.editTag}> 编辑</span>
                                 </div>
                                 <div style={{float: 'left', margin: '5px 0px'}}>产品标签：</div>
                                 <div className='product-tag-list'>
@@ -261,29 +247,30 @@ export default class Permission extends React.Component {
                 </Card>
                 <Tabs id="product-info-tabs-id" className="product-info-tabs" type="card">
                     <TabPane tab="功能定义" key="1">
-                        <FunctionDefinition  addCustomFeatures={this.addCustomFeatures} addStandardFeatures={this.addStandardFeatures}></FunctionDefinition>
+                        <FunctionDefinition addCustomFeatures={this.addCustomFeatures}
+                                            addStandardFeatures={this.addStandardFeatures}></FunctionDefinition>
                     </TabPane>
                     <TabPane tab="数据解析" key="2">
-                       <DataAnalysis></DataAnalysis>
+                        <DataAnalysis></DataAnalysis>
                     </TabPane>
                     <TabPane tab="Topic列表" key="3">
-                      <TopicListTab></TopicListTab>
+                        <TopicListTab></TopicListTab>
                     </TabPane>
                     <TabPane tab="数据订阅" key="5">
-                       <DataSubscribe></DataSubscribe>
+                        <DataSubscribe></DataSubscribe>
                     </TabPane>
                 </Tabs>
                 {
-                    this.state.roleVisible &&
+                    this.state.editProductVisible &&
                     <Modal
                         title={this.state.title}
-                        visible={this.state.roleVisible}
-                        onCancel={this.resetUserFrom}
-                        onOk={this.saveUserSubmit}
+                        visible={this.state.editProductVisible}
+                        onCancel={this.closeSubmit}
+                        onOk={this.saveSubmit}
                         centered
                         footer={[
-                            <Button key="submit" type="primary" onClick={this.saveUserSubmit}>确定</Button>,
-                            <Button key="back" onClick={this.resetUserFrom}>取消</Button>
+                            <Button key="submit" type="primary" onClick={this.saveSubmit}>确定</Button>,
+                            <Button key="back" onClick={this.closeSubmit}>取消</Button>
                         ]}
                     >
                         <EditProduct
@@ -292,13 +279,13 @@ export default class Permission extends React.Component {
                         />
                     </Modal>
                 },
-                <AddCustomFeatures  onRef={this.addCustomFeaturesRef}></AddCustomFeatures>
-                <AddStandardFeatures  onRef={this.addStandardFeaturesRef}></AddStandardFeatures>
+                <AddCustomFeatures onRef={this.addCustomFeaturesRef}></AddCustomFeatures>
+                <AddStandardFeatures onRef={this.addStandardFeaturesRef}></AddStandardFeatures>
                 <AddLabel onRef={this.addLabelRef}></AddLabel>
                 <BaseModel that={this}
                            visible={this.state.visibleBaseModel}
                            submitOk={this.submitOk}
-                           submitCancle={this.submitCancle}
+                           submitCancel={this.submitCancel}
                            content={this.state.baseModelContent}
                 ></BaseModel>
             </div>

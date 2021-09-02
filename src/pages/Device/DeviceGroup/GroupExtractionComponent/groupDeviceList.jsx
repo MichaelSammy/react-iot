@@ -203,7 +203,7 @@ class GroupDeviceList extends React.Component {
             visibleBaseModel: false
         })
     }
-    submitCancle = () => {
+    submitCancel = () => {
         this.setState({
             visibleBaseModel: false
         })
@@ -305,7 +305,7 @@ class GroupDeviceList extends React.Component {
                 <BaseModel that={this}
                            visible={this.state.visibleBaseModel}
                            submitOk={this.submitOk}
-                           submitCancle={this.submitCancle}
+                           submitCancel={this.submitCancel}
                            content={this.state.baseModelContent}
                 ></BaseModel>
                 <AddDeviceToGruop

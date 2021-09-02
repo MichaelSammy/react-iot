@@ -2,11 +2,12 @@ import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Breadcrumb} from "antd";
 import {getBreadItem, updateSelectedItem} from '../../../../utils'
 import './index.less'
-import SelectProductCategory from  "../ExtractionComponent/selectProductCategory";
+import SelectProductCategory from "../ExtractionComponent/selectProductCategory";
 import device from '../../../../assets/images/device.png'
 import gateway from '../../../../assets/images/gateway.png'
 import childDevice from '../../../../assets/images/childDevice.png'
 import IconFont from "../../../../utils/IconFont";
+
 const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -14,29 +15,30 @@ export default class AddRole extends React.Component {
     fromModeRef = React.createRef();
     state = {
         detail: {},
-        showOption:false,
-        showOtherOpion:true,
-        closeOtherOpion:false,
+        showOption: false,
+        showOtherOption: true,
+        closeOtherOption: false,
     }
     onRef = (ref) => {
         this.child = ref
     }
+
     componentDidMount() {
 
     }
 
-    showOtherOpion = () => {
+    showOtherOption = () => {
         this.setState({
-            showOtherOpion: !this.state.showOtherOpion,
-            closeOtherOpion: !this.state.closeOtherOpion,
-            showOption:!this.state.showOption,
+            showOtherOption: !this.state.showOtherOption,
+            closeOtherOption: !this.state.closeOtherOption,
+            showOption: !this.state.showOption,
         })
     }
-    closeOtherOpion= () => {
+    closeOtherOption = () => {
         this.setState({
-            showOtherOpion: !this.state.showOtherOpion,
-            closeOtherOpion: !this.state.closeOtherOpion,
-            showOption:!this.state.showOption,
+            showOtherOption: !this.state.showOtherOption,
+            closeOtherOption: !this.state.closeOtherOption,
+            showOption: !this.state.showOption,
         })
     }
     handleSubmit = async () => {
@@ -56,15 +58,16 @@ export default class AddRole extends React.Component {
             from: this.props.location.pathname
         });
     }
-    selectProductCategory=()=>{
+    selectProductCategory = () => {
         this.child.showDrawer()
     }
-    goBackPreviousPage= () => {
+    goBackPreviousPage = () => {
         this.props.history.go(-1)
     }
-    selectDeviceType= (item,index) => {
+    selectDeviceType = (item, index) => {
 
     }
+
     render() {
         const formItemLayout = {
             labelCol: {span: 2},
@@ -120,9 +123,12 @@ export default class AddRole extends React.Component {
                         getBreadItem(breadList)
                     }
                 </Breadcrumb>
-                <div className="product-add-page-title">  <IconFont onClick={this.goBackPreviousPage} className="product-info-go-back-list" type='icon-fanhuijiantou'/>创建产品</div>
+                <div className="product-add-page-title"><IconFont onClick={this.goBackPreviousPage}
+                                                                  className="product-info-go-back-list"
+                                                                  type='icon-fanhuijiantou'/>创建产品
+                </div>
                 <div style={{clear: 'both'}}></div>
-                <Form ref={this.fromModeRef} style={{width:'1150px',marginBottom:'10vh'}}>
+                <Form ref={this.fromModeRef} style={{width: '1150px', marginBottom: '10vh'}}>
                     <FormItem label="产品名称"
                               name="loginName"
                               initialValue={detail.loginName}
@@ -210,7 +216,7 @@ export default class AddRole extends React.Component {
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    cursor:'pointer'
+                                    cursor: 'pointer'
                                 }} onClick={this.selectDeviceType.bind(item)}>
                                     <div style={{
                                         width: '90px',
@@ -226,8 +232,8 @@ export default class AddRole extends React.Component {
                                         lineHeight: '80px'
                                     }}>{item.id == '1' ? '设备' : (item.id == '2' ? '网关' : '子设备')}
                                     </div>
-                                    <div ref={'abc'+index} className='select-device-type'>
-                                        <IconFont  className="select-device-type-icon" type='icon-duihao'/>
+                                    <div ref={'abc' + index} className='select-device-type'>
+                                        <IconFont className="select-device-type-icon" type='icon-duihao'/>
                                     </div>
                                 </div>
 
@@ -315,7 +321,7 @@ export default class AddRole extends React.Component {
                             ))}
                         </Select>
                     </FormItem>
-                    <div className={this.state.showOption==true?'word-style':'word-style-hide'}>
+                    <div className={this.state.showOption == true ? 'word-style' : 'word-style-hide'}>
                         <FormItem label="加密方式"
                                   name="name"
                                   rules={[
@@ -368,29 +374,32 @@ export default class AddRole extends React.Component {
                                           message: '请输入产品描述'
                                       },
                                   ]}{...formItemLayout}>
-                            <TextArea id='textAreaId' rows={5} maxLength={100} showCount placeholder="请输入产品描述"></TextArea>
+                            <TextArea id='textAreaId' rows={5} maxLength={100} showCount
+                                      placeholder="请输入产品描述"></TextArea>
                         </FormItem>
                     </div>
-                    {this.state.showOtherOpion&&
-                      <div onClick={this.showOtherOpion} className="product-add-more-info">
-                        <IconFont  className="product-info-go-back-list" type='icon-zhankaijiantou'/>
+                    {this.state.showOtherOption &&
+                    <div onClick={this.showOtherOption} className="product-add-more-info">
+                        <IconFont className="product-info-go-back-list" type='icon-zhankaijiantou'/>
                         更多信息
                     </div>
                     }
-                    {this.state.closeOtherOpion && <div onClick={this.closeOtherOpion} className="product-add-more-info">
+                    {this.state.closeOtherOption &&
+                    <div onClick={this.closeOtherOption} className="product-add-more-info">
                         <IconFont className="product-info-go-back-list" type='icon-shouhuijiantou'/>
                         收起
                     </div>
                     }
                 </Form>
                 <div className='add-product-option-button'>
-                    <div style={{marginLeft:'16px'}}>
-                    <Button  type="primary" onClick={this.handleSubmit.bind(this)}
-                            style={{marginRight: '10px'}}>提交</Button>
-                    <Button  type="" onClick={this.handleCancel.bind(this)}>取消</Button>
+                    <div style={{marginLeft: '16px'}}>
+                        <Button type="primary" onClick={this.handleSubmit.bind(this)}
+                                style={{marginRight: '10px'}}>提交</Button>
+                        <Button type="" onClick={this.handleCancel.bind(this)}>取消</Button>
                     </div>
-                </div>,
-                <SelectProductCategory  title='选择产品类别'  onRef={this.onRef}></SelectProductCategory>
+                </div>
+                ,
+                <SelectProductCategory title='选择产品类别' onRef={this.onRef}></SelectProductCategory>
             </div>
         )
     }

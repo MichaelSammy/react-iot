@@ -11,6 +11,30 @@ import './../index.less'
 const FormItem = Form.Item
 
 class SelectProductCategory extends React.Component {
+    params = {
+        page: 1,
+        pageSize: 10,
+    }
+    state = {
+        rowSelection: false,
+        visible: false,
+        pagination: {
+            showSizeChanger: true,
+            type: '',
+            showQuickJumper: true,
+            hideOnSinglePage: false,
+            pageSizeOptions: ['10', '20', '30'],
+            // defaultCurrent: 1,
+            pageSize:this.params.pageSize,
+            current:this.params.page,
+            total: this.params.total,
+            onChange:(page,pageSize)=>this.changePage(page,pageSize),
+            showTotal: (total) => `共${total}条`,
+        },
+        list: [],
+        detail: {},
+        title: ''
+    }
     modelDetailsRef= (ref) => {
         this.modelDetailsChildRef = ref
     }
@@ -35,35 +59,7 @@ class SelectProductCategory extends React.Component {
         this.props.onRef(this);
         this.requestList()
     }
-    params = {
-        page: 1,
-        pageSize: 10,
-    }
-    state = {
-        rowSelection: false,
-        visible: false,
-        pagination: {
-            showSizeChanger: true,
-            type: '',
-            showQuickJumper: true,
-            hideOnSinglePage: false,
-            pageSizeOptions: ['10', '20', '30'],
-            // defaultCurrent: 1,
-            pageSize:this.params.pageSize,
-            current:this.params.page,
-            total: this.params.total,
-            onChange:(page,pageSize)=>this.changePage(page,pageSize),
-            showTotal: (total) => `共${total}条`,
-        },
-        list: [],
-        roleVisible: false,
-        perVisible: false,
-        authVisible: false,
-        checkedKeys: [],
-        targetKeys: [],
-        detail: {},
-        title: ''
-    }
+
     changePage=(page,pageSize)=>{
         this.params.page=page;
         this.params.pageSize=pageSize;

@@ -1,7 +1,6 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select} from "antd";
 import BaseModel from "../../../../common/BaseModel";
-import {updateSelectedItem} from '../../../../utils'
 import request from '../../../../utils/request'
 import IconFont from '../../../../utils/IconFont';
 
@@ -9,58 +8,54 @@ const FormItem = Form.Item
 
 class AddLabel extends React.Component {
     fromModeRef = React.createRef();
+    state = {
+        addLabelVisible: false,
+        formList: [],
+        title: '',
+        visibleBaseModel: false,
+        baseModelContent: '是否删除？'
+    }
 
     componentDidMount() {
         this.props.onRef(this)
     }
 
-    state = {
-        roleVisible: false,
-        perVisible: false,
-        authVisible: false,
-        checkedKeys: [],
-        targetKeys: [],
-        formList: [],
-        title: '',
-        visibleBaseModel:false,
-        baseModelContent:'是否删除？'
-    }
-    submitOk=()=>{
+    submitOk = () => {
         this.setState({
-            visibleBaseModel:false
+            visibleBaseModel: false
         })
     }
-    submitCancle=()=>{
+    submitCancel = () => {
         this.setState({
-            visibleBaseModel:false
+            visibleBaseModel: false
         })
     }
-    deleteTagColumn= () => {
+    deleteTagColumn = () => {
         this.setState({
-            visibleBaseModel:true,
-            baseModelContent:'是否删除？'
+            visibleBaseModel: true,
+            baseModelContent: '是否删除？'
         })
     }
     filterTag = () => {
         this.setState({
-            roleVisible: true,
+            addLabelVisible: true,
             title: '筛选标签'
         })
     }
     addTag = () => {
         this.setState({
-            roleVisible: true,
-            title: '编辑标签'
+            addLabelVisible: true,
+            title: '新增标签'
         })
     }
     editTag = (item) => {
         this.setState({
             formList: item,
-            roleVisible: true,
+            addLabelVisible: true,
             title: '编辑标签'
         })
     }
-    saveUserSubmit = async () => {
+    saveSubmit = async () => {
         const form = this.fromModeRef.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             console.log('成功')
@@ -70,10 +65,10 @@ class AddLabel extends React.Component {
             console.log(errInfo)
         })
     }
-    resetUserFrom = () => {
+    closeSubmit = () => {
         const form = this.fromModeRef.current;
         this.setState({
-            roleVisible: false
+            addLabelVisible: false
         })
         form.resetFields();
     }
@@ -89,18 +84,18 @@ class AddLabel extends React.Component {
         const formList = [{name: "1"}, {name: "2"}]
         return (
             <div>
-                {this.state.roleVisible &&
+                {this.state.addLabelVisible &&
                 <Modal
                     title={this.state.title}
-                    visible={this.state.roleVisible}
+                    visible={this.state.addLabelVisible}
                     centered
                     okText="保存"
                     cancelText="取消"
-                    onOk={this.saveUserSubmit}
-                    onCancel={this.resetUserFrom}
+                    onOk={this.saveSubmit}
+                    onCancel={this.closeSubmit}
                     footer={[
-                        <Button key="submit" type="primary" onClick={this.saveUserSubmit}>确定</Button>,
-                        <Button key="back" onClick={this.resetUserFrom}>取消</Button>
+                        <Button key="submit" type="primary" onClick={this.saveSubmit}>确定</Button>,
+                        <Button key="back" onClick={this.closeSubmit}>取消</Button>
                     ]}
                 >
                     <Form ref={this.fromModeRef}>
@@ -132,7 +127,7 @@ class AddLabel extends React.Component {
                                 </div>
                             </FormItem>
                         ))}
-                        <div style={{color: '#2979E7', textAlign: 'center', position: 'relative'}} >
+                        <div style={{color: '#2979E7', textAlign: 'center', position: 'relative'}}>
                             <span onClick={this.addTagColumn} style={{cursor: 'pointer'}}>
                             <IconFont style={{marginRight: '8px'}} type='icon-jiahao'/> 新增标签
                             </span>
@@ -143,7 +138,7 @@ class AddLabel extends React.Component {
                 <BaseModel that={this}
                            visible={this.state.visibleBaseModel}
                            submitOk={this.submitOk}
-                           submitCancle={this.submitCancle}
+                           submitCancel={this.submitCancel}
                            content={this.state.baseModelContent}
                 ></BaseModel>
             </div>

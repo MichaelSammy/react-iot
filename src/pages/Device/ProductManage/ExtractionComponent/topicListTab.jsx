@@ -1,8 +1,5 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Tabs} from "antd";
-import FunctionDefinition from "./functionDefinition";
-import DataAnalysis from "./dataAnalysis";
-import DataSubscribe from "./dataSubscribe";
 import DefineTopicList from "./defineTopicList";
 import BasicCommTopic from "./basicCommTopic";
 import ModelCommTopic from "./modelCommTopic";
@@ -17,32 +14,7 @@ class TopicListTab extends React.Component {
     componentDidMount() {
         // this.props.onRef(this)
     }
-
-    handleSubmit = async () => {
-        const form = this.fromModeRef.current
-        form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
-            console.log('成功')
-            console.log(values)
-        }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
-            console.log('失败')
-            console.log(errInfo)
-        })
-    }
-    resetUserFrom = () => {
-        const form = this.fromModeRef.current;
-        form.resetFields();
-    }
-
     render() {
-        const formItemLayout = {
-            labelCol: {span: 10},
-            wrapperCol: {span: 16}
-        }
-        const detail = this.props.detail
-        const nameList = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
-            id: '4',
-            value: 'cyan'
-        }];
         return (
             <div>
                 <Tabs id="product-info-tabs-id-child" className="product-info-tabs" type="card">

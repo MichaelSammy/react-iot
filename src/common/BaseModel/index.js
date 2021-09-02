@@ -8,8 +8,8 @@ class BaseModel extends React.Component {
     submitOk=()=>{
       this.props.submitOk()
     }
-    submitCancle=()=>{
-        this.props.submitCancle()
+    submitCancel=()=>{
+        this.props.submitCancel()
     }
     render(){
         return (
@@ -20,11 +20,11 @@ class BaseModel extends React.Component {
                 maskClosable={false}
                 visible={this.props.visible}
                 onOk={this.submitOk}
-                onCancel={this.submitCancle}
+                onCancel={this.submitCancel}
                 centered={true}
                 footer={[
                     <Button key="submit" type="primary" onClick={this.submitOk}>确定</Button>,
-                    <Button key="back"onClick={this.submitCancle}>取消</Button>
+                    <Button key="back"onClick={this.submitCancel}>取消</Button>
                 ]}
             >
                 <div style={{display: 'flex','padding': '15px',fontSize:'15px'}}>

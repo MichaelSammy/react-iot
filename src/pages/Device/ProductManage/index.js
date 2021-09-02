@@ -11,12 +11,6 @@ import AddLabel from "./ExtractionComponent/addLabel";
 
 const FormItem = Form.Item
 export default class Permission extends React.Component {
-    onRef = (ref) => {
-        this.child = ref
-    }
-    addLabelRef = (ref) => {
-        this.addLabelRefChild = ref
-    }
     params = {
         page: 1,
         pageSize: 5
@@ -41,19 +35,16 @@ export default class Permission extends React.Component {
         }
     ]
     state = {
-        rowSelection: {
-            selectedRowKeys: [],
-            selectedRows: [],
-        },
-        type: 'radio',
         list: [],
-        roleVisible: false,
-        perVisible: false,
-        authVisible: false,
-        checkedKeys: [],
-        targetKeys: [],
+        editProductVisible: false,
         detail: {},
         title: ''
+    }
+    onRef = (ref) => {
+        this.child = ref
+    }
+    addLabelRef = (ref) => {
+        this.addLabelRefChild = ref
     }
     //查询
     handleSearch = (data) => {
@@ -61,9 +52,10 @@ export default class Permission extends React.Component {
         // data.beginTime= data.beginTime.format("YYYY-MM-DD HH:mm:ss");
         console.log(data)
     }
-    clickSelect= (data) => {
+    clickSelect = (data) => {
         this.addLabelRefChild.filterTag()
     }
+
     componentDidMount() {
         this.requestList()
     }
@@ -90,14 +82,14 @@ export default class Permission extends React.Component {
         })
     }
 
-    saveUserSubmit = () => {
+    saveSubmit = () => {
         this.child.handleSubmit();
     }
-    resetUserFrom = () => {
+    closeSubmit = () => {
         this.setState({
-            roleVisible: false
+            editProductVisible: false
         })
-        this.child.resetUserFrom()
+        this.child.closeSubmit()
     }
     createProduct = () => {
         this.props.history.push({'pathname': "/user/device/product/add", params: true});
@@ -111,26 +103,26 @@ export default class Permission extends React.Component {
                 address: '',
                 email: ''
             },
-            visibleBaseModel:false,
-            baseModelContent:'',
-            roleVisible: true,
+            visibleBaseModel: false,
+            baseModelContent: '',
+            editProductVisible: true,
             title: '编辑'
         })
     }
-    submitOk=()=>{
+    submitOk = () => {
         this.setState({
-            visibleBaseModel:false
+            visibleBaseModel: false
         })
     }
-    submitCancle=()=>{
+    submitCancel = () => {
         this.setState({
-            visibleBaseModel:false
+            visibleBaseModel: false
         })
     }
-    deleteProduct= () => {
+    deleteProduct = () => {
         this.setState({
-            visibleBaseModel:true,
-            baseModelContent:'是否删除？'
+            visibleBaseModel: true,
+            baseModelContent: '是否删除？'
         })
     }
     showProductInfo = () => {
@@ -176,7 +168,7 @@ export default class Permission extends React.Component {
                     <div className="product-list-title-desc">产品是一组具有相同功能定义的设备集合，创建产品是使用平台的第一步快速创建产品后可定义产品物模型、添加对应设备。
                     </div>
                     <div>
-                    <div className="product-show-doc">查看文档</div>
+                        <div className="product-show-doc">查看文档</div>
                     </div>
                 </div>
                 <div className="product-list-card">
@@ -190,8 +182,8 @@ export default class Permission extends React.Component {
                             />
                         </div>
                         <div style={{float: 'left'}}>
-                            <Button  type="primary"
-                                 onClick={this.createProduct}>创建产品
+                            <Button type="primary"
+                                    onClick={this.createProduct}>创建产品
                             </Button>
                         </div>
                     </div>
@@ -229,8 +221,9 @@ export default class Permission extends React.Component {
                                             <div className='card-title-option'><span onClick={this.editProduct}>
                                   <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
                                             type='icon-a-bianjicopy'/></span>
-                                                <span onClick={this.deleteProduct}> <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
-                                                                 type='icon-a-shanchucopy'/></span>
+                                                <span onClick={this.deleteProduct}> <IconFont
+                                                    style={{fontSize: '20px', color: '#89A0C2'}}
+                                                    type='icon-a-shanchucopy'/></span>
                                                 <span className="product-card-status"> 已发布</span></div>
                                         </div>
                                         <div className='row-split-line'></div>
@@ -271,16 +264,16 @@ export default class Permission extends React.Component {
                 </div>
                 ,
                 {
-                    this.state.roleVisible &&
+                    this.state.editProductVisible &&
                     <Modal
                         title={this.state.title}
-                        visible={this.state.roleVisible}
-                        onCancel={this.resetUserFrom}
-                        onOk={this.saveUserSubmit}
+                        visible={this.state.editProductVisible}
+                        onCancel={this.closeSubmit}
+                        onOk={this.saveSubmit}
                         centered
                         footer={[
-                            <Button key="submit" type="primary" onClick={this.saveUserSubmit}>确定</Button>,
-                            <Button key="back" onClick={this.resetUserFrom}>取消</Button>
+                            <Button key="submit" type="primary" onClick={this.saveSubmit}>确定</Button>,
+                            <Button key="back" onClick={this.closeSubmit}>取消</Button>
                         ]}
                     >
                         <EditProduct
@@ -293,7 +286,7 @@ export default class Permission extends React.Component {
                 <BaseModel that={this}
                            visible={this.state.visibleBaseModel}
                            submitOk={this.submitOk}
-                           submitCancle={this.submitCancle}
+                           submitCancel={this.submitCancel}
                            content={this.state.baseModelContent}
                 ></BaseModel>
             </div>

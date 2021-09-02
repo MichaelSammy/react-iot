@@ -3,6 +3,9 @@ import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import './../index.less'
 
 class AddStandardFeatures extends React.Component {
+    state = {
+        visible: false,
+    }
 
     showDrawer = () => {
         this.setState({
@@ -15,9 +18,6 @@ class AddStandardFeatures extends React.Component {
             visible: false,
         });
     };
-    state = {
-        visible: false,
-    }
 
     componentDidMount() {
         this.props.onRef(this);
