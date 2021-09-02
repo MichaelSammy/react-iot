@@ -7,7 +7,7 @@ const {TextArea} = Input
 const FormItem = Form.Item
 
 class DefineTopicClass extends React.Component {
-    formRefUser = React.createRef();
+    fromModeRef = React.createRef();
 
     componentDidMount() {
         this.props.onRef(this)
@@ -19,7 +19,7 @@ class DefineTopicClass extends React.Component {
         }
     }
     handleSubmit = async () => {
-        const form = this.formRefUser.current
+        const form = this.fromModeRef.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             console.log('成功')
             console.log(values)
@@ -29,7 +29,7 @@ class DefineTopicClass extends React.Component {
         })
     }
     resetUserFrom = () => {
-        const form = this.formRefUser.current;
+        const form = this.fromModeRef.current;
         form.resetFields();
     }
 
@@ -57,7 +57,7 @@ class DefineTopicClass extends React.Component {
                         {info}
                     </div>
                 </div>
-                <Form ref={this.formRefUser} layout="vertical">
+                <Form ref={this.fromModeRef} layout="vertical">
                     <FormItem label="设备操作权限"
                               name="name"
                               rules={[

@@ -8,7 +8,7 @@ import './index.less'
 
 const FormItem = Form.Item
 export default class AddRole extends React.Component {
-    formRefUser = React.createRef();
+    fromModeRef = React.createRef();
     state = {
         detail: {}
     }
@@ -18,7 +18,7 @@ export default class AddRole extends React.Component {
     }
 
     handleSubmit = async () => {
-        const form = this.formRefUser.current
+        const form = this.fromModeRef.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             console.log('成功')
             console.log(values)
@@ -45,7 +45,7 @@ export default class AddRole extends React.Component {
         return (
             <div>
                 {/*<Card>*/}
-                <Form ref={this.formRefUser}>
+                <Form ref={this.fromModeRef}>
                     <FormItem label="登录名"
                               name="loginName"
                               initialValue={detail.loginName}

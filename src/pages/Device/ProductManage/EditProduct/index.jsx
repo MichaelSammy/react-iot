@@ -5,14 +5,14 @@ const {TextArea} = Input
 const FormItem = Form.Item
 
 class EditProduct extends React.Component {
-    formRefUser = React.createRef();
+    fromModeRef = React.createRef();
 
     componentDidMount() {
         this.props.onRef(this)
     }
 
     handleSubmit = async () => {
-        const form = this.formRefUser.current
+        const form = this.fromModeRef.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             console.log('成功')
             console.log(values)
@@ -22,7 +22,7 @@ class EditProduct extends React.Component {
         })
     }
     resetUserFrom = () => {
-        const form = this.formRefUser.current;
+        const form = this.fromModeRef.current;
         form.resetFields();
     }
 
@@ -34,7 +34,7 @@ class EditProduct extends React.Component {
         const detail = this.props.detail
 
         return (
-            <Form ref={this.formRefUser} layout="vertical">
+            <Form ref={this.fromModeRef} layout="vertical">
                 <FormItem label="产品名称"
                           name="loginName"
                           initialValue={detail.loginName}

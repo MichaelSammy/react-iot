@@ -5,12 +5,15 @@ import UserManage from './pages/User/Permission/UserManage'
 import RoleManage from './pages/User/Permission/RoleManage'
 import addRole from './pages/User/Permission/RoleManage/AddRole'
 // import ProductManage from './pages/Device/ProductManage'
-import addDevice from './pages/Device/ProductManage/AddDevice'
+import addProduct from './pages/Device/ProductManage/AddProduct'
 import productInfo from './pages/Device/ProductManage/ProductInfo'
+import GroupInfo from './pages/Device/DeviceGroup/GroupInfo'
 const Home = AsyncComponent(() => import('./pages/Home'))
 const Login = AsyncComponent(() => import('./pages/Login'))
 const User = AsyncComponent(() => import('./pages/User'))
 const ProductManage = AsyncComponent(() => import('./pages/Device/ProductManage'))
+const DeviceGroup = AsyncComponent(() => import('./pages/Device/DeviceGroup'))
+const DeviceManage = AsyncComponent(() => import('./pages/Device/DeviceManage'))
 const NotFound = AsyncComponent(() => import('./pages/NotFound'))
 
 const SecondLevelComponent = AsyncComponent(() => import('./common/SecondLevelComponent'))
@@ -97,8 +100,8 @@ const routes = [
                 children: [
                     {
                         path: '/user/device/product/add',
-                        pathName: 'add-device',
-                        component: addDevice,
+                        pathName: 'add-product',
+                        component: addProduct,
                         name: '创建产品',
                         icon: 'icon-xiugai1',
                         show: false
@@ -119,15 +122,22 @@ const routes = [
                         icon: 'icon-xiugai1',
                     },
                     {
+                        path: '/user/device/group/info',
+                        pathName: 'group-info',
+                        component: GroupInfo,
+                        name: '设备分组详情',
+                        show: false
+                    },
+                    {
                         path: '/user/device/group',
                         pathName: 'device-group',
-                        component: ProductManage,
+                        component: DeviceGroup,
                         name: '设备分组',
                     },
                     {
                         path: '/user/device/managent',
                         pathName: 'device-manage',
-                        component: ProductManage,
+                        component: DeviceManage,
                         name: '设备管理',
                     },
 

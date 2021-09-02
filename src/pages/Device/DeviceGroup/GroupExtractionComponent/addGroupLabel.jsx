@@ -1,62 +1,63 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select} from "antd";
 import BaseModel from "../../../../common/BaseModel";
-import {updateSelectedItem} from '../../../../utils'
 import request from '../../../../utils/request'
 import IconFont from '../../../../utils/IconFont';
 
 const FormItem = Form.Item
 
-class AddLabel extends React.Component {
+class AddGroupLabel extends React.Component {
     fromModeRef = React.createRef();
+    state = {
+        addGroupLabelModel: false,
+        formList: [],
+        title: '',
+        visibleBaseModel: false,
+        baseModelContent: '是否删除？'
+    }
 
     componentDidMount() {
         this.props.onRef(this)
     }
 
-    state = {
-        roleVisible: false,
-        perVisible: false,
-        authVisible: false,
-        checkedKeys: [],
-        targetKeys: [],
-        formList: [],
-        title: '',
-        visibleBaseModel:false,
-        baseModelContent:'是否删除？'
-    }
-    submitOk=()=>{
-        this.setState({
-            visibleBaseModel:false
-        })
-    }
-    submitCancle=()=>{
-        this.setState({
-            visibleBaseModel:false
-        })
-    }
-    deleteTagColumn= () => {
-        this.setState({
-            visibleBaseModel:true,
-            baseModelContent:'是否删除？'
-        })
-    }
     filterTag = () => {
         this.setState({
-            roleVisible: true,
+            addGroupLabelModel: true,
             title: '筛选标签'
+        })
+    }
+    deleteTagColumn = () => {
+        this.setState({
+            visibleBaseModel: true,
+            baseModelContent: '是否删除？'
+        })
+    }
+    resetCoordinate = () => {
+        this.setState({
+            visibleBaseModel: true,
+            baseModelContent: '是否重置？'
+        })
+    }
+    submitOk = () => {
+        this.setState({
+            visibleBaseModel: false
+        })
+    }
+    submitCancle = () => {
+        this.setState({
+            visibleBaseModel: false
         })
     }
     addTag = () => {
         this.setState({
-            roleVisible: true,
-            title: '编辑标签'
+            addGroupLabelModel: true,
+            title: '新增标签'
         })
     }
     editTag = (item) => {
         this.setState({
             formList: item,
-            roleVisible: true,
+            addGroupLabelModel: true,
             title: '编辑标签'
         })
     }
@@ -73,7 +74,7 @@ class AddLabel extends React.Component {
     resetUserFrom = () => {
         const form = this.fromModeRef.current;
         this.setState({
-            roleVisible: false
+            addGroupLabelModel: false
         })
         form.resetFields();
     }
@@ -89,13 +90,11 @@ class AddLabel extends React.Component {
         const formList = [{name: "1"}, {name: "2"}]
         return (
             <div>
-                {this.state.roleVisible &&
+                {this.state.addGroupLabelModel &&
                 <Modal
                     title={this.state.title}
-                    visible={this.state.roleVisible}
+                    visible={this.state.addGroupLabelModel}
                     centered
-                    okText="保存"
-                    cancelText="取消"
                     onOk={this.saveUserSubmit}
                     onCancel={this.resetUserFrom}
                     footer={[
@@ -104,8 +103,34 @@ class AddLabel extends React.Component {
                     ]}
                 >
                     <Form ref={this.fromModeRef}>
+                        <FormItem label="地理位置标签" colon={true} name="name"
+                                  rules={[{required: false}]} style={{marginBottom: -16}} {...formItemLayout}>
+                            <FormItem
+                                name="name"
+                                rules={[{required: false}]}
+                                style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
+                            >
+                                <Input placeholder="coordinate"/>
+                            </FormItem>
+                            <FormItem
+                                name="name"
+                                rules={[{required: false}]}
+                                style={{display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px'}}
+                            >
+                                <Input placeholder="无坐标信息"/>
+                            </FormItem>
+                            <div style={{
+                                position: 'absolute',
+                                cursor: 'pointer',
+                                marginLeft: '103%',
+                                wordBreak: 'keep-all',
+                                marginTop: '-48px',
+                                color: '#2979E7',
+                            }} onClick={this.resetCoordinate}>重置
+                            </div>
+                        </FormItem>
                         {formList.map((item, index) => (
-                            <FormItem label={index > 0 ? " " : "定义取值范围"} colon={index > 0 ? false : true} name="name"
+                            <FormItem label={index > 0 ? " " : "分组标签"} colon={index > 0 ? false : true} name="name"
                                       rules={[{required: false}]} style={{marginBottom: -16}} {...formItemLayout}>
                                 <FormItem
                                     name="name"
@@ -132,7 +157,7 @@ class AddLabel extends React.Component {
                                 </div>
                             </FormItem>
                         ))}
-                        <div style={{color: '#2979E7', textAlign: 'center', position: 'relative'}} >
+                        <div style={{color: '#2979E7', textAlign: 'center', position: 'relative'}}>
                             <span onClick={this.addTagColumn} style={{cursor: 'pointer'}}>
                             <IconFont style={{marginRight: '8px'}} type='icon-jiahao'/> 新增标签
                             </span>
@@ -151,4 +176,4 @@ class AddLabel extends React.Component {
     }
 }
 
-export default AddLabel
+export default AddGroupLabel

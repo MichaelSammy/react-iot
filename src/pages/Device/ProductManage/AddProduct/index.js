@@ -11,7 +11,7 @@ const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
 export default class AddRole extends React.Component {
-    formRefUser = React.createRef();
+    fromModeRef = React.createRef();
     state = {
         detail: {},
         showOption:false,
@@ -40,7 +40,7 @@ export default class AddRole extends React.Component {
         })
     }
     handleSubmit = async () => {
-        const form = this.formRefUser.current
+        const form = this.fromModeRef.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             console.log('成功')
             console.log(values)
@@ -59,7 +59,7 @@ export default class AddRole extends React.Component {
     selectProductCategory=()=>{
         this.child.showDrawer()
     }
-    goBackProductList= () => {
+    goBackPreviousPage= () => {
         this.props.history.go(-1)
     }
     selectDeviceType= (item,index) => {
@@ -101,7 +101,7 @@ export default class AddRole extends React.Component {
                     },
                     {
                         "path": "/user/device/product/add",
-                        "pathName": "add-device",
+                        "pathName": "add-product",
                         "name": "创建产品",
                         "icon": "iconxiangmu",
                         "show": false,
@@ -120,9 +120,9 @@ export default class AddRole extends React.Component {
                         getBreadItem(breadList)
                     }
                 </Breadcrumb>
-                <div className="product-add-page-title">  <IconFont onClick={this.goBackProductList} className="product-info-go-back-list" type='icon-fanhuijiantou'/>创建产品</div>
+                <div className="product-add-page-title">  <IconFont onClick={this.goBackPreviousPage} className="product-info-go-back-list" type='icon-fanhuijiantou'/>创建产品</div>
                 <div style={{clear: 'both'}}></div>
-                <Form ref={this.formRefUser} style={{width:'1150px',marginBottom:'10vh'}}>
+                <Form ref={this.fromModeRef} style={{width:'1150px',marginBottom:'10vh'}}>
                     <FormItem label="产品名称"
                               name="loginName"
                               initialValue={detail.loginName}

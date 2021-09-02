@@ -13,7 +13,7 @@ const {TextArea} = Input
 const FormItem = Form.Item
 
 class DefineTopicList extends React.Component {
-    // formRefUser = React.createRef();
+    // fromModeRef = React.createRef();
     onRef = (ref) => {
         this.child = ref
     }

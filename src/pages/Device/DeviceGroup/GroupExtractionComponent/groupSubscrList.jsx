@@ -2,7 +2,9 @@ import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
 import IconFont from "../../../../utils/IconFont";
 import BaseForm from "../../../../common/BaseForm";
+import BaseModel from "../../../../common/BaseModel";
 import Etable from "../../../../common/Etable";
+import AddSubscription from "./addSubscription";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
 import './../index.less'
@@ -10,19 +12,66 @@ import './../index.less'
 const {TextArea} = Input
 const FormItem = Form.Item
 
-class BasicCommTopic extends React.Component {
+class GroupSubscrList extends React.Component {
     // fromModeRef = React.createRef();
+    params = {
+        page: 1,
+        pageSize: 5
+    }
+    data = [
+        {
+            type: 'select',
+            initialValue: '1',
+            placeholder: '查询请先选择分组',
+            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            field: 'power',
+            width: '130px'
+        }
+    ]
+    state = {
+        rowSelection: {
+            selectedRowKeys: [],
+            selectedRows: [],
+        },
+        pagination: {
+            showSizeChanger: true,
+            showQuickJumper: true,
+            hideOnSinglePage: false,
+            pageSizeOptions: ['10', '20', '30'],
+            pageSize: this.params.pageSize,
+            current: this.params.page,
+            total: this.params.total,
+            onChange: (page, pageSize) => this.changePage(page, pageSize),
+            showTotal: (total) => `共${total}条`,
+        },
+        type: 'checkbox',
+        list: [],
+        visibleBaseModel: false,
+        baseModelContent: '',
+        detail: {},
+        title: ''
+    }
+    addAddSubscrRef = (ref) => {
+        this.addAddSubscrRefChild = ref
+    }
 
     componentDidMount() {
         // this.props.onRef(this);
         this.requestList();
     }
 
-    userRole = () => {
+    callBackFatherMethod = () => {
+        this.addAddSubscrRefChild.showDrawer()
+    }
+
+    showSubscr = () => {
         alert(2)
     }
-    deleteRole = () => {
-        alert(1)
+    deleteSubscr = () => {
+        this.setState({
+            visibleBaseModel: true,
+            baseModelContent: '是否删除？'
+        })
     }
 
     //请求列表
@@ -134,51 +183,15 @@ class BasicCommTopic extends React.Component {
         })
     }
 
-    data = [
-        {
-            type: 'select',
-            initialValue: '1',
-            placeholder: '',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
-            width: '130px'
-        },
-        {
-            type: 'search',
-            initialValue: '',
-            label: '',
-            placeholder: '查询',
-            field: 'username',
-            width: '336px',
-            bordered: true,
-        }
-    ]
-    params = {
-        page: 1,
-        pageSize: 5
+    submitOk = () => {
+        this.setState({
+            visibleBaseModel: false
+        })
     }
-    state = {
-        rowSelection: false,
-        pagination: {
-            showSizeChanger: true,
-            showQuickJumper: true,
-            hideOnSinglePage: false,
-            pageSizeOptions: ['10', '20', '30'],
-            pageSize: this.params.pageSize,
-            current: this.params.page,
-            total: this.params.total,
-            onChange: (page, pageSize) => this.changePage(page, pageSize),
-            showTotal: (total) => `共${total}条`,
-        },
-        type: '',
-        list: [],
-        roleVisible: false,
-        perVisible: false,
-        authVisible: false,
-        checkedKeys: [],
-        targetKeys: [],
-        detail: {},
-        title: ''
+    submitCancle = () => {
+        this.setState({
+            visibleBaseModel: false
+        })
     }
     changePage = (page, pageSize) => {
         this.params.page = page;
@@ -202,18 +215,28 @@ class BasicCommTopic extends React.Component {
     render() {
         const columns = [
             {
-                title: '订阅类型',
+                title: '分组ID',
                 dataIndex: 'roleName',
                 align: 'left'
             },
             {
-                title: '订阅消息',
+                title: '消息类别',
                 dataIndex: 'officeName',
                 align: 'left',
             },
             {
-                title: '创建时间',
+                title: '订阅级别',
                 dataIndex: 'createUser',
+                align: 'left',
+            },
+            {
+                title: '订阅方地址',
+                dataIndex: 'createTime',
+                align: 'left',
+            },
+            {
+                title: '创建时间',
+                dataIndex: 'remark',
                 align: 'left',
             },
             {
@@ -222,7 +245,9 @@ class BasicCommTopic extends React.Component {
                 render: (item) => {
                     return (
                         <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.userRole.bind(this, item)}>编辑</div>
+                            <div className="option-button" onClick={this.showSubscr.bind(this, item)}>查看</div>
+                            <div className="split"></div>
+                            <div className="option-button" onClick={this.deleteSubscr.bind(this, item)}>删除</div>
                         </div>
                     )
                 }
@@ -230,6 +255,20 @@ class BasicCommTopic extends React.Component {
         ];
         return (
             <div>
+                <div className="function-search-from" style={{display: 'flex',justifyContent: 'space-between'}}>
+                    <BaseForm
+                        data={this.data}
+                        handleSearch={this.handleSearch}
+                        show={false}
+                    />
+                    <div className='product-function-mode-manager'>
+                        <div className="product-mode-right-option">
+                            <div className="add-stand-function" onClick={this.callBackFatherMethod}><IconFont
+                                type='icon-jiahao' className="icon-font-offset-px"/>新增订阅
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <Etable
                     that={this}
                     dataSource={this.state.dataSource}
@@ -240,9 +279,16 @@ class BasicCommTopic extends React.Component {
                     type={this.state.type}
                 >
                 </Etable>
+                <BaseModel that={this}
+                           visible={this.state.visibleBaseModel}
+                           submitOk={this.submitOk}
+                           submitCancle={this.submitCancle}
+                           content={this.state.baseModelContent}
+                ></BaseModel>
+                <AddSubscription onRef={this.addAddSubscrRef} title='新增订阅'></AddSubscription>
             </div>
         )
     }
 }
 
-export default BasicCommTopic;
+export default GroupSubscrList;

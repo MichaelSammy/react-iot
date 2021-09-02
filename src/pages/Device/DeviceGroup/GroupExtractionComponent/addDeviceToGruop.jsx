@@ -7,22 +7,62 @@ import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
 import './../index.less'
 
-const {TextArea} = Input
-const FormItem = Form.Item
-
-class BasicCommTopic extends React.Component {
-    // fromModeRef = React.createRef();
+class AddDeviceToGruop extends React.Component {
+    params = {
+        page: 1,
+        pageSize: 5
+    }
+    data = [
+        {
+            type: 'select',
+            initialValue: '1',
+            placeholder: '查询请先选择分组',
+            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            field: 'power',
+            width: '130px'
+        },
+        {
+            type: 'search',
+            initialValue: '',
+            label: '',
+            placeholder: '查询',
+            field: 'username',
+            width: '336px',
+            bordered: true,
+        }
+    ]
+    state = {
+        rowSelection: {
+            selectedRowKeys: [],
+            selectedRows: [],
+        },
+        pagination: {
+            showSizeChanger: true,
+            showQuickJumper: true,
+            hideOnSinglePage: false,
+            pageSizeOptions: ['10', '20', '30'],
+            pageSize: this.params.pageSize,
+            current: this.params.page,
+            total: this.params.total,
+            onChange: (page, pageSize) => this.changePage(page, pageSize),
+            showTotal: (total) => `共${total}条`,
+        },
+        type: 'checkbox',
+        list: [],
+        detail: {},
+        title: '添加设备到分组'
+    }
 
     componentDidMount() {
         // this.props.onRef(this);
         this.requestList();
     }
 
-    userRole = () => {
-        alert(2)
+    saveSubmit = async () => {
+        this.props.hideAddDviceToGroupModel()
     }
-    deleteRole = () => {
-        alert(1)
+    resetModelFrom = () => {
+        this.props.hideAddDviceToGroupModel()
     }
 
     //请求列表
@@ -134,52 +174,6 @@ class BasicCommTopic extends React.Component {
         })
     }
 
-    data = [
-        {
-            type: 'select',
-            initialValue: '1',
-            placeholder: '',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
-            width: '130px'
-        },
-        {
-            type: 'search',
-            initialValue: '',
-            label: '',
-            placeholder: '查询',
-            field: 'username',
-            width: '336px',
-            bordered: true,
-        }
-    ]
-    params = {
-        page: 1,
-        pageSize: 5
-    }
-    state = {
-        rowSelection: false,
-        pagination: {
-            showSizeChanger: true,
-            showQuickJumper: true,
-            hideOnSinglePage: false,
-            pageSizeOptions: ['10', '20', '30'],
-            pageSize: this.params.pageSize,
-            current: this.params.page,
-            total: this.params.total,
-            onChange: (page, pageSize) => this.changePage(page, pageSize),
-            showTotal: (total) => `共${total}条`,
-        },
-        type: '',
-        list: [],
-        roleVisible: false,
-        perVisible: false,
-        authVisible: false,
-        checkedKeys: [],
-        targetKeys: [],
-        detail: {},
-        title: ''
-    }
     changePage = (page, pageSize) => {
         this.params.page = page;
         this.params.pageSize = pageSize;
@@ -202,47 +196,68 @@ class BasicCommTopic extends React.Component {
     render() {
         const columns = [
             {
-                title: '订阅类型',
+                title: '设备名称',
                 dataIndex: 'roleName',
                 align: 'left'
             },
             {
-                title: '订阅消息',
+                title: '设备ID',
                 dataIndex: 'officeName',
                 align: 'left',
             },
             {
-                title: '创建时间',
+                title: '设备编号/IMEI',
                 dataIndex: 'createUser',
                 align: 'left',
             },
             {
-                title: '操作',
+                title: '节点类型',
+                dataIndex: 'createTime',
                 align: 'left',
-                render: (item) => {
-                    return (
-                        <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.userRole.bind(this, item)}>编辑</div>
-                        </div>
-                    )
-                }
-            }
+            },
+            {
+                title: '状态',
+                dataIndex: 'remark',
+                align: 'left',
+            },
         ];
         return (
             <div>
-                <Etable
-                    that={this}
-                    dataSource={this.state.dataSource}
-                    columns={columns}
-                    rowSelection={this.state.rowSelection}
-                    updateSelectedItem={updateSelectedItem.bind(this)}
-                    pagination={this.state.pagination}
-                    type={this.state.type}
+                <Modal
+                    title={this.state.title}
+                    visible={this.props.visible}
+                    onCancel={this.resetModelFrom}
+                    onOk={this.saveSubmit}
+                    width={900}
+                    centered
+                    footer={[
+                        <Button key="submit" type="primary" onClick={this.saveSubmit}>确定</Button>,
+                        <Button key="back" onClick={this.resetModelFrom}>取消</Button>
+                    ]}
                 >
-                </Etable>
+                    <div className='product-function-mode-manager'>
+                        <div className="function-search-from">
+                            <BaseForm
+                                data={this.data}
+                                handleSearch={this.handleSearch}
+                                show={false}
+                            />
+                        </div>
+                    </div>
+                    <Etable
+                        that={this}
+                        dataSource={this.state.dataSource}
+                        columns={columns}
+                        rowSelection={this.state.rowSelection}
+                        updateSelectedItem={updateSelectedItem.bind(this)}
+                        pagination={this.state.pagination}
+                        type={this.state.type}
+                    >
+                    </Etable>
+                </Modal>
             </div>
         )
     }
 }
 
-export default BasicCommTopic;
+export default AddDeviceToGruop;

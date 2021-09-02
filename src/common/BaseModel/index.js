@@ -27,8 +27,10 @@ class BaseModel extends React.Component {
                     <Button key="back"onClick={this.submitCancle}>取消</Button>
                 ]}
             >
-                <ExclamationCircleOutlined style={{ color: "#faad14", fontSize: "22px" }}></ExclamationCircleOutlined>
+                <div style={{display: 'flex','padding': '15px',fontSize:'15px'}}>
+                <ExclamationCircleOutlined style={{ color: "#faad14", fontSize: "22px",marginRight:'15px' }}></ExclamationCircleOutlined>
                 <div>{this.props.content}</div>
+                </div>
             </Modal>
         )
     }

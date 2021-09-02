@@ -11,7 +11,7 @@ const {TextArea} = Input
 const FormItem = Form.Item
 
 class ModelCommTopic extends React.Component {
-    // formRefUser = React.createRef();
+    // fromModeRef = React.createRef();
 
     componentDidMount() {
         // this.props.onRef(this);

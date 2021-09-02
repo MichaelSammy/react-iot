@@ -1,6 +1,7 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, List, Breadcrumb, Tabs} from "antd";
 import BaseForm from '../../../../common/BaseForm'
+import BaseModel from '../../../../common/BaseModel'
 import IconFont from '../../../../utils/IconFont';
 import Etable from "../../../../common/Etable";
 import request from '../../../../utils/request'
@@ -44,7 +45,31 @@ export default class Permission extends React.Component {
         checkedKeys: [],
         targetKeys: [],
         detail: {},
-        title: ''
+        title: '',
+        visibleBaseModel:false,
+        baseModelContent:'',
+    }
+    submitOk=()=>{
+        this.setState({
+            visibleBaseModel:false
+        })
+    }
+    submitCancle=()=>{
+        this.setState({
+            visibleBaseModel:false
+        })
+    }
+    releaseProduct= () => {
+        this.setState({
+            visibleBaseModel:true,
+            baseModelContent:'是否发布该产品？'
+        })
+    }
+    unpublishProduct= () => {
+        this.setState({
+            visibleBaseModel:true,
+            baseModelContent:'是否取消发布该产品？'
+        })
     }
     data = [
         {
@@ -69,7 +94,7 @@ export default class Permission extends React.Component {
     componentDidMount() {
         // this.requestList()
     }
-    goBackProductList= () => {
+    goBackPreviousPage= () => {
         this.props.history.go(-1)
     }
     addTag = () => {
@@ -139,7 +164,7 @@ export default class Permission extends React.Component {
                     },
                     {
                         "path": "/user/device/product/info",
-                        "pathName": "add-device",
+                        "pathName": "product-info",
                         "name": "产品详情",
                         "icon": "iconxiangmu",
                         "show": false,
@@ -159,7 +184,7 @@ export default class Permission extends React.Component {
                             getBreadItem(breadList)
                         }
                     </Breadcrumb>
-                    <div className="product-big-title">  <IconFont onClick={this.goBackProductList} className="product-info-go-back-list" type='icon-fanhuijiantou'/>产品详情</div>
+                    <div className="product-big-title">  <IconFont onClick={this.goBackPreviousPage} className="product-info-go-back-list" type='icon-fanhuijiantou'/>产品详情</div>
                     <div className="product-list-title-desc">产品是一组具有相同功能定义的设备集合，创建产品是使用平台的第一步快速创建产品后可定义产品物模型、添加对应设备。
                     </div>
                     <div>
@@ -185,7 +210,8 @@ export default class Permission extends React.Component {
                                               type='icon-a-bianjicopy'/>
                                     <span className='edit-card-title-option' onClick={this.editProduct}> 编辑</span>
                                 </div>
-                                <div className='product-release'>发布</div>
+                                <div className='product-release' onClick={this.releaseProduct}>发布</div>
+                                {   this.state.visibleBaseModel!=false&&<div className='product-release' onClick={this.unpublishProduct}>取消发布</div>}
                             </div>
                             <div className='card-top-spilt-line'></div>
                             <div>
@@ -269,6 +295,12 @@ export default class Permission extends React.Component {
                 <AddCustomFeatures  onRef={this.addCustomFeaturesRef}></AddCustomFeatures>
                 <AddStandardFeatures  onRef={this.addStandardFeaturesRef}></AddStandardFeatures>
                 <AddLabel onRef={this.addLabelRef}></AddLabel>
+                <BaseModel that={this}
+                           visible={this.state.visibleBaseModel}
+                           submitOk={this.submitOk}
+                           submitCancle={this.submitCancle}
+                           content={this.state.baseModelContent}
+                ></BaseModel>
             </div>
         )
     }

@@ -1,12 +1,12 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, List, Breadcrumb, Pagination} from "antd";
 import BaseForm from '../../../common/BaseForm'
+import BaseModel from '../../../common/BaseModel'
 import EditProduct from './EditProduct'
 import IconFont from '../../../utils/IconFont';
 import request from '../../../utils/request'
 import './index.less'
 import {filterRoutes, getBreadItem} from "../../../utils";
-import {recursionRouterTwo} from "../../../utils/recursion-router";
 import AddLabel from "./ExtractionComponent/addLabel";
 
 const FormItem = Form.Item
@@ -111,12 +111,27 @@ export default class Permission extends React.Component {
                 address: '',
                 email: ''
             },
+            visibleBaseModel:false,
+            baseModelContent:'',
             roleVisible: true,
             title: '编辑'
         })
     }
+    submitOk=()=>{
+        this.setState({
+            visibleBaseModel:false
+        })
+    }
+    submitCancle=()=>{
+        this.setState({
+            visibleBaseModel:false
+        })
+    }
     deleteProduct= () => {
-
+        this.setState({
+            visibleBaseModel:true,
+            baseModelContent:'是否删除？'
+        })
     }
     showProductInfo = () => {
         this.props.history.push({'pathname': "/user/device/product/info", params: true});
@@ -245,7 +260,7 @@ export default class Permission extends React.Component {
                             )}
                         />
                         <Pagination
-                            style={{textAlign: "center"}}
+                            style={{textAlign: "right"}}
                             total={85}
                             showSizeChanger
                             showQuickJumper
@@ -275,6 +290,12 @@ export default class Permission extends React.Component {
                     </Modal>
                 }
                 <AddLabel onRef={this.addLabelRef}></AddLabel>
+                <BaseModel that={this}
+                           visible={this.state.visibleBaseModel}
+                           submitOk={this.submitOk}
+                           submitCancle={this.submitCancle}
+                           content={this.state.baseModelContent}
+                ></BaseModel>
             </div>
         )
     }

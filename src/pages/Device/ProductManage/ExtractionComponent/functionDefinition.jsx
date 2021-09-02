@@ -12,7 +12,7 @@ const {TextArea} = Input
 const FormItem = Form.Item
 
 class FunctionDefinition extends React.Component {
-    // formRefUser = React.createRef();
+    // fromModeRef = React.createRef();
 
     componentDidMount() {
         // this.props.onRef(this);
@@ -26,16 +26,19 @@ class FunctionDefinition extends React.Component {
     }
     batchDelete = () => {
         this.setState({
-            visibleBaseModel:true
+            visibleBaseModel:true,
+            baseModelContent:'是否批量删除？'
         })
     }
     userRole = () => {
         alert(2)
     }
-    deleteRole = () => {
-        alert(1)
+    deleteRole=()=>{
+        this.setState({
+            visibleBaseModel:true,
+            baseModelContent:'是否删除？'
+        })
     }
-
     //请求列表
     requestList() {
         request({
@@ -190,6 +193,7 @@ class FunctionDefinition extends React.Component {
         perVisible: false,
         authVisible: false,
         visibleBaseModel:false,
+        baseModelContent:'',
         checkedKeys: [],
         targetKeys: [],
         detail: {},
@@ -306,7 +310,7 @@ class FunctionDefinition extends React.Component {
                            visible={this.state.visibleBaseModel}
                            submitOk={this.submitOk}
                            submitCancle={this.submitCancle}
-                           content={'是否批量删除！'}
+                           content={this.state.baseModelContent}
                 ></BaseModel>
             </div>
         )

@@ -11,7 +11,7 @@ const {TextArea} = Input
 const FormItem = Form.Item
 
 class AddCustomFeatures extends React.Component {
-    formRefUser = React.createRef();
+    fromModeRef = React.createRef();
     state = {
         detail: {}
     }
@@ -64,20 +64,28 @@ class AddCustomFeatures extends React.Component {
                     onClose={this.onClose}
                     visible={this.state.visible}
                     footer={
-                        <div className="product-drawer-close">
-                            <div onClick={this.onClose} type="primary">
+                        <div
+                            style={{
+                                textAlign: 'right',
+                            }}
+                        >
+                            <Button onClick={this.onClose} type="primary" style={{ marginRight: 8 }}>
+                                添加
+                            </Button>
+                            <Button onClick={this.onClose}>
                                 关闭
-                            </div>
+                            </Button>
+
                         </div>
                     }
                 >
-                    <Form ref={this.formRefUser} layout="vertical">
+                    <Form ref={this.fromModeRef} layout="vertical">
                         <FormItem label="功能类型"
                                   name="name"
                                   rules={[
                                       {
                                           required: true,
-                                          message: '请选择属性类型s'
+                                          message: '请选择属性类型'
                                       },
                                   ]}{...formItemLayout}>
                             <Select placeholder="请选择属性类型">

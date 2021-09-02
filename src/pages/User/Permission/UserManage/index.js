@@ -7,7 +7,7 @@ import request from '../../../../utils/request'
 
 const FormItem = Form.Item
 export default class Permission extends React.Component {
-    // formRefUser = React.createRef();
+    // fromModeRef = React.createRef();
     onRef = (ref) => {
         this.child = ref
     }
@@ -238,14 +238,14 @@ export default class Permission extends React.Component {
 
 //创建角色
 class CreatUser extends React.Component {
-    formRefUser = React.createRef();
+    fromModeRef = React.createRef();
 
     componentDidMount() {
         this.props.onRef(this)
     }
 
     handleSubmit = async () => {
-        const form = this.formRefUser.current
+        const form = this.fromModeRef.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             console.log('成功')
             console.log(values)
@@ -255,7 +255,7 @@ class CreatUser extends React.Component {
         })
     }
     resetUserFrom=()=>{
-        const form = this.formRefUser.current;
+        const form = this.fromModeRef.current;
         form.resetFields();
     }
     render() {
@@ -266,7 +266,7 @@ class CreatUser extends React.Component {
         const detail = this.props.detail
 
         return (
-            <Form ref={this.formRefUser}>
+            <Form ref={this.fromModeRef}>
                 <FormItem label="登录名"
                           name="loginName"
                           initialValue={detail.loginName}
