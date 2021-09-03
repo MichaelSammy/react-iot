@@ -119,7 +119,6 @@ const routes = [
                         pathName: 'product-manage',
                         component: ProductManage,
                         name: '产品管理',
-                        icon: 'icon-xiugai1',
                     },
                     {
                         path: '/user/device/group/info',

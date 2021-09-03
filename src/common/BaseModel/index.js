@@ -13,7 +13,8 @@ class BaseModel extends React.Component {
     }
     render(){
         return (
-            <Modal
+            <div>
+            {this.props.visible==true&&<Modal
                 // title={'提示'}
                 closable={false}
                 width={350}
@@ -31,7 +32,8 @@ class BaseModel extends React.Component {
                 <ExclamationCircleOutlined style={{ color: "#faad14", fontSize: "22px",marginRight:'15px' }}></ExclamationCircleOutlined>
                 <div>{this.props.content}</div>
                 </div>
-            </Modal>
+            </Modal>}
+            </div>
         )
     }
 
