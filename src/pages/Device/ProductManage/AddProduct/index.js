@@ -67,7 +67,8 @@ export default class AddRole extends React.Component {
     selectDeviceType = (item, index) => {
 
     }
-
+    onChangeRadio = (item) => {
+    }
     render() {
         const formItemLayout = {
             labelCol: {span: 2},
@@ -76,11 +77,11 @@ export default class AddRole extends React.Component {
         const detail = {
             loginName: '',
             name: '',
-            mobile: '',
+            type: '',
             address: '',
             email: ''
         }
-        const typeList = [{id: '1', value: '标准类别'}, {id: '2', value: '自定义类别'}];
+        const typeList = [{id: '1', label: '标准类别',value:'1'}, {id: '2', label: '自定义类别',value:'2'}];
         const accessList = [{id: '1', value: '设备接入'}, {id: '2', value: '平台接入'}];
         const nodeList = [{id: '1', value: '设备'}, {id: '2', value: '网关'}, {id: '3', value: '子设备'}];
         const nameList = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
@@ -140,7 +141,7 @@ export default class AddRole extends React.Component {
                               ]}{...formItemLayout}>
                         <Input type="text" placeholder="请输入产品名称"/>
                     </FormItem>
-                    <FormItem label="所属类别" name="mobile"
+                    <FormItem label="所属类别" name="type"
                         // initialValue={detail.mobile}
                               rules={[
                                   {
@@ -148,10 +149,12 @@ export default class AddRole extends React.Component {
                                       message: '请选择所属类别'
                                   },
                               ]}{...formItemLayout}>
-                        <Radio.Group>
+                        <Radio.Group  onChange={(e) => {
+                                this.onChangeRadio(e.target.value);
+                        }}>
                             {typeList.map((item) => (
-                                <Radio value={item.id}>
-                                    {item.value}
+                                <Radio value={item.value}>
+                                    {item.label}
                                 </Radio>
                             ))}
                         </Radio.Group>

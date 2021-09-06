@@ -196,9 +196,10 @@ class ModelDetails extends React.Component {
         ];
         return (
             <div style={{marginRight: '560px', position: 'absolute'}}>
-                <Drawer
+                {this.state.visible==true && <Drawer
                     title='标准物模型定义详情'
                     width={560}
+                    height={300}
                     style={{marginRight: '560px', position: 'absolute'}}
                     onClose={this.onClose}
                     visible={this.state.visible}
@@ -222,6 +223,7 @@ class ModelDetails extends React.Component {
                     >
                     </Etable>
                 </Drawer>
+                }
             </div>
         )
     }
