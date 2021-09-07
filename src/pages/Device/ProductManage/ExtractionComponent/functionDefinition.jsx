@@ -30,7 +30,7 @@ class FunctionDefinition extends React.Component {
             type: 'search',
             initialValue: '',
             label: '',
-            placeholder: '查询',
+            placeholder: '请输入搜索内容',
             field: 'username',
             width: '336px',
             bordered: true,
@@ -277,12 +277,15 @@ class FunctionDefinition extends React.Component {
                 <div className='product-function-mode-manager'>
                     <div className="product-function-mode-title">物模型管理</div>
                     <div className="product-mode-right-option">
-                        <div className="batch-delete" onClick={this.batchDelete}><IconFont type='icon-a-shanchucopy' className="icon-font-offset-px"/>批量删除</div>
-                        <div className="import-mode"><IconFont type='icon-daochuwumoxing'  className="icon-font-offset-px"/>导入物模型</div>
-                        <div className="add-stand-function" style={{marginRight: "10px"}} onClick={this.callBackAddStandardFeatures}><IconFont
+                        <div className="batch-delete" onClick={this.batchDelete}><div><IconFont type='icon-a-shanchucopy' className="icon-font-offset-px"/>批量删除</div></div>
+                        <div className="import-mode"><div><IconFont type='icon-daochuwumoxing'  className="icon-font-offset-px"/>导入物模型</div></div>
+                        <div className="add-stand-function" style={{marginRight: "10px"}} onClick={this.callBackAddStandardFeatures}>
+                            <div><IconFont
                             type='icon-jiahao'  className="icon-font-offset-px"/>添加标准功能点
+                                </div>
                         </div>
-                        <div className="add-stand-function" onClick={this.callBackFatherMethod}><IconFont type='icon-jiahao'  className="icon-font-offset-px"/>添加自定义功能点</div>
+                        <div className="add-stand-function" onClick={this.callBackFatherMethod}>
+                            <div><IconFont type='icon-jiahao'  className="icon-font-offset-px"/>添加自定义功能点    </div></div>
                     </div>
                 </div>
                 <div className="function-search-from">

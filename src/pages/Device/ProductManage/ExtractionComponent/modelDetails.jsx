@@ -205,10 +205,15 @@ class ModelDetails extends React.Component {
                     visible={this.state.visible}
                     placement={'right'}
                     footer={
-                        <div className="product-drawer-close">
-                            <div onClick={this.onClose} type="primary">
+                        <div
+                            style={{
+                                textAlign: 'right',
+                            }}
+                        >
+                            <Button onClick={this.onClose}>
                                 关闭
-                            </div>
+                            </Button>
+
                         </div>
                     }
                 >

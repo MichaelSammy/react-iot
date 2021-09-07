@@ -11,7 +11,7 @@ class BaseForm extends React.Component {
         const data = this.props.data;
         const list = [];
         data.forEach((item, index) => {
-            const {type, field, label, initialValue, width,bordered, placeholder, showTime} = item;
+            const {type, field, label, initialValue, width,bordered, placeholder, showTime,open} = item;
             switch (type) {
                 case 'input':
                     const inputItem = <FormItem key={field} name={field} label={label} initialValue={initialValue}>
@@ -33,7 +33,7 @@ class BaseForm extends React.Component {
                 case 'select':
                     const selectItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue} onClick={this.clickSelect}>
                         {
-                            <Select style={{width}} placeholder={placeholder}>
+                            <Select style={{width}} open={open} placeholder={placeholder}>
                                 {getOptionsList(item.list)}
                             </Select>
                         }

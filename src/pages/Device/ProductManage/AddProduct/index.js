@@ -15,6 +15,7 @@ export default class AddRole extends React.Component {
     fromModeRef = React.createRef();
     state = {
         detail: {},
+        showStandard:true,
         showOption: false,
         showOtherOption: true,
         closeOtherOption: false,
@@ -67,7 +68,21 @@ export default class AddRole extends React.Component {
     selectDeviceType = (item, index) => {
 
     }
-    onChangeRadio = (item) => {
+    onChangeTypeRadio = (item) => {
+        if(item=='1'){
+            this.setState({
+                showStandard: true,
+            })
+        }else{
+            this.setState({
+                showStandard: false,
+            })
+        }
+    }
+    onChangeAccessRadio = (item) => {
+        if(item=='1'){
+        }else{
+        }
     }
     render() {
         const formItemLayout = {
@@ -150,8 +165,8 @@ export default class AddRole extends React.Component {
                                   },
                               ]}{...formItemLayout}>
                         <Radio.Group  onChange={(e) => {
-                                this.onChangeRadio(e.target.value);
-                        }}>
+                                this.onChangeTypeRadio(e.target.value);
+                        }} defaultValue={'1'}>
                             {typeList.map((item) => (
                                 <Radio value={item.value}>
                                     {item.label}
@@ -159,16 +174,18 @@ export default class AddRole extends React.Component {
                             ))}
                         </Radio.Group>
                     </FormItem>
+                    {
+                    this.state.showStandard &&
                     <FormItem label=" "
                               colon={false}
                               name="name"
                               rules={[
                                   {
                                       required: false,
-                                      message: '请选择标准品类'
+                                      message: '请选择标准类别'
                                   },
                               ]}{...formItemLayout}>
-                        <Select placeholder="请选择标准品类" onClick={this.selectProductCategory}>
+                        <Select placeholder="请选择标准类别" onClick={this.selectProductCategory} open={false}>
                             {nameList.map((item) => (
                                 <Option value={item.id} key={item.id}>
                                     {item.value}
@@ -185,6 +202,7 @@ export default class AddRole extends React.Component {
                         }}>查看功能
                         </div>
                     </FormItem>
+                    }
                     <FormItem label="接入方式" name="mobile"
                         // initialValue={detail.mobile}
                               rules={[
@@ -193,7 +211,9 @@ export default class AddRole extends React.Component {
                                       message: '请选择接入方式'
                                   },
                               ]}{...formItemLayout}>
-                        <Radio.Group>
+                        <Radio.Group onChange={(e) => {
+                            this.onChangeAccessRadio(e.target.value);
+                        }} defaultValue={'1'}>
                             {accessList.map((item) => (
                                 <Radio value={item.id}>
                                     {item.value}

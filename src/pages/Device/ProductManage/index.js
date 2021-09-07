@@ -31,7 +31,8 @@ export default class Permission extends React.Component {
             placeholder: '请选择产品标签',
             list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
             field: 'power',
-            width: '150px'
+            width: '150px',
+            open:false
         }
     ]
     state = {
@@ -216,7 +217,7 @@ export default class Permission extends React.Component {
                                             <div>
                                                 <span className='title-font' onClick={this.showProductInfo}>S270B</span>
                                                 <span className="split-symbol"> / </span>
-                                                <span className='title-font'>S270B</span>
+                                                <span className='title-name-font'>S270B</span>
                                             </div>
                                             <div className='card-title-option'><span onClick={this.editProduct}>
                                   <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
@@ -262,7 +263,7 @@ export default class Permission extends React.Component {
 
                     </div>
                 </div>
-                ,
+
                 {
                     this.state.editProductVisible &&
                     <Modal

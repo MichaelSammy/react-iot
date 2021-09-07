@@ -26,7 +26,7 @@ class User extends React.Component {
             type: 'search',
             initialValue: '',
             label: '',
-            placeholder: '查询',
+            placeholder: '请输入搜索内容',
             field: 'username',
             width: '336px',
             bordered: false,
@@ -100,7 +100,11 @@ class User extends React.Component {
                     width: '100%',
                     boxShadow: '0px 0px 10px 0px rgba(200, 200, 200, 0.5)'
                 }}>
-                    <img src={logo} style={{height: 25, width: 150, marginLeft: 20}} alt=""/>
+                    <IconFont  type='icon-logozheng' style={{fontSize: '150px',
+                        position: 'absolute',
+                        top: '-50px',
+                        marginLeft: '20px'}}/>
+                    {/*<img src={logo} style={{height: 25, width: 150, marginLeft: 20}} alt=""/>*/}
                     <span className="logoutIcon" onClick={this.logOut}>
                          <img src={defaultUser} style={{height: 30, width: 30}} alt=""/>
                         {/*< PoweroffOutlined></PoweroffOutlined>*/}

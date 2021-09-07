@@ -32,7 +32,8 @@ export default class DeviceGroup extends React.Component {
             placeholder: '请选择分组标签',
             list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
             field: 'power',
-            width: '150px'
+            width: '150px',
+            open:false
         }
     ]
     state = {

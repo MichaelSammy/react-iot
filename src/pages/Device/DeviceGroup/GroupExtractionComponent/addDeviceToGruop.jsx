@@ -16,7 +16,7 @@ class AddDeviceToGruop extends React.Component {
         {
             type: 'select',
             initialValue: '1',
-            placeholder: '查询请先选择分组',
+            placeholder: '请先选择分组',
             list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
             field: 'power',
             width: '130px'
@@ -25,7 +25,7 @@ class AddDeviceToGruop extends React.Component {
             type: 'search',
             initialValue: '',
             label: '',
-            placeholder: '查询',
+            placeholder: '请输入搜索内容',
             field: 'username',
             width: '336px',
             bordered: true,

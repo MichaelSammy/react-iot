@@ -22,7 +22,7 @@ class GroupSubscrList extends React.Component {
         {
             type: 'select',
             initialValue: '1',
-            placeholder: '查询请先选择分组',
+            placeholder: '请先选择分组',
             list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
             field: 'power',
             width: '130px'
@@ -263,8 +263,8 @@ class GroupSubscrList extends React.Component {
                     />
                     <div className='product-function-mode-manager'>
                         <div className="product-mode-right-option">
-                            <div className="add-stand-function" onClick={this.callBackFatherMethod}><IconFont
-                                type='icon-jiahao' className="icon-font-offset-px"/>新增订阅
+                            <div className="add-stand-function" onClick={this.callBackFatherMethod}><div><IconFont
+                                type='icon-jiahao' className="icon-font-offset-px"/>新增订阅</div>
                             </div>
                         </div>
                     </div>

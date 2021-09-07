@@ -134,7 +134,7 @@ class AddLabel extends React.Component {
                         </div>
                     </Form>
                 </Modal>
-                },
+                }
                 <BaseModel that={this}
                            visible={this.state.visibleBaseModel}
                            submitOk={this.submitOk}

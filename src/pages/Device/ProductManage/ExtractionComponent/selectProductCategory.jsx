@@ -234,10 +234,15 @@ class SelectProductCategory extends React.Component {
                     onClose={this.onClose}
                     visible={this.state.visible}
                     footer={
-                        <div className="product-drawer-close">
-                            <div onClick={this.onClose} type="primary">
+                        <div
+                            style={{
+                                textAlign: 'right',
+                            }}
+                        >
+                            <Button onClick={this.onClose}>
                                 关闭
-                            </div>
+                            </Button>
+
                         </div>
                     }
                     id='selectProductCategory'

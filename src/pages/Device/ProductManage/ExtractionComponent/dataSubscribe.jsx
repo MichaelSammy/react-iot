@@ -28,7 +28,7 @@ class DataSubscribe extends React.Component {
             type: 'search',
             initialValue: '',
             label: '',
-            placeholder: '查询',
+            placeholder: '请输入搜索内容',
             field: 'username',
             width: '336px',
             bordered: true,

@@ -31,7 +31,7 @@ class GroupDeviceList extends React.Component {
             type: 'search',
             initialValue: '',
             label: '',
-            placeholder: '查询',
+            placeholder: '请输入搜索内容',
             field: 'username',
             width: '336px',
             bordered: true,
@@ -85,7 +85,7 @@ class GroupDeviceList extends React.Component {
     removeDevice = () => {
         this.setState({
             visibleBaseModel: true,
-            baseModelContent: '是否移除车陂？'
+            baseModelContent: '是否移除设备？'
         })
     }
 
@@ -283,11 +283,11 @@ class GroupDeviceList extends React.Component {
                     />
                     <div className='product-function-mode-manager'>
                         <div className="product-mode-right-option">
-                            <div className="batch-delete" onClick={this.batchDelete}><IconFont type='icon-a-shanchucopy'
-                                                                                               className="icon-font-offset-px"/>批量删除
+                            <div className="batch-delete" onClick={this.batchDelete}><div><IconFont type='icon-a-shanchucopy'
+                                                                                               className="icon-font-offset-px"/>批量删除</div>
                             </div>
-                            <div className="add-stand-function" onClick={this.callBackFatherMethod}><IconFont
-                                type='icon-jiahao' className="icon-font-offset-px"/>添加设备到分组
+                            <div className="add-stand-function" onClick={this.callBackFatherMethod}><div><IconFont
+                                type='icon-jiahao' className="icon-font-offset-px"/>添加设备到分组</div>
                             </div>
                         </div>
                     </div>
