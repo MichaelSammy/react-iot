@@ -189,7 +189,17 @@ data-analysis-tab-select-shell div {
   background: #fff;
   height: 100% !important;
 }
-
+.data-analysis-operation-button{
+  height: 70px;
+  background: #FFFFFF;
+  width: 100%;
+  box-shadow: 0px 0px 12px 0px rgb(200 200 200 / 30%);
+  display: flex;
+  align-items: center;
+}
+.data-analysis-operation-button Button{
+  margin-right: 10px;
+}
 .data-analysis-tab-result {
   height: 42px;
   background: #F9F9F9;
@@ -207,19 +217,24 @@ data-analysis-tab-select-shell div {
 }
 
 .data-analysis-result-input {
-  height: 283px;
+  //height: 283px;
   background: #F4F4F4;
   //border: 1px solid #D8D8D8;
 }
 
-.data-analysis-result-selected {
+.data-analysis-result-unselected {
   color: #2979E7;
   text-align: center;
-  border-bottom: 3px solid #2979E7;
   width: 80px;
   height: 40px;
 }
-
+ .data-analysis-result-selected{
+  border-bottom: 3px solid #2979E7;
+   color: #2979E7;
+   text-align: center;
+   width: 80px;
+   height: 40px;
+}
 .product-list-title-background {
   background: url('../../../assets/images/productTitleBg.png') no-repeat 100%;
   height: 200px;
@@ -497,4 +512,10 @@ data-analysis-tab-select-shell div {
   padding: 10px 12px;
   margin-top: 15px;
   cursor: pointer;
+}
+.ant-input-group-addon{
+  background: #EDEDED;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #999999;
 }

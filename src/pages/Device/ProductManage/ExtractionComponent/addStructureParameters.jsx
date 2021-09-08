@@ -1,7 +1,6 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import IconFont from "../../../../utils/IconFont";
-import AddStructureParameters from './addStructureParameters'
 import request from "../../../../utils/request";
 import './../index.less'
 
@@ -9,25 +8,17 @@ const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
 
-class AddCustomFeatures extends React.Component {
-
+class AddStructureParameters extends React.Component {
     fromModeRef = React.createRef();
-    addStructureParametersRef= (ref) => {
-        this.addStructureParametersChildRef = ref
-    }
     state = {
         detail: {},
         visible: false,
-        numberDataVisible:true,
-        enumDataVisible:false,
-        booleanDataVisible:false,
-        dateDataVisible:false,
-        stringDataVisible:false,
-        structDataVisible:false,
+        numberDataVisible: true,
+        enumDataVisible: false,
+        booleanDataVisible: false,
+        dateDataVisible: false,
+        stringDataVisible: false,
 
-    }
-    showAddaStructureParameters=()=>{
-        this.addStructureParametersChildRef.showDrawer()
     }
     showDrawer = () => {
         this.setState({
@@ -48,81 +39,78 @@ class AddCustomFeatures extends React.Component {
     onClose = () => {
         this.setState({
             visible: false,
+            numberDataVisible: true,
+            enumDataVisible: false,
+            booleanDataVisible: false,
+            dateDataVisible: false,
+            stringDataVisible: false,
         });
         const form = this.fromModeRef.current;
         form.resetFields();
     };
-    changeFunctionType = (item) => {
+
+    changeDataType = (item) => {
+        switch (item) {
+            case '1':
+                this.setState({
+                    numberDataVisible: true,
+                    enumDataVisible: false,
+                    booleanDataVisible: false,
+                    dateDataVisible: false,
+                    stringDataVisible: false,
+                });
+                break;
+            case '2':
+                this.setState({
+                    numberDataVisible: false,
+                    enumDataVisible: true,
+                    booleanDataVisible: false,
+                    dateDataVisible: false,
+                    stringDataVisible: false,
+                });
+                break;
+            case '3':
+                this.setState({
+                    numberDataVisible: false,
+                    enumDataVisible: false,
+                    booleanDataVisible: true,
+                    dateDataVisible: false,
+                    stringDataVisible: false,
+                });
+                break;
+            case '4':
+                this.setState({
+                    numberDataVisible: false,
+                    enumDataVisible: false,
+                    booleanDataVisible: false,
+                    dateDataVisible: false,
+                    stringDataVisible: true,
+                });
+                break;
+            case '5':
+                this.setState({
+                    numberDataVisible: false,
+                    enumDataVisible: false,
+                    booleanDataVisible: false,
+                    dateDataVisible: false,
+                    stringDataVisible: false,
+                });
+                break;
+            case '6':
+                this.setState({
+                    numberDataVisible: false,
+                    enumDataVisible: false,
+                    booleanDataVisible: false,
+                    dateDataVisible: true,
+                    stringDataVisible: false,
+                });
+                break;
+            case '7':
+                break;
+            default:
+        }
     }
-    changeDataType= (item) => {
-       switch (item) {
-           case '1':
-               this.setState({
-                   numberDataVisible: true,
-                   enumDataVisible:false,
-                   booleanDataVisible:false,
-                   dateDataVisible:false,
-                   stringDataVisible:false,
-                   structDataVisible:false,
-               });
-               break;
-           case '2':
-               this.setState({
-                   numberDataVisible: false,
-                   enumDataVisible:true,
-                   booleanDataVisible:false,
-                   dateDataVisible:false,
-                   stringDataVisible:false,
-                   structDataVisible:false,
-               });
-               break;
-           case '3':
-               this.setState({
-                   numberDataVisible: false,
-                   enumDataVisible:false,
-                   booleanDataVisible:true,
-                   dateDataVisible:false,
-                   stringDataVisible:false,
-                   structDataVisible:false,
-               });
-               break;
-           case '4':
-               this.setState({
-                   numberDataVisible: false,
-                   enumDataVisible:false,
-                   booleanDataVisible:false,
-                   dateDataVisible:false,
-                   stringDataVisible:true,
-                   structDataVisible:false,
-               });
-               break;
-           case '5':
-               this.setState({
-                   numberDataVisible: false,
-                   enumDataVisible:false,
-                   booleanDataVisible:false,
-                   dateDataVisible:false,
-                   stringDataVisible:false,
-                   structDataVisible:true,
-               });
-               break;
-           case '6':
-               this.setState({
-                   numberDataVisible: false,
-                   enumDataVisible:false,
-                   booleanDataVisible:false,
-                   dateDataVisible:true,
-                   stringDataVisible:false,
-                   structDataVisible:false,
-               });
-               break;
-           case '7':
-               break;
-           default:
-       }
-    }
-    changeReadWrite= (item) => {
-    }
+
     componentDidMount() {
         this.props.onRef(this);
         this.requestList()
@@ -141,15 +129,21 @@ class AddCustomFeatures extends React.Component {
             address: '',
             email: ''
         }
-        const functionTypeList = [{id: '1', value: '1',name:'属性类型'}, {id: '2', value: '2',name:'事件类型'}, {id: '3', value: '3',name:'服务类型'}];
-        const dataTypeList=[{id: '1', value: '1',name:'int32(整数型)'}, {id: '2', value: '2',name:'enum(枚举)'}, {id: '3', value: '3',name:'bool(布尔)'}, {id: '4', value: '4',name:'string(字符串)'}, {id: '5', value: '5',name:'struct(结构体)'}, {id: '6', value: '6',name:'date(时间)'}, {id: '7', value: '7',name:'array(数组)'}];
-        const readWriteList=[{id: '1', value: '1',name:'读写'}, {id: '2', value: '2',name:'只读'}];
-        const unitList=[{id: '1', value: '1',name:'伏特/V'}, {id: '2', value: '2',name:'秒/s'}]
+        const dataTypeList = [{id: '1', value: '1', name: 'int32(整数型)'}, {
+            id: '2',
+            value: '2',
+            name: 'enum(枚举)'
+        }, {id: '3', value: '3', name: 'bool(布尔)'}, {id: '4', value: '4', name: 'string(字符串)'}, {
+            id: '6',
+            value: '6',
+            name: 'date(时间)'
+        }, {id: '7', value: '7', name: 'array(数组)'}];
+        const unitList = [{id: '1', value: '1', name: '伏特/V'}, {id: '2', value: '2', name: '秒/s'}]
         return (
             <div>
-                <Drawer
-                    title="添加自定义功能点"
-                    width={560}
+                {this.state.visible == true && <Drawer
+                    title="新增参数"
+                    width={500}
                     onClose={this.onClose}
                     visible={this.state.visible}
                     footer={
@@ -169,34 +163,16 @@ class AddCustomFeatures extends React.Component {
                     }
                 >
                     <Form ref={this.fromModeRef} layout="vertical">
-                        <FormItem label="功能类型"
-                                  name="name"
-                                  rules={[
-                                      {
-                                          required: true,
-                                          message: '请选择属性类型'
-                                      },
-                                  ]}{...formItemLayout}>
-                            <Select placeholder="请选择属性类型"  onChange={(value) => {
-                                this.changeFunctionType(value);
-                            }} defaultValue={'1'}>
-                                {functionTypeList.map((item) => (
-                                    <Option value={item.value} key={item.value}>
-                                        {item.name}
-                                    </Option>
-                                ))}
-                            </Select>
-                        </FormItem>
-                        <FormItem label="功能名称"
+                        <FormItem label="参数名称"
                                   name="loginName"
                                   initialValue={detail.loginName}
                                   rules={[
                                       {
                                           required: true,
-                                          message: '请输入功能名称'
+                                          message: '请输入参数名称 '
                                       },
                                   ]}{...formItemLayout}>
-                            <Input type="text" placeholder="1-32位，中文，英文，数字，特殊字符"/>
+                            <Input type="text" placeholder="请输入参数名称"/>
                         </FormItem>
                         <FormItem label="标识符"
                                   name="loginName"
@@ -207,7 +183,7 @@ class AddCustomFeatures extends React.Component {
                                           message: '请输入标识符'
                                       },
                                   ]}{...formItemLayout}>
-                            <Input type="text" placeholder="1-32位，中文，英文，数字，特殊字符"/>
+                            <Input type="text" placeholder="请输入标识符"/>
                         </FormItem>
                         <FormItem label="数据类型"
                                   name="name"
@@ -217,7 +193,7 @@ class AddCustomFeatures extends React.Component {
                                           message: '请选择数据类型'
                                       },
                                   ]}{...formItemLayout}>
-                            <Select placeholder="请选择数据类型"   onChange={(value) => {
+                            <Select placeholder="请选择数据类型" onChange={(value) => {
                                 this.changeDataType(value);
                             }} defaultValue={'1'}>
                                 {dataTypeList.map((item) => (
@@ -227,8 +203,8 @@ class AddCustomFeatures extends React.Component {
                                 ))}
                             </Select>
                         </FormItem>
-                        {this.state.numberDataVisible==true &&
-                            <div>
+                        {this.state.numberDataVisible == true &&
+                        <div>
                             <FormItem label="定义取值范围" name="name" rules={[{required: true, message: ' '}]}
                                       style={{marginBottom: 0}}>
                                 <FormItem
@@ -272,13 +248,19 @@ class AddCustomFeatures extends React.Component {
                                     ))}
                                 </Select>
                             </FormItem>
-                            </div>
+                        </div>
                         }
                         {
-                            this.state.enumDataVisible==true &&
+                            this.state.enumDataVisible == true &&
                             <div>
-                               <div><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 枚举值</span></div>
-                                <div style={{display:'flex',padding:'8px 0px'}}><div style={{width:'40%',float:'left',marginLeft:'10px'}}>参数值</div><div style={{width:'55%',float:'right'}}>参数类型</div></div>
+                                <div><span style={{
+                                    color: '#ff4d4f',
+                                    fontFamily: 'SimSun, sans-serif'
+                                }}>*</span><span> 枚举值</span></div>
+                                <div style={{display: 'flex', padding: '8px 0px'}}>
+                                    <div style={{width: '40%', float: 'left', marginLeft: '10px'}}>参数值</div>
+                                    <div style={{width: '55%', float: 'right'}}>参数类型</div>
+                                </div>
 
                                 <FormItem label="" name="name" rules={[{required: true, message: ' '}]}
                                           style={{marginBottom: 0}}>
@@ -306,35 +288,40 @@ class AddCustomFeatures extends React.Component {
                                     }} onClick={this.deleteTagColumn}>删除
                                     </div>
                                 </FormItem>
-                                <div style={{marginBottom:'24px',color:'#2979E7',cursor:'pointer'}}> <IconFont  type='icon-jiahao'/>添加枚举项</div>
+                                <div style={{marginBottom: '24px', color: '#2979E7', cursor: 'pointer'}}><IconFont
+                                    type='icon-jiahao'/>添加枚举项
+                                </div>
                             </div>
                         }
                         {
-                            this.state.booleanDataVisible==true &&
+                            this.state.booleanDataVisible == true &&
                             <div>
-                                <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 布尔值</span></div>
-                                <div style={{float: 'left', lineHeight: '32px',padding:'0px 10px 0px 10px'}}>0 -</div>
+                                <div style={{padding: '0px 0px 8px'}}><span style={{
+                                    color: '#ff4d4f',
+                                    fontFamily: 'SimSun, sans-serif'
+                                }}>*</span><span> 布尔值</span></div>
+                                <div style={{float: 'left', lineHeight: '32px', padding: '0px 10px 0px 10px'}}>0 -</div>
                                 <FormItem label="" name="name" rules={[{required: true, message: ' '}]}
                                           {...formItemLayout}>
-                                   <Input placeholder="如  关"/>
+                                    <Input placeholder="如  关"/>
                                 </FormItem>
-                                <div style={{float: 'left', lineHeight: '32px',padding:'0px 10px 0px 10px'}}>1 -</div>
+                                <div style={{float: 'left', lineHeight: '32px', padding: '0px 10px 0px 10px'}}>1 -</div>
                                 <FormItem label="" name="name" rules={[{required: true, message: ' '}]}
                                           {...formItemLayout}>
                                     <Input placeholder="如  开"/>
                                 </FormItem>
                             </div>
 
-                         }
-                        {this.state.dateDataVisible==true &&
-                            <div>
-                                <FormItem label="时间格式" name="name" rules={[{required: false, message: ' '}]}
-                                          {...formItemLayout}>
-                                    <Input placeholder="String类型的UTC时间戳（毫秒）" disabled={true}/>
-                                </FormItem>
-                            </div>
                         }
-                        {this.state.stringDataVisible==true &&
+                        {this.state.dateDataVisible == true &&
+                        <div>
+                            <FormItem label="时间格式" name="name" rules={[{required: false, message: ' '}]}
+                                      {...formItemLayout}>
+                                <Input placeholder="String类型的UTC时间戳（毫秒）" disabled={true}/>
+                            </FormItem>
+                        </div>
+                        }
+                        {this.state.stringDataVisible == true &&
                         <div>
                             <FormItem label="数据长度" name="name" rules={[{required: true, message: ' '}]}
                                       {...formItemLayout}>
@@ -342,47 +329,12 @@ class AddCustomFeatures extends React.Component {
                             </FormItem>
                         </div>
                         }
-                        {this.state.structDataVisible==true &&
-                        <div>
-                            <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> Json对象</span></div>
-                            <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddaStructureParameters}> <IconFont  type='icon-jiahao'/>添加参数</div>
-                        </div>
-                        }
-                        <FormItem label="读写类型"
-                                  name="name"
-                                  rules={[
-                                      {
-                                          required: true,
-                                          message: '请选择读写类型'
-                                      },
-                                  ]}{...formItemLayout}>
-                            <Select placeholder="请选择读写类型" onChange={(value)=>{
-                                this.changeReadWrite(value)}} defaultValue={'1'}>
-                                {readWriteList.map((item) => (
-                                    <Option value={item.value} key={item.value}>
-                                        {item.name}
-                                    </Option>
-                                ))}
-                            </Select>
-                        </FormItem>
-                        <FormItem label="描述"
-                                  name="loginName"
-                                  initialValue={detail.loginName}
-                                  rules={[
-                                      {
-                                          required: false,
-                                          message: '请输入描述信息'
-                                      },
-                                  ]}{...formItemLayout}>
-                            <TextArea id='textAreaId' rows={5} maxLength={100} showCount
-                                      placeholder="请输入描述信息"></TextArea>
-                        </FormItem>
                     </Form>
                 </Drawer>
-                <AddStructureParameters  onRef={this.addStructureParametersRef} ></AddStructureParameters>
+                }
             </div>
         )
     }
 }
 
-export default AddCustomFeatures
+export default AddStructureParameters

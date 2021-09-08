@@ -283,11 +283,11 @@ class GroupDeviceList extends React.Component {
                     />
                     <div className='product-function-mode-manager'>
                         <div className="product-mode-right-option">
-                            <div className="batch-delete" onClick={this.batchDelete}><div><IconFont type='icon-a-shanchucopy'
-                                                                                               className="icon-font-offset-px"/>批量删除</div>
-                            </div>
                             <div className="add-stand-function" onClick={this.callBackFatherMethod}><div><IconFont
-                                type='icon-jiahao' className="icon-font-offset-px"/>添加设备到分组</div>
+                                type='icon-jiahao' className="icon-font-offset-px"/>添加设备</div>
+                            </div>
+                            <div className="batch-delete" onClick={this.batchDelete}><div><IconFont type='icon-a-shanchucopy'
+                                                                                                    className="icon-font-offset-px"/>移除</div>
                             </div>
                         </div>
                     </div>

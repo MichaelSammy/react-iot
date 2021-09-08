@@ -61,27 +61,17 @@ class AddGroup extends React.Component {
         }];
         return (
             <div>
-                <Drawer
-                    title={this.props.title}
-                    width={560}
-                    onClose={this.onClose}
-                    visible={this.state.visible}
-                    footer={
-                        <div
-                            style={{
-                                textAlign: 'right',
-                            }}
-                        >
-                            <Button onClick={this.onSubmit} type="primary" style={{marginRight: 8}}>
-                                确定
-                            </Button>
-                            <Button onClick={this.onClose}>
-                                取消
-                            </Button>
-
-                        </div>
-                    }
-                >
+                    <Modal
+                        title={this.props.title}
+                        visible={this.state.visible}
+                        onCancel={this.onClose}
+                        onOk={this.onSubmit}
+                        centered
+                        footer={[
+                            <Button key="submit" type="primary" onClick={this.onSubmit}>确定</Button>,
+                            <Button key="back" onClick={this.onClose}>取消</Button>
+                        ]}
+                    >
                     <Form ref={this.fromModeRef} layout="vertical">
                         <FormItem label="父组"
                                   name="name"
@@ -123,7 +113,7 @@ class AddGroup extends React.Component {
                                       placeholder="请输入描述信息"></TextArea>
                         </FormItem>
                     </Form>
-                </Drawer>
+                </Modal>
             </div>
         )
     }

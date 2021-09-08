@@ -277,15 +277,21 @@ class FunctionDefinition extends React.Component {
                 <div className='product-function-mode-manager'>
                     <div className="product-function-mode-title">物模型管理</div>
                     <div className="product-mode-right-option">
-                        <div className="batch-delete" onClick={this.batchDelete}><div><IconFont type='icon-a-shanchucopy' className="icon-font-offset-px"/>批量删除</div></div>
-                        <div className="import-mode"><div><IconFont type='icon-daochuwumoxing'  className="icon-font-offset-px"/>导入物模型</div></div>
-                        <div className="add-stand-function" style={{marginRight: "10px"}} onClick={this.callBackAddStandardFeatures}>
+                        <div className="add-stand-function" style={{marginRight: "10px"}}
+                             onClick={this.callBackAddStandardFeatures}>
                             <div><IconFont
-                            type='icon-jiahao'  className="icon-font-offset-px"/>添加标准功能点
-                                </div>
+                                type='icon-jiahao' className="icon-font-offset-px"/>添加标准功能点
+                            </div>
                         </div>
                         <div className="add-stand-function" onClick={this.callBackFatherMethod}>
-                            <div><IconFont type='icon-jiahao'  className="icon-font-offset-px"/>添加自定义功能点    </div></div>
+                            <div><IconFont type='icon-jiahao' className="icon-font-offset-px"/>添加自定义功能点</div>
+                        </div>
+                        <div className="import-mode">
+                            <div><IconFont type='icon-daochuwumoxing' className="icon-font-offset-px"/>导入物模型</div>
+                        </div>
+                        <div className="batch-delete" onClick={this.batchDelete}>
+                            <div><IconFont type='icon-a-shanchucopy' className="icon-font-offset-px"/>删除</div>
+                        </div>
                     </div>
                 </div>
                 <div className="function-search-from">

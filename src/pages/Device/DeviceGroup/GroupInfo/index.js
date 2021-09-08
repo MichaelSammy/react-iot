@@ -133,9 +133,9 @@ export default class Permission extends React.Component {
                                     <div className='tag-name'>ncknsac</div>
                                     <div className='tag-name'>ncknsac</div>
                                     <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-option'>
-                                        <span onClick={this.editTag}> 编辑</span>
-                                        /<span onClick={this.addTag}>添加</span></div>
+                                    {/*<div className='tag-option'>*/}
+                                        {/*<span onClick={this.editTag}> 编辑</span>*/}
+                                        {/*/<span onClick={this.addTag}>添加</span></div>*/}
                                 </div>
                             </div>
                         </div>

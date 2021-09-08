@@ -195,9 +195,9 @@ export default class Permission extends React.Component {
                                               type='icon-a-bianjicopy'/>
                                     <span className='edit-card-title-option' onClick={this.editProduct}> 编辑</span>
                                 </div>
-                                <div className='product-release' onClick={this.releaseProduct}>发布</div>
+                                <div className='product-release' onClick={this.releaseProduct}> <div><IconFont type='icon-fabuicon' className="icon-font-offset-px"/>发布</div></div>
                                 {this.state.visibleBaseModel != false &&
-                                <div className='product-release' onClick={this.unpublishProduct}>取消发布</div>}
+                                <div className='product-release' onClick={this.unpublishProduct}><div><IconFont type='icon-fabuicon' className="icon-font-offset-px"/>取消发布</div></div>}
                             </div>
                             <div className='card-top-spilt-line'></div>
                             <div>
@@ -236,9 +236,9 @@ export default class Permission extends React.Component {
                                     <div className='tag-name'>ncknsac</div>
                                     <div className='tag-name'>ncknsac</div>
                                     <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-option'>
-                                        <span onClick={this.editTag}> 编辑</span>
-                                        /<span onClick={this.addTag}>添加</span></div>
+                                    {/*<div className='tag-option'>*/}
+                                        {/*<span onClick={this.editTag}> 编辑</span>*/}
+                                        {/*/<span onClick={this.addTag}>添加</span></div>*/}
                                 </div>
                             </div>
                         </div>

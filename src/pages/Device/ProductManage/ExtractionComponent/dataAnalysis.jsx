@@ -40,21 +40,37 @@ class DataAnalysis extends React.Component {
     ]
     state = {
         detail: {},
-        title: ''
+        title: '',
+        selectTabIndex:1,
+        showScript:true,
+        showResult:false,
     }
 
-    componentDidMount() {
+    // componentDidMount() {
         // this.props.onRef(this);
         // this.requestList();
+    // }
+    editScript = (index) => {
+        this.setState({
+            selectTabIndex:index,
+            showScript:true,
+            showResult:false,
+        })
     }
-
+    runResult = (index) => {
+        this.setState({
+            selectTabIndex:index,
+            showScript:false,
+            showResult:true,
+        })
+    }
     //请求列表
     requestList() {
     }
 
     render() {
         return (
-            <div style={{marginBottom: "10%"}}>
+            <div>
                 <div>
                     <div className="data-analysis-tab">
                         <div className='data-analysis-tab-edit'>
@@ -75,21 +91,34 @@ class DataAnalysis extends React.Component {
                 <div>
                     <div className="data-analysis-tab-result">
                         <div className='data-analysis-tab-edit'>
-                            <div className="data-analysis-result-selected">编辑脚本</div>
-                            <div>运行结果</div>
+                            <div className={this.state.selectTabIndex==1?'data-analysis-result-selected':'data-analysis-result-unselected'} onClick={()=>this.editScript('1')}>编辑脚本</div>
+                            <div className={this.state.selectTabIndex==2?'data-analysis-result-selected':'data-analysis-result-unselected'}  onClick={()=>this.runResult('2')}>运行结果</div>
                         </div>
                     </div>
                     <div className="data-analysis-result-search">
-                        <BaseForm
+                        {this.state.showScript && <BaseForm
                             data={this.data}
                             handleSearch={this.handleSearch}
                             show={false}
                         />
+                        }
+                        {this.state.showResult &&
+                        <div style={{height:'32px',lineHeight:'32px'}}>输出Topic：""</div>
+                        }
                     </div>
                     <div className="data-analysis-result-input">
-                        <TextArea className="data-analysis-code-content" placeholder={"* 将设备自定义topic数据转"}></TextArea>
+                        {this.state.showScript &&   <TextArea className="data-analysis-code-content" placeholder={"* 将设备自定义topic数据转"} rows={10}></TextArea>
+                        }
+                        {this.state.showResult &&   <TextArea className="data-analysis-code-content" placeholder={""} rows={10}></TextArea>
+                        }
+                    </div>
+                    <div className="data-analysis-operation-button">
+                        <Button>提交</Button>
+                        <Button>执行</Button>
+                        <Button type="primary">保存</Button>
                     </div>
                 </div>
+
             </div>
         )
     }
