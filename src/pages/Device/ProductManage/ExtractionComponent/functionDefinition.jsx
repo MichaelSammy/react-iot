@@ -69,6 +69,9 @@ class FunctionDefinition extends React.Component {
     callBackAddStandardFeatures = () => {
         this.props.addStandardFeatures();
     }
+    callBackImportModelMethod = () => {
+        this.props.importModelFrom();
+    }
     batchDelete = () => {
         this.setState({
             visibleBaseModel:true,
@@ -286,7 +289,7 @@ class FunctionDefinition extends React.Component {
                         <div className="add-stand-function" onClick={this.callBackFatherMethod}>
                             <div><IconFont type='icon-jiahao' className="icon-font-offset-px"/>添加自定义功能点</div>
                         </div>
-                        <div className="import-mode">
+                        <div className="import-mode" onClick={this.callBackImportModelMethod}>
                             <div><IconFont type='icon-daochuwumoxing' className="icon-font-offset-px"/>导入物模型</div>
                         </div>
                         <div className="batch-delete" onClick={this.batchDelete}>

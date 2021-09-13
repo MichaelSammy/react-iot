@@ -15,6 +15,25 @@ class SelectProductCategory extends React.Component {
         page: 1,
         pageSize: 10,
     }
+    data = [
+        {
+            type: 'select',
+            // initialValue: '',
+            label: '',
+            placeholder: '模拟类型：自定义',
+            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            field: 'power',
+            // width: '516px',
+        },
+        {
+            type: 'search',
+            initialValue: '',
+            label: '',
+            placeholder: '请输入搜索内容',
+            field: 'username',
+            // width: '100vw',
+        }
+    ]
     state = {
         rowSelection: false,
         visible: false,
@@ -176,25 +195,6 @@ class SelectProductCategory extends React.Component {
             }
         })
     }
-    data = [
-        {
-            type: 'select',
-            // initialValue: '',
-            label: '',
-            placeholder: '模拟类型：自定义',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
-            // width: '516px',
-        },
-        {
-            type: 'search',
-            initialValue: '',
-            label: '',
-            placeholder: '请输入搜索内容',
-            field: 'username',
-            // width: '100vw',
-        }
-    ]
     render() {
         const columns = [
             {

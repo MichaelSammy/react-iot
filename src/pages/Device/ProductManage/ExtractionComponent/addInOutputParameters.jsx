@@ -1,6 +1,7 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import IconFont from "../../../../utils/IconFont";
+import AddStructureParameters from './addStructureParameters'
 import request from "../../../../utils/request";
 import './../index.less'
 
@@ -8,7 +9,7 @@ const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
 
-class AddStructureParameters extends React.Component {
+class AddInOutputParameters extends React.Component {
     fromModeRef = React.createRef();
     state = {
         detail: {},
@@ -28,25 +29,29 @@ class AddStructureParameters extends React.Component {
         title:'',
 
     }
+    addStructureParametersRef= (ref) => {
+        this.addStructureParametersChildRef = ref
+    }
     showAddStructureParameters=(item)=>{
-        // switch (item) {
-        //     case '1':
-        //         this.setState({
-        //             title:'添加参数'
-        //         })
-        //         break;
-        //     case '2':
-        //         this.setState({
-        //             title:'添加输出参数'
-        //         })
-        //         break;
-        //     case '3':
-        //         this.setState({
-        //             title:'添加输入参数'
-        //         })
-        //         break;
-        //     default:
-        // }
+        switch (item) {
+            case '1':
+                this.setState({
+                    title:'添加参数'
+                })
+                break;
+            case '2':
+                this.setState({
+                    title:'添加输出参数'
+                })
+                break;
+            case '3':
+                this.setState({
+                    title:'添加输入参数'
+                })
+                break;
+            default:
+        }
+        this.addStructureParametersChildRef.showDrawer()
     }
     showDrawer = () => {
         this.setState({
@@ -216,14 +221,14 @@ class AddStructureParameters extends React.Component {
             address: '',
             email: ''
         }
-        const dataTypeList=[{id: '1', value: '1',name:'int32(整数型)'}, {id: '2', value: '2',name:'enum(枚举)'}, {id: '3', value: '3',name:'bool(布尔)'}, {id: '4', value: '4',name:'string(字符串)'}, {id: '6', value: '6',name:'date(时间)'}, {id: '7', value: '7',name:'array(数组)'}];
+        const dataTypeList=[{id: '1', value: '1',name:'int32(整数型)'}, {id: '2', value: '2',name:'enum(枚举)'}, {id: '3', value: '3',name:'bool(布尔)'}, {id: '4', value: '4',name:'string(字符串)'}, {id: '5', value: '5',name:'struct(结构体)'}, {id: '6', value: '6',name:'date(时间)'}, {id: '7', value: '7',name:'array(数组)'}];
         const unitList=[{id: '1', value: '1',name:'伏特/V'}, {id: '2', value: '2',name:'秒/s'}]
         const elementTypeList=[{id: '1', value: '1',name:'int32(整数型)'},{id: '4', value: '4',name:'string(字符串)'}, {id: '5', value: '5',name:'struct(结构体)'}, {id: '6', value: '6',name:'date(时间)'}];
         return (
             <div>
-                {this.state.visible == true && <Drawer
+                 <Drawer
                     title={this.props.title}
-                    width={440}
+                    width={500}
                     onClose={this.onClose}
                     visible={this.state.visible}
                     footer={
@@ -456,10 +461,10 @@ class AddStructureParameters extends React.Component {
                         }
                     </Form>
                 </Drawer>
-                }
+                <AddStructureParameters onRef={this.addStructureParametersRef} title={this.state.title}></AddStructureParameters>
             </div>
         )
     }
 }
 
-export default AddStructureParameters
+export default AddInOutputParameters

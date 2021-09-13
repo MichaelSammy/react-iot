@@ -14,6 +14,7 @@ import AddCustomFeatures from "../ExtractionComponent/addCustomFeatures";
 import AddStandardFeatures from "../ExtractionComponent/addStandardFeatures";
 import AddLabel from "../ExtractionComponent/addLabel";
 import TopicListTab from "../ExtractionComponent/topicListTab";
+import ImportModel from "../ExtractionComponent/importModel";
 
 const {TabPane} = Tabs;
 const FormItem = Form.Item
@@ -56,6 +57,9 @@ export default class Permission extends React.Component {
     }
     addLabelRef = (ref) => {
         this.addLabelRefChild = ref
+    }
+    importModelRef= (ref) => {
+        this.importModelRefChild = ref
     }
     submitOk = () => {
         this.setState({
@@ -107,7 +111,9 @@ export default class Permission extends React.Component {
     addStandardFeatures = () => {
         this.addStandardFeaturesRefChild.showDrawer()
     }
-
+    importModelFrom = () => {
+        this.importModelRefChild.showDrawer()
+    }
     editProduct = () => {
         this.setState({
             detail: {
@@ -248,7 +254,9 @@ export default class Permission extends React.Component {
                 <Tabs id="product-info-tabs-id" className="product-info-tabs" type="card">
                     <TabPane tab="功能定义" key="1">
                         <FunctionDefinition addCustomFeatures={this.addCustomFeatures}
-                                            addStandardFeatures={this.addStandardFeatures}></FunctionDefinition>
+                                            addStandardFeatures={this.addStandardFeatures}
+                                            importModelFrom={this.importModelFrom}
+                        ></FunctionDefinition>
                     </TabPane>
                     <TabPane tab="数据解析" key="2">
                         <DataAnalysis></DataAnalysis>
@@ -288,6 +296,7 @@ export default class Permission extends React.Component {
                            submitCancel={this.submitCancel}
                            content={this.state.baseModelContent}
                 ></BaseModel>
+                <ImportModel onRef={this.importModelRef} title='导入物模型'></ImportModel>
             </div>
         )
     }

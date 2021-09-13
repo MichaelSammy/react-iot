@@ -1,6 +1,7 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import IconFont from "../../../../utils/IconFont";
+import AddInOutputParameters from './addInOutputParameters'
 import AddStructureParameters from './addStructureParameters'
 import request from "../../../../utils/request";
 import './../index.less'
@@ -12,22 +13,58 @@ const FormItem = Form.Item
 class AddCustomFeatures extends React.Component {
 
     fromModeRef = React.createRef();
+    addInOutputParametersRef= (ref) => {
+        this.addInOutputParametersChildRef = ref
+    }
     addStructureParametersRef= (ref) => {
         this.addStructureParametersChildRef = ref
     }
     state = {
         detail: {},
         visible: false,
+        attributeType:true,
+        eventType:false,
+        serviceType:false,
+
         numberDataVisible:true,
         enumDataVisible:false,
         booleanDataVisible:false,
         dateDataVisible:false,
         stringDataVisible:false,
         structDataVisible:false,
+        arrayDataVisible:false,
+
+        elementNumberVisible:true,
+        elementStringVisible:false,
+        elementDateVisible:false,
+        elementStructVisible:false,
+
+        title:'',
 
     }
-    showAddaStructureParameters=()=>{
-        this.addStructureParametersChildRef.showDrawer()
+    showAddStructureParameters=(item)=>{
+        switch (item) {
+            case '1':
+                this.setState({
+                    title:'添加参数'
+                })
+                this.addStructureParametersChildRef.showDrawer()
+                break;
+            case '2':
+                this.setState({
+                    title:'添加输出参数'
+                })
+                this.addInOutputParametersChildRef.showDrawer()
+                break;
+            case '3':
+                this.setState({
+                    title:'添加输入参数'
+                })
+                this.addInOutputParametersChildRef.showDrawer()
+                break;
+            default:
+        }
+
     }
     showDrawer = () => {
         this.setState({
@@ -53,6 +90,30 @@ class AddCustomFeatures extends React.Component {
         form.resetFields();
     };
     changeFunctionType = (item) => {
+        switch(item){
+            case '1':
+                this.setState({
+                    attributeType:true,
+                    eventType:false,
+                    serviceType:false,
+                })
+              break;
+            case '2':
+                this.setState({
+                    attributeType:false,
+                    eventType:true,
+                    serviceType:false,
+                })
+             break;
+            case '3':
+                this.setState({
+                    attributeType:false,
+                    eventType:false,
+                    serviceType:true,
+                })
+              break;
+            default:
+        }
     }
     changeDataType= (item) => {
        switch (item) {
@@ -64,6 +125,7 @@ class AddCustomFeatures extends React.Component {
                    dateDataVisible:false,
                    stringDataVisible:false,
                    structDataVisible:false,
+                   arrayDataVisible:false,
                });
                break;
            case '2':
@@ -74,6 +136,7 @@ class AddCustomFeatures extends React.Component {
                    dateDataVisible:false,
                    stringDataVisible:false,
                    structDataVisible:false,
+                   arrayDataVisible:false,
                });
                break;
            case '3':
@@ -84,6 +147,7 @@ class AddCustomFeatures extends React.Component {
                    dateDataVisible:false,
                    stringDataVisible:false,
                    structDataVisible:false,
+                   arrayDataVisible:false,
                });
                break;
            case '4':
@@ -94,6 +158,7 @@ class AddCustomFeatures extends React.Component {
                    dateDataVisible:false,
                    stringDataVisible:true,
                    structDataVisible:false,
+                   arrayDataVisible:false,
                });
                break;
            case '5':
@@ -104,6 +169,7 @@ class AddCustomFeatures extends React.Component {
                    dateDataVisible:false,
                    stringDataVisible:false,
                    structDataVisible:true,
+                   arrayDataVisible:false,
                });
                break;
            case '6':
@@ -114,12 +180,59 @@ class AddCustomFeatures extends React.Component {
                    dateDataVisible:true,
                    stringDataVisible:false,
                    structDataVisible:false,
+                   arrayDataVisible:false,
                });
                break;
            case '7':
+               this.setState({
+                   numberDataVisible: false,
+                   enumDataVisible:false,
+                   booleanDataVisible:false,
+                   dateDataVisible:false,
+                   stringDataVisible:false,
+                   structDataVisible:false,
+                   arrayDataVisible:true,
+               });
                break;
            default:
        }
+    }
+    changeElementType= (item) => {
+        switch (item) {
+            case '1':
+                this.setState({
+                    elementNumberVisible:true,
+                    elementStringVisible:false,
+                    elementDateVisible:false,
+                    elementStructVisible:false,
+                })
+                break;
+            case  '4':
+                this.setState({
+                    elementNumberVisible:false,
+                    elementStringVisible:true,
+                    elementDateVisible:false,
+                    elementStructVisible:false,
+                })
+                break;
+            case '5':
+                this.setState({
+                    elementNumberVisible:false,
+                    elementStringVisible:false,
+                    elementDateVisible:false,
+                    elementStructVisible:true,
+                })
+                break;
+            case  '6':
+                this.setState({
+                    elementNumberVisible:false,
+                    elementStringVisible:false,
+                    elementDateVisible:true,
+                    elementStructVisible:false,
+                })
+                break;
+            default:
+        }
     }
     changeReadWrite= (item) => {
     }
@@ -135,6 +248,9 @@ class AddCustomFeatures extends React.Component {
     render() {
         const formItemLayout = {}
         const detail = {
+            dataType:'',
+            functionType:'',
+            elementType:'',
             loginName: '',
             name: '',
             mobile: '',
@@ -145,6 +261,9 @@ class AddCustomFeatures extends React.Component {
         const dataTypeList=[{id: '1', value: '1',name:'int32(整数型)'}, {id: '2', value: '2',name:'enum(枚举)'}, {id: '3', value: '3',name:'bool(布尔)'}, {id: '4', value: '4',name:'string(字符串)'}, {id: '5', value: '5',name:'struct(结构体)'}, {id: '6', value: '6',name:'date(时间)'}, {id: '7', value: '7',name:'array(数组)'}];
         const readWriteList=[{id: '1', value: '1',name:'读写'}, {id: '2', value: '2',name:'只读'}];
         const unitList=[{id: '1', value: '1',name:'伏特/V'}, {id: '2', value: '2',name:'秒/s'}]
+        const eventTypeList=[{id: '1', value: '1',name:'信息'}, {id: '2', value: '2',name:'告警'}, {id: '3', value: '3',name:'故障'}];
+        const callTypeList= [{id: '1', value: '1',name:'同步'}, {id: '2', value: '2',name:'异步'}]
+        const elementTypeList=[{id: '1', value: '1',name:'int32(整数型)'},{id: '4', value: '4',name:'string(字符串)'}, {id: '5', value: '5',name:'struct(结构体)'}, {id: '6', value: '6',name:'date(时间)'}];
         return (
             <div>
                 <Drawer
@@ -170,7 +289,7 @@ class AddCustomFeatures extends React.Component {
                 >
                     <Form ref={this.fromModeRef} layout="vertical">
                         <FormItem label="功能类型"
-                                  name="name"
+                                  name="functionType"
                                   rules={[
                                       {
                                           required: true,
@@ -209,8 +328,56 @@ class AddCustomFeatures extends React.Component {
                                   ]}{...formItemLayout}>
                             <Input type="text" placeholder="1-32位，中文，英文，数字，特殊字符"/>
                         </FormItem>
-                        <FormItem label="数据类型"
+                        {this.state.serviceType==true &&
+                        <div>
+                            <FormItem label="调用方式"
+                                      name="name"
+                                      rules={[
+                                          {
+                                              required: true,
+                                              message: '请选择调用方式'
+                                          },
+                                      ]}{...formItemLayout}>
+                                <Select placeholder="请选择调用方式"  defaultValue={'1'}>
+                                    {callTypeList.map((item) => (
+                                        <Option value={item.value} key={item.value}>
+                                            {item.name}
+                                        </Option>
+                                    ))}
+                                </Select>
+                            </FormItem>
+                            <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 输入参数</span></div>
+                            <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'3')}> <IconFont  type='icon-jiahao'/>添加参数</div>
+                            <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 输出参数</span></div>
+                            <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'2')}> <IconFont  type='icon-jiahao'/>添加参数</div>
+                        </div>
+                        }
+                        {this.state.eventType==true &&
+                    <div>
+                        <FormItem label="事件类型"
                                   name="name"
+                                  rules={[
+                                      {
+                                          required: true,
+                                          message: '请选择事件类型'
+                                      },
+                                  ]}{...formItemLayout}>
+                            <Select placeholder="请选择事件类型"  defaultValue={'1'}>
+                                {eventTypeList.map((item) => (
+                                    <Option value={item.value} key={item.value}>
+                                        {item.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </FormItem>
+                        <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 输出参数</span></div>
+                        <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'2')}> <IconFont  type='icon-jiahao'/>添加参数</div>
+                    </div>
+                    }
+                        {
+                            this.state.attributeType &&
+                       <FormItem label="数据类型"
+                                  name="dataType"
                                   rules={[
                                       {
                                           required: true,
@@ -226,8 +393,42 @@ class AddCustomFeatures extends React.Component {
                                     </Option>
                                 ))}
                             </Select>
-                        </FormItem>
-                        {this.state.numberDataVisible==true &&
+                      </FormItem>
+                        }
+                        {  this.state.arrayDataVisible && this.state.attributeType &&
+                            <div>
+                                <FormItem label="元素类型"
+                                          name="elementType"
+                                          rules={[
+                                              {
+                                                  required: true,
+                                                  message: '请选择元素类型'
+                                              },
+                                          ]}{...formItemLayout}>
+                                    <Select placeholder="请选择元素类型"   onChange={(value) => {
+                                        this.changeElementType(value);
+                                    }} defaultValue={'1'}>
+                                        {elementTypeList.map((item) => (
+                                            <Option value={item.value} key={item.value}>
+                                                {item.name}
+                                            </Option>
+                                        ))}
+                                    </Select>
+                                </FormItem>
+                                <FormItem label="元素个数"
+                                          name="loginName"
+                                          initialValue={detail.loginName}
+                                          rules={[
+                                              {
+                                                  required: true,
+                                                  message: '请输入元素个数'
+                                              },
+                                          ]}{...formItemLayout}>
+                                    <Input type="text" placeholder="请输入元素个数"/>
+                                </FormItem>
+                            </div>
+                        }
+                        {((this.state.numberDataVisible==true && this.state.attributeType)||(this.state.arrayDataVisible&&this.state.attributeType&&this.state.elementNumberVisible)) &&
                             <div>
                             <FormItem label="定义取值范围" name="name" rules={[{required: true, message: ' '}]}
                                       style={{marginBottom: 0}}>
@@ -275,7 +476,7 @@ class AddCustomFeatures extends React.Component {
                             </div>
                         }
                         {
-                            this.state.enumDataVisible==true &&
+                            this.state.enumDataVisible==true  && this.state.attributeType &&
                             <div>
                                <div><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 枚举值</span></div>
                                 <div style={{display:'flex',padding:'8px 0px'}}><div style={{width:'40%',float:'left',marginLeft:'10px'}}>参数值</div><div style={{width:'55%',float:'right'}}>参数类型</div></div>
@@ -310,7 +511,7 @@ class AddCustomFeatures extends React.Component {
                             </div>
                         }
                         {
-                            this.state.booleanDataVisible==true &&
+                            this.state.booleanDataVisible==true  && this.state.attributeType &&
                             <div>
                                 <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 布尔值</span></div>
                                 <div style={{float: 'left', lineHeight: '32px',padding:'0px 10px 0px 10px'}}>0 -</div>
@@ -326,7 +527,7 @@ class AddCustomFeatures extends React.Component {
                             </div>
 
                          }
-                        {this.state.dateDataVisible==true &&
+                        {((this.state.dateDataVisible==true  && this.state.attributeType)||(this.state.arrayDataVisible==true  && this.state.attributeType&&this.state.elementDateVisible)) &&
                             <div>
                                 <FormItem label="时间格式" name="name" rules={[{required: false, message: ' '}]}
                                           {...formItemLayout}>
@@ -334,7 +535,7 @@ class AddCustomFeatures extends React.Component {
                                 </FormItem>
                             </div>
                         }
-                        {this.state.stringDataVisible==true &&
+                        {((this.state.stringDataVisible==true  && this.state.attributeType) ||(this.state.arrayDataVisible==true  && this.state.attributeType&&this.state.elementStringVisible))&&
                         <div>
                             <FormItem label="数据长度" name="name" rules={[{required: true, message: ' '}]}
                                       {...formItemLayout}>
@@ -342,29 +543,33 @@ class AddCustomFeatures extends React.Component {
                             </FormItem>
                         </div>
                         }
-                        {this.state.structDataVisible==true &&
+                        {((this.state.structDataVisible==true && this.state.attributeType) ||(this.state.arrayDataVisible==true && this.state.attributeType &&this.state.elementStructVisible)) &&
                         <div>
                             <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> Json对象</span></div>
-                            <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddaStructureParameters}> <IconFont  type='icon-jiahao'/>添加参数</div>
+                            <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'1')}> <IconFont  type='icon-jiahao'/>添加参数</div>
                         </div>
                         }
-                        <FormItem label="读写类型"
-                                  name="name"
-                                  rules={[
-                                      {
-                                          required: true,
-                                          message: '请选择读写类型'
-                                      },
-                                  ]}{...formItemLayout}>
-                            <Select placeholder="请选择读写类型" onChange={(value)=>{
-                                this.changeReadWrite(value)}} defaultValue={'1'}>
-                                {readWriteList.map((item) => (
-                                    <Option value={item.value} key={item.value}>
-                                        {item.name}
-                                    </Option>
-                                ))}
-                            </Select>
-                        </FormItem>
+                        {
+                            this.state.attributeType &&
+                            <FormItem label="读写类型"
+                                      name="name"
+                                      rules={[
+                                          {
+                                              required: true,
+                                              message: '请选择读写类型'
+                                          },
+                                      ]}{...formItemLayout}>
+                                <Select placeholder="请选择读写类型" onChange={(value) => {
+                                    this.changeReadWrite(value)
+                                }} defaultValue={'1'}>
+                                    {readWriteList.map((item) => (
+                                        <Option value={item.value} key={item.value}>
+                                            {item.name}
+                                        </Option>
+                                    ))}
+                                </Select>
+                            </FormItem>
+                        }
                         <FormItem label="描述"
                                   name="loginName"
                                   initialValue={detail.loginName}
@@ -379,7 +584,8 @@ class AddCustomFeatures extends React.Component {
                         </FormItem>
                     </Form>
                 </Drawer>
-                <AddStructureParameters  onRef={this.addStructureParametersRef} ></AddStructureParameters>
+                <AddInOutputParameters  onRef={this.addInOutputParametersRef} title={this.state.title}></AddInOutputParameters>
+                <AddStructureParameters onRef={this.addStructureParametersRef} title={this.state.title}></AddStructureParameters>
             </div>
         )
     }
