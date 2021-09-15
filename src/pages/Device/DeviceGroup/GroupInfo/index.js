@@ -44,7 +44,7 @@ export default class Permission extends React.Component {
             {
                 "path": "/user/device",
                 "pathName": "device",
-                "name": "设备管理",
+                "name": "设备接入与管理",
                 "icon": "iconxiangmu",
                 "children": [
                     {

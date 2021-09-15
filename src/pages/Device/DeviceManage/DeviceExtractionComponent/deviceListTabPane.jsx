@@ -1,17 +1,26 @@
 import React from "react";
-import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
+import {Card, Modal, Form, Input, Button, Select, Radio, Switch} from "antd";
 import IconFont from "../../../../utils/IconFont";
+import BaseForm from "../../../../common/BaseForm";
+import BaseModel from "../../../../common/BaseModel";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
 import './../index.less'
-import DefineTopicClass from "./defineTopicClass";
+import AddDevice from "./addDevice"
+import BatchAddDevice from "./batchAddDevice"
 
 const {TextArea} = Input
 const FormItem = Form.Item
 
-class DefineTopicList extends React.Component {
+class DeviceListTabPane extends React.Component {
     // fromModeRef = React.createRef();
+    addDeviceRef = (ref) => {
+        this.addDeviceRefChild = ref
+    }
+    addBatchDeviceRef = (ref) => {
+        this.addBatchDeviceRefChild = ref
+    }
     params = {
         page: 1,
         pageSize: 5
@@ -23,7 +32,15 @@ class DefineTopicList extends React.Component {
             placeholder: '',
             list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
             field: 'power',
-            width: '130px'
+            width: '100px'
+        },
+        {
+            type: 'select',
+            initialValue: '1',
+            placeholder: '',
+            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            field: 'power',
+            width: '80px'
         },
         {
             type: 'search',
@@ -31,12 +48,23 @@ class DefineTopicList extends React.Component {
             label: '',
             placeholder: '请输入搜索内容',
             field: 'username',
-            width: '336px',
+            width: '160px',
             bordered: true,
-        }
+        },
+        {
+            type: 'select',
+            initialValue: '1',
+            placeholder: '',
+            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            field: 'power',
+            width: '80px'
+        },
     ]
     state = {
-        rowSelection: false,
+        rowSelection: {
+            selectedRowKeys: [],
+            selectedRows: [],
+        },
         pagination: {
             showSizeChanger: true,
             showQuickJumper: true,
@@ -48,26 +76,62 @@ class DefineTopicList extends React.Component {
             onChange: (page, pageSize) => this.changePage(page, pageSize),
             showTotal: (total) => `共${total}条`,
         },
-        type: '',
+        type: 'checkbox',
         list: [],
-        defineTopicVisible: false,
+        visibleBaseModel: false,
+        baseModelContent: '',
+        addDeviceToGroupModel: false,
         detail: {},
         title: ''
     }
-    onRef = (ref) => {
-        this.child = ref
-    }
 
     componentDidMount() {
+        // this.props.onRef(this);
         this.requestList();
     }
 
-    addDefineTopicClass = () => {
+    addDevice = () => {
+        this.addDeviceRefChild.showDrawer();
+    }
+    addBatchDevice = () => {
+        this.addBatchDeviceRefChild.showDrawer();
+    }
+    callBackFatherMethod = () => {
+        this.setState({
+            addDeviceToGroupModel: true,
+        })
+    }
+    enable = () => {
+        this.setState({
+            visibleBaseModel: true,
+            baseModelContent: '是否启用？'
+        })
+    }
+    disable = () => {
+        this.setState({
+            visibleBaseModel: true,
+            baseModelContent: '是否禁用？'
+        })
+    }
+    batchDelete = () => {
+        this.setState({
+            visibleBaseModel: true,
+            baseModelContent: '是否删除？'
+        })
+    }
+    showDevice = () => {
+        this.props.forwardDeviceInfo();
+    }
+    removeDevice = () => {
+        this.setState({
+            visibleBaseModel: true,
+            baseModelContent: '是否删除设备？'
+        })
+    }
+    childDevice = () => {
 
     }
-    editDefineTopic = () => {
-        alert(2)
-    }
+
     //请求列表
     requestList() {
         request({
@@ -177,24 +241,24 @@ class DefineTopicList extends React.Component {
         })
     }
 
-    saveSubmit = () => {
-        this.child.saveSubmit();
-    }
-    closeSubmit = () => {
+    submitOk = () => {
         this.setState({
-            defineTopicVisible: false
-        })
-        this.child.closeSubmit()
-    }
-  
-    addDefineTopicClass = () => {
-        this.setState({
-            detail: {},
-            defineTopicVisible: true,
-            title: '定义Topic类'
+            visibleBaseModel: false
         })
     }
-  
+    submitCancel = () => {
+        this.setState({
+            visibleBaseModel: false
+        })
+    }
+    tableColumnChange = () => {
+        alert('12345');
+    }
+    hideAddDviceToGroupModel = () => {
+        this.setState({
+            addDeviceToGroupModel: false
+        })
+    }
     changePage = (page, pageSize) => {
         this.params.page = page;
         this.params.pageSize = pageSize;
@@ -217,18 +281,44 @@ class DefineTopicList extends React.Component {
     render() {
         const columns = [
             {
-                title: '订阅类型',
+                title: 'DeviceName/备注名称',
                 dataIndex: 'roleName',
                 align: 'left'
             },
             {
-                title: '订阅消息',
+                title: '设备所属产品',
                 dataIndex: 'officeName',
                 align: 'left',
             },
             {
-                title: '创建时间',
+                title: '节点类型',
                 dataIndex: 'createUser',
+                align: 'left',
+            },
+            {
+                title: '状态/启用状态',
+                dataIndex: 'createTime',
+                align: 'left',
+                render: (item) => {
+                    return (
+                        <div className="function-table-option-buttion">
+                            <div style={{
+                                width: '6px',
+                                height: '6px',
+                                background: '#FF6D6D',
+                                borderRadius: '3px',
+                                marginRight: '10px'
+                            }}></div>
+                            <div className="option-button">已启用</div>
+                            <div className="option-button"><Switch defaultChecked onChange={this.tableColumnChange}/>
+                            </div>
+                        </div>
+                    )
+                }
+            },
+            {
+                title: '最后上线时间',
+                dataIndex: 'remark',
                 align: 'left',
             },
             {
@@ -237,7 +327,11 @@ class DefineTopicList extends React.Component {
                 render: (item) => {
                     return (
                         <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.editDefineTopic.bind(this, item)}>编辑</div>
+                            <div className="option-button" onClick={this.showDevice.bind(this, item)}>查看</div>
+                            <div className="split"></div>
+                            <div className="option-button" onClick={this.removeDevice.bind(this, item)}>删除</div>
+                            <div className="split"></div>
+                            <div className="option-button" onClick={this.childDevice.bind(this, item)}>子设备(1)</div>
                         </div>
                     )
                 }
@@ -245,7 +339,51 @@ class DefineTopicList extends React.Component {
         ];
         return (
             <div>
-                <div className="add-topic-class" onClick={this.addDefineTopicClass}>定义Topic类</div>
+                <div className="function-search-from" style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <BaseForm
+                        data={this.data}
+                        handleSearch={this.handleSearch}
+                        show={false}
+                    />
+                    <div className='product-function-mode-manager'>
+                        <div className="product-mode-right-option">
+                            <div className="add-stand-function" onClick={this.addDevice}>
+                                <div><IconFont
+                                    type='icon-jiahao' className="icon-font-offset-px"/>添加设备
+                                </div>
+                            </div>
+
+                            <div className="add-stand-function" onClick={this.addBatchDevice}>
+                                <div><IconFont
+                                    type='icon-jiahao' className="icon-font-offset-px"/>批量添加
+                                </div>
+                            </div>
+
+                            <div className="add-stand-function" onClick={this.callBackFatherMethod}>
+                                <div><IconFont
+                                    type='icon-jiahao' className="icon-font-offset-px"/>导出设备
+                                </div>
+                            </div>
+
+
+                            <div className="batch-delete" onClick={this.enable}>
+                                <div><IconFont type='icon-a-shanchucopy'
+                                               className="icon-font-offset-px"/>启用
+                                </div>
+                            </div>
+                            <div className="batch-delete" onClick={this.disable}>
+                                <div><IconFont type='icon-a-shanchucopy'
+                                               className="icon-font-offset-px"/>禁用
+                                </div>
+                            </div>
+                            <div className="batch-delete" onClick={this.batchDelete}>
+                                <div><IconFont type='icon-a-shanchucopy'
+                                               className="icon-font-offset-px"/>删除
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <Etable
                     that={this}
                     dataSource={this.state.dataSource}
@@ -256,25 +394,17 @@ class DefineTopicList extends React.Component {
                     type={this.state.type}
                 >
                 </Etable>
-                {
-                    this.state.defineTopicVisible &&
-                    <Modal
-                        title={this.state.title}
-                        visible={this.state.defineTopicVisible}
-                        onCancel={this.closeSubmit}
-                        onOk={this.saveSubmit}
-                        centered
-                        footer={[
-                            <Button key="submit" type="primary" onClick={this.saveSubmit}>确定</Button>,
-                            <Button key="back" onClick={this.closeSubmit}>取消</Button>
-                        ]}
-                    >
-                        <DefineTopicClass detail={this.state.detail} onRef={this.onRef}> </DefineTopicClass>
-                    </Modal>
-                }
+                <BaseModel that={this}
+                           visible={this.state.visibleBaseModel}
+                           submitOk={this.submitOk}
+                           submitCancel={this.submitCancel}
+                           content={this.state.baseModelContent}
+                ></BaseModel>
+                <AddDevice title={'添加设备'} onRef={this.addDeviceRef}></AddDevice>
+                <BatchAddDevice title={'批量添加设备'} onRef={this.addBatchDeviceRef}></BatchAddDevice>
             </div>
         )
     }
 }
 
-export default DefineTopicList;
+export default DeviceListTabPane;

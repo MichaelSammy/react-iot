@@ -57,6 +57,7 @@ export const permissionAction = (path) => {
                 res.data.data.push('add-product')
                 res.data.data.push('product-info')
                 res.data.data.push('device-manage')
+                res.data.data.push('device-info')
                 res.data.data.push('device-group')
                 res.data.data.push('group-info')
                 res.data.data.push('plugin-manage')

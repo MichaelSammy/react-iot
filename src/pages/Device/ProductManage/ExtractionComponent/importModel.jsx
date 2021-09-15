@@ -41,8 +41,8 @@ class ImportModel extends React.Component {
     }
     render() {
         const formItemLayout = {
-            // labelCol: {span: 10},
-            // wrapperCol: {span: 16}
+            labelCol: {span: 10},
+            wrapperCol: {span: 16}
         }
         const detail ={
             loginName:''
@@ -92,13 +92,12 @@ class ImportModel extends React.Component {
                                               message: '请输入产品名称'
                                           },
                                       ]}{...formItemLayout}>
-                                <FormItem name="dragger" valuePropName="fileList"  noStyle>
-                                    <Upload.Dragger name="files" action="/upload.do">
-                                        <p className="ant-upload-drag-icon">
-                                          sss
-                                        </p>
-                                    </Upload.Dragger>
-                                </FormItem>
+                                <div  style={{float:'left',color:'#666666'}}>
+                                    <Upload>
+                                        <Button>上传文件</Button>
+                                    </Upload>
+                                </div>
+                                    <div className="upload-button-desc">支持json格式：体积小于256KB</div>
                             </FormItem>
                         </Form>
                     </div>

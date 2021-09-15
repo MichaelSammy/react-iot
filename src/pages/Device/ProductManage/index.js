@@ -139,7 +139,7 @@ export default class Permission extends React.Component {
             {
                 "path": "/user/device",
                 "pathName": "device",
-                "name": "设备管理",
+                "name": "设备接入与管理",
                 "icon": "iconxiangmu",
                 "children": [
                     {
@@ -201,10 +201,10 @@ export default class Permission extends React.Component {
                         <List
                             grid={{
                                 gutter: 13,
-                                xs: 1,
-                                sm: 2,
-                                md: 4,
-                                lg: 4,
+                                xs: 3,
+                                sm: 3,
+                                md: 3,
+                                lg: 3,
                                 xl: 3,
                                 xxl: 3,
                             }}

@@ -1,16 +1,16 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
 import IconFont from "../../../../utils/IconFont";
+import BaseForm from "../../../../common/BaseForm";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
 import './../index.less'
-import DefineTopicClass from "./defineTopicClass";
 
 const {TextArea} = Input
 const FormItem = Form.Item
 
-class DefineTopicList extends React.Component {
+export default class ServiceRecordTabPane extends React.Component {
     // fromModeRef = React.createRef();
     params = {
         page: 1,
@@ -48,26 +48,18 @@ class DefineTopicList extends React.Component {
             onChange: (page, pageSize) => this.changePage(page, pageSize),
             showTotal: (total) => `共${total}条`,
         },
-        type: '',
+        type: 'checkbox',
         list: [],
-        defineTopicVisible: false,
+        baseModelContent: '',
         detail: {},
         title: ''
     }
-    onRef = (ref) => {
-        this.child = ref
-    }
 
     componentDidMount() {
+        // this.props.onRef(this);
         this.requestList();
     }
 
-    addDefineTopicClass = () => {
-
-    }
-    editDefineTopic = () => {
-        alert(2)
-    }
     //请求列表
     requestList() {
         request({
@@ -177,24 +169,6 @@ class DefineTopicList extends React.Component {
         })
     }
 
-    saveSubmit = () => {
-        this.child.saveSubmit();
-    }
-    closeSubmit = () => {
-        this.setState({
-            defineTopicVisible: false
-        })
-        this.child.closeSubmit()
-    }
-  
-    addDefineTopicClass = () => {
-        this.setState({
-            detail: {},
-            defineTopicVisible: true,
-            title: '定义Topic类'
-        })
-    }
-  
     changePage = (page, pageSize) => {
         this.params.page = page;
         this.params.pageSize = pageSize;
@@ -217,35 +191,40 @@ class DefineTopicList extends React.Component {
     render() {
         const columns = [
             {
-                title: '订阅类型',
+                title: '时间',
                 dataIndex: 'roleName',
                 align: 'left'
             },
             {
-                title: '订阅消息',
+                title: '标识符',
                 dataIndex: 'officeName',
                 align: 'left',
             },
             {
-                title: '创建时间',
+                title: '事件名称',
                 dataIndex: 'createUser',
                 align: 'left',
             },
             {
-                title: '操作',
+                title: '事件类型',
+                dataIndex: 'createTime',
                 align: 'left',
-                render: (item) => {
-                    return (
-                        <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.editDefineTopic.bind(this, item)}>编辑</div>
-                        </div>
-                    )
-                }
+            },
+            {
+                title: '输出参数',
+                dataIndex: 'remark',
+                align: 'left',
             }
         ];
         return (
             <div>
-                <div className="add-topic-class" onClick={this.addDefineTopicClass}>定义Topic类</div>
+                <div className="function-search-from" style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <BaseForm
+                        data={this.data}
+                        handleSearch={this.handleSearch}
+                        show={false}
+                    />
+                </div>
                 <Etable
                     that={this}
                     dataSource={this.state.dataSource}
@@ -256,25 +235,8 @@ class DefineTopicList extends React.Component {
                     type={this.state.type}
                 >
                 </Etable>
-                {
-                    this.state.defineTopicVisible &&
-                    <Modal
-                        title={this.state.title}
-                        visible={this.state.defineTopicVisible}
-                        onCancel={this.closeSubmit}
-                        onOk={this.saveSubmit}
-                        centered
-                        footer={[
-                            <Button key="submit" type="primary" onClick={this.saveSubmit}>确定</Button>,
-                            <Button key="back" onClick={this.closeSubmit}>取消</Button>
-                        ]}
-                    >
-                        <DefineTopicClass detail={this.state.detail} onRef={this.onRef}> </DefineTopicClass>
-                    </Modal>
-                }
             </div>
         )
     }
 }
 
-export default DefineTopicList;

@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
+import {Card, Modal, Form, Input, Button, Select, Radio, Switch} from "antd";
 import IconFont from "../../../../utils/IconFont";
 import BaseForm from "../../../../common/BaseForm";
 import BaseModel from "../../../../common/BaseModel";
@@ -208,6 +208,9 @@ class GroupDeviceList extends React.Component {
             visibleBaseModel: false
         })
     }
+    tableColumnChange = () => {
+        alert('12345');
+    }
     hideAddDviceToGroupModel = () => {
         this.setState({
             addDeviceToGroupModel: false
@@ -253,6 +256,15 @@ class GroupDeviceList extends React.Component {
                 title: '状态/启用状态',
                 dataIndex: 'createTime',
                 align: 'left',
+                render: (item) => {
+                    return (
+                        <div className="function-table-option-buttion">
+                            <div style={{width: '6px',height: '6px',background: '#FF6D6D',borderRadius:'3px',marginRight:'10px'}}></div>
+                            <div className="option-button">已启用</div>
+                            <div className="option-button"><Switch defaultChecked onChange={this.tableColumnChange} /></div>
+                        </div>
+                    )
+                }
             },
             {
                 title: '最后上线时间',

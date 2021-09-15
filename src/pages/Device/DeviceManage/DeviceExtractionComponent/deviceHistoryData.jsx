@@ -1,40 +1,22 @@
 import React from "react";
-import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
+import {Card, Modal, Form, Input, Button, Select, Radio, Drawer, DatePicker} from "antd";
+import './../index.less'
+import moment from 'moment';
 import IconFont from "../../../../utils/IconFont";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
-import './../index.less'
-import DefineTopicClass from "./defineTopicClass";
 
+const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
-
-class DefineTopicList extends React.Component {
-    // fromModeRef = React.createRef();
+const {RangePicker} = DatePicker;
+export default class DeviceHistoryData extends React.Component {
+    fromModeRef = React.createRef();
     params = {
         page: 1,
         pageSize: 5
     }
-    data = [
-        {
-            type: 'select',
-            initialValue: '1',
-            placeholder: '',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
-            width: '130px'
-        },
-        {
-            type: 'search',
-            initialValue: '',
-            label: '',
-            placeholder: '请输入搜索内容',
-            field: 'username',
-            width: '336px',
-            bordered: true,
-        }
-    ]
     state = {
         rowSelection: false,
         pagination: {
@@ -50,25 +32,28 @@ class DefineTopicList extends React.Component {
         },
         type: '',
         list: [],
-        defineTopicVisible: false,
+        visible: false,
+        selectTabIndex: '1',
         detail: {},
         title: ''
     }
-    onRef = (ref) => {
-        this.child = ref
-    }
 
     componentDidMount() {
-        this.requestList();
+        this.props.onRef(this);
+        this.requestList()
     }
 
-    addDefineTopicClass = () => {
+    showDrawer = () => {
+        this.setState({
+            visible: true,
+        });
+    };
+    onClose = () => {
+        this.setState({
+            visible: false,
+        });
+    };
 
-    }
-    editDefineTopic = () => {
-        alert(2)
-    }
-    //请求列表
     requestList() {
         request({
             url: '/user/list',
@@ -177,24 +162,20 @@ class DefineTopicList extends React.Component {
         })
     }
 
-    saveSubmit = () => {
-        this.child.saveSubmit();
-    }
-    closeSubmit = () => {
+    selectCharts = (index) => {
         this.setState({
-            defineTopicVisible: false
-        })
-        this.child.closeSubmit()
-    }
-  
-    addDefineTopicClass = () => {
-        this.setState({
-            detail: {},
-            defineTopicVisible: true,
-            title: '定义Topic类'
+            selectTabIndex: index,
+            showScript: true,
+            showResult: false,
         })
     }
-  
+    selectList = (index) => {
+        this.setState({
+            selectTabIndex: index,
+            showScript: false,
+            showResult: true,
+        })
+    }
     changePage = (page, pageSize) => {
         this.params.page = page;
         this.params.pageSize = pageSize;
@@ -217,64 +198,85 @@ class DefineTopicList extends React.Component {
     render() {
         const columns = [
             {
-                title: '订阅类型',
+                title: '属性名称',
                 dataIndex: 'roleName',
                 align: 'left'
             },
             {
-                title: '订阅消息',
+                title: '标识符',
                 dataIndex: 'officeName',
                 align: 'left',
             },
             {
-                title: '创建时间',
+                title: '当前值',
                 dataIndex: 'createUser',
                 align: 'left',
             },
             {
-                title: '操作',
+                title: '时间',
+                dataIndex: 'createUser',
                 align: 'left',
-                render: (item) => {
-                    return (
-                        <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.editDefineTopic.bind(this, item)}>编辑</div>
-                        </div>
-                    )
-                }
             }
         ];
         return (
             <div>
-                <div className="add-topic-class" onClick={this.addDefineTopicClass}>定义Topic类</div>
-                <Etable
-                    that={this}
-                    dataSource={this.state.dataSource}
-                    columns={columns}
-                    rowSelection={this.state.rowSelection}
-                    updateSelectedItem={updateSelectedItem.bind(this)}
-                    pagination={this.state.pagination}
-                    type={this.state.type}
+                <Modal
+                    title={this.props.title}
+                    visible={this.state.visible}
+                    onCancel={this.onClose}
+                    width={1000}
+                    centered
+                    footer={[]}
                 >
-                </Etable>
-                {
-                    this.state.defineTopicVisible &&
-                    <Modal
-                        title={this.state.title}
-                        visible={this.state.defineTopicVisible}
-                        onCancel={this.closeSubmit}
-                        onOk={this.saveSubmit}
-                        centered
-                        footer={[
-                            <Button key="submit" type="primary" onClick={this.saveSubmit}>确定</Button>,
-                            <Button key="back" onClick={this.closeSubmit}>取消</Button>
-                        ]}
-                    >
-                        <DefineTopicClass detail={this.state.detail} onRef={this.onRef}> </DefineTopicClass>
-                    </Modal>
-                }
+                    <div>
+                        <div>
+                            <div className="history-data-table-title">
+                                <div className="history-data-filed-desc">属性名称：基站定位</div>
+                                <div className="history-data-filed-desc">标识符：$OneNET_LBS</div>
+                                <div className="history-data-filed-desc">数据类型：array</div>
+                            </div>
+                            <div className="history-data-search-refresh">
+                                <div><RangePicker
+                                    ranges={{
+                                        Today: [moment(), moment()],
+                                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                    }}
+                                    showTime
+                                    format="YYYY/MM/DD HH:mm:ss"
+                                    //  onChange={onChange}
+                                /></div>
+                                <div className="history-data-function-button">
+                                    <div
+                                        className={this.state.selectTabIndex == '1' ? 'history-data-charts-list-selected' : 'history-data-charts-list-unselected'}
+                                        onClick={() => this.selectCharts('1')}>图表
+                                    </div>
+                                    <div
+                                        className={this.state.selectTabIndex == '2' ? 'history-data-charts-list-selected' : 'history-data-charts-list-unselected'}
+                                        onClick={() => this.selectList('2')}>列表
+                                    </div>
+                                    <div className="history-data-refresh"><IconFont
+                                        type='icon-jiahao' className="icon-font-offset-px"/>刷新
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="history-data-charts-list">
+                            {this.state.selectTabIndex == '2' && <Etable
+                                that={this}
+                                dataSource={this.state.dataSource}
+                                columns={columns}
+                                rowSelection={this.state.rowSelection}
+                                updateSelectedItem={updateSelectedItem.bind(this)}
+                                pagination={this.state.pagination}
+                                type={this.state.type}
+                            >
+                            </Etable>
+                            }
+                        </div>
+                    </div>
+                </Modal>
             </div>
         )
     }
 }
 
-export default DefineTopicList;

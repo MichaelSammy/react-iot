@@ -1,12 +1,16 @@
 import React from "react";
-import {Card, Modal, Form, Input, Button, List, Breadcrumb, Pagination} from "antd";
+import {Card, Modal, Form, Input, Button, List, Breadcrumb, Pagination, Tabs} from "antd";
 import BaseForm from '../../../common/BaseForm'
 import BaseModel from '../../../common/BaseModel'
+import device from '../../../assets/images/device.png'
 import IconFont from '../../../utils/IconFont';
 import request from '../../../utils/request'
 import './index.less'
+import './device.less'
 import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../utils";
-
+import DeviceListTabPane from "../DeviceManage/DeviceExtractionComponent/deviceListTabPane";
+import BatchListTabPane from "../DeviceManage/DeviceExtractionComponent/batchListTabPane";
+const {TabPane} = Tabs;
 const FormItem = Form.Item
 export default class DeviceManage extends React.Component {
     params = {
@@ -18,10 +22,10 @@ export default class DeviceManage extends React.Component {
             type: 'select',
             // initialValue: '',
             label: '',
-            placeholder: '请选择分组标签',
+            placeholder: '全部产品',
             list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
             field: 'power',
-            width: '150px'
+            width: '400px'
         }
     ]
     state = {
@@ -56,6 +60,9 @@ export default class DeviceManage extends React.Component {
             visibleBaseModel: false
         })
     }
+    forwardDeviceInfo=()=>{
+        this.props.history.push({'pathname': "/user/device/managent/info", params: true});
+    }
     submitCancel = () => {
         this.setState({
             visibleBaseModel: false
@@ -67,19 +74,19 @@ export default class DeviceManage extends React.Component {
             {
                 "path": "/user/device",
                 "pathName": "device",
-                "name": "设备管理",
+                "name": "设备接入与管理",
                 "icon": "iconxiangmu",
                 "children": [
                     {
-                        "path": "/user/device/product",
-                        "pathName": "product-manage",
-                        "name": "产品管理",
+                        "path": "/user/device/managent",
+                        "pathName": "device-manage",
+                        "name": "设备管理",
                         "icon": "iconxiangmu",
                         "children": null,
                         "redirect": null
                     }
                 ],
-                "redirect": "/user/device/product"
+                "redirect": "/user/device/managent"
             }
         ]
         return (
@@ -99,17 +106,49 @@ export default class DeviceManage extends React.Component {
                     </div>
                 </div>
                 <div className="product-list-card">
-                    <div className="product-list-card-search">
-                        <div style={{float: 'left'}}>
+                    <div className="device-manage-list-header">
+                        <div className="device-manage-search">
+                            <div className="device-manage-search-title">产品范围</div>
                             <BaseForm
                                 data={this.data}
                                 show={false}
                                 handleSearch={this.handleSearch}
+                                clickSelect={this.clickSelect}
                             />
+                        </div>
+                        <div className="device-state-count">
+                            <div className="device-state-count-category">
+                                <div className="device-state-count-picture"></div>
+                                <div className="device-state-count-number">
+                                     <div>32135</div>
+                                     <div>设备总数</div>
+                                </div>
+                            </div>
+                            <div className="device-state-count-category">
+                                <div  className="device-state-count-picture"></div>
+                                <div className="device-state-count-number">
+                                    <div>685</div>
+                                    <div><span className="device-count online"></span>在线设备数</div>
+                                </div>
+                            </div>
+                            <div className="device-state-count-category">
+                                <div  className="device-state-count-picture"></div>
+                                <div className="device-state-count-number">
+                                    <div>0</div>
+                                    <div><span className="device-count activation"></span> 激活设备数</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div style={{clear: 'both'}}></div>
-
+                    <Tabs id="product-info-tabs-id" type="card">
+                        <TabPane tab="设备列表" key="1">
+                            <DeviceListTabPane forwardDeviceInfo={this.forwardDeviceInfo}></DeviceListTabPane>
+                        </TabPane>
+                        <TabPane tab="批次列表" key="2">
+                            <BatchListTabPane></BatchListTabPane>
+                        </TabPane>
+                    </Tabs>
 
                 </div>
                 <BaseModel that={this}
@@ -118,6 +157,7 @@ export default class DeviceManage extends React.Component {
                            submitCancel={this.submitCancel}
                            content={this.state.baseModelContent}
                 ></BaseModel>
+
             </div>
         )
     }

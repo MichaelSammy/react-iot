@@ -5,8 +5,9 @@ import UserManage from './pages/User/Permission/UserManage'
 import RoleManage from './pages/User/Permission/RoleManage'
 import addRole from './pages/User/Permission/RoleManage/AddRole'
 // import ProductManage from './pages/Device/ProductManage'
-import addProduct from './pages/Device/ProductManage/AddProduct'
-import productInfo from './pages/Device/ProductManage/ProductInfo'
+import AddProduct from './pages/Device/ProductManage/AddProduct'
+import ProductInfo from './pages/Device/ProductManage/ProductInfo'
+import DeviceInfo from './pages/Device/DeviceManage/DeviceInfo'
 import GroupInfo from './pages/Device/DeviceGroup/GroupInfo'
 const Home = AsyncComponent(() => import('./pages/Home'))
 const Login = AsyncComponent(() => import('./pages/Login'))
@@ -101,7 +102,7 @@ const routes = [
                     {
                         path: '/user/device/product/add',
                         pathName: 'add-product',
-                        component: addProduct,
+                        component: AddProduct,
                         name: '创建产品',
                         icon: 'icon-xiugai1',
                         show: false
@@ -109,7 +110,7 @@ const routes = [
                     {
                         path: '/user/device/product/info',
                         pathName: 'product-info',
-                        component: productInfo,
+                        component: ProductInfo,
                         name: '产品详情',
                         icon: 'icon-xiugai1',
                         show: false
@@ -132,6 +133,13 @@ const routes = [
                         pathName: 'device-group',
                         component: DeviceGroup,
                         name: '设备分组',
+                    },
+                    {
+                        path: '/user/device/managent/info',
+                        pathName: 'device-info',
+                        component: DeviceInfo,
+                        name: '设备详情',
+                        show: false
                     },
                     {
                         path: '/user/device/managent',
