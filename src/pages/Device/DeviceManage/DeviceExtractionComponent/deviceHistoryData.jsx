@@ -255,7 +255,7 @@ export default class DeviceHistoryData extends React.Component {
                                         onClick={() => this.selectList('2')}>列表
                                     </div>
                                     <div className="history-data-refresh"><IconFont
-                                        type='icon-jiahao' className="icon-font-offset-px"/>刷新
+                                        type='icon-shuaxinicon' className="icon-font-offset-px"/><span>刷新</span>
                                     </div>
                                 </div>
                             </div>

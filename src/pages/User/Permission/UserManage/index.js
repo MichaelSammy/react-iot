@@ -80,7 +80,8 @@ export default class Permission extends React.Component {
 
     //请求列表
     requestList() {
-        request({
+        request(
+            {
             url: '/user/list',
             type: 'get',
             params: {

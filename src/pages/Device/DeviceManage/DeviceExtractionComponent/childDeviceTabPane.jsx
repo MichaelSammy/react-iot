@@ -315,12 +315,12 @@ export default class ChildDeviceTabPane extends React.Component {
                                 </div>
                             </div>
                             <div className="batch-delete" onClick={this.enable}>
-                                <div><IconFont type='icon-a-shanchucopy'
+                                <div><IconFont type='icon-piliangqiyong'
                                                className="icon-font-offset-px"/>启用
                                 </div>
                             </div>
                             <div className="batch-delete" onClick={this.disable}>
-                                <div><IconFont type='icon-a-shanchucopy'
+                                <div><IconFont type='icon-piliangjinyong'
                                                className="icon-font-offset-px"/>禁用
                                 </div>
                             </div>

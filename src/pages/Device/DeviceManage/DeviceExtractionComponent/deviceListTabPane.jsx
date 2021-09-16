@@ -355,24 +355,24 @@ class DeviceListTabPane extends React.Component {
 
                             <div className="add-stand-function" onClick={this.addBatchDevice}>
                                 <div><IconFont
-                                    type='icon-jiahao' className="icon-font-offset-px"/>批量添加
+                                    type='icon-piliangtianjia' className="icon-font-offset-px"/>批量添加
                                 </div>
                             </div>
 
                             <div className="add-stand-function" onClick={this.callBackFatherMethod}>
                                 <div><IconFont
-                                    type='icon-jiahao' className="icon-font-offset-px"/>导出设备
+                                    type='icon-daochushebei' className="icon-font-offset-px"/>导出设备
                                 </div>
                             </div>
 
 
                             <div className="batch-delete" onClick={this.enable}>
-                                <div><IconFont type='icon-a-shanchucopy'
+                                <div><IconFont type='icon-piliangqiyong'
                                                className="icon-font-offset-px"/>启用
                                 </div>
                             </div>
                             <div className="batch-delete" onClick={this.disable}>
-                                <div><IconFont type='icon-a-shanchucopy'
+                                <div><IconFont type='icon-piliangjinyong'
                                                className="icon-font-offset-px"/>禁用
                                 </div>
                             </div>

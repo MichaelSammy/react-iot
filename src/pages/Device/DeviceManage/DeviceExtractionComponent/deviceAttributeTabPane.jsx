@@ -79,8 +79,8 @@ export default class DeviceAttributeTabPane extends React.Component {
                                     <div className="device-attribute-card-title">
                                         <div>总累积量</div>
                                         <div style={{cursor: 'pointer'}} onClick={this.showHistoryData}><IconFont
-                                            type='icon-xiugai1'
-                                            style={{background: '#666666', marginRight: '8px'}}/>历史数据
+                                            type='icon-lishishujuicon'
+                                            style={{color: '#666666', marginRight: '8px'}}/>历史数据
                                         </div>
                                     </div>
                                     <div>-</div>
