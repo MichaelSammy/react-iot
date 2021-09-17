@@ -280,6 +280,7 @@ export default class DeviceHistoryData extends React.Component {
                             {this.state.selectTabIndex == '2' && <Etable
                                 that={this}
                                 dataSource={this.state.dataSource}
+
                                 columns={columns}
                                 rowSelection={this.state.rowSelection}
                                 updateSelectedItem={updateSelectedItem.bind(this)}
