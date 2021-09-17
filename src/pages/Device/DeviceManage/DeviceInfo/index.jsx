@@ -11,7 +11,9 @@ import DeviceTopicListTabPane from '../DeviceExtractionComponent/deviceTopicList
 import DeviceInfoGroupTabPane from '../DeviceExtractionComponent/deviceInfoGroupTabPane'
 import ChildDeviceTabPane from '../DeviceExtractionComponent/childDeviceTabPane'
 import DeviceShadowTabPane from '../DeviceExtractionComponent/deviceShadowTabPane'
+import EditDevice from '../DeviceExtractionComponent/editDevice'
 import '../../ProductManage/index.less'
+import AddGroup from "../../DeviceGroup/AddGroup";
 
 const {TabPane} = Tabs;
 const FormItem = Form.Item
@@ -23,7 +25,12 @@ export default class Permission extends React.Component {
     componentDidMount() {
         // this.requestList()
     }
-
+    editDeviceRef = (ref) => {
+        this.editDeviceRefChild = ref
+    }
+    editDevice=()=>{
+        this.editDeviceRefChild.showDrawer()
+    }
 
     render() {
         const breadList = [
@@ -83,7 +90,7 @@ export default class Permission extends React.Component {
                                     <span className='title-desc'>设备信息</span>
                                     <IconFont style={{fontSize: '15px', color: '#2979E7', marginRight: '7px'}}
                                               type='icon-a-bianjicopy'/>
-                                    <span className='edit-card-title-option' onClick={this.editGroup}> 编辑</span>
+                                    <span className='edit-card-title-option' onClick={this.editDevice}> 编辑</span>
                                 </div>
                             </div>
                             <div className='card-top-spilt-line'></div>
@@ -154,6 +161,7 @@ export default class Permission extends React.Component {
                         <DeviceShadowTabPane></DeviceShadowTabPane>
                     </TabPane>
                 </Tabs>
+                <EditDevice onRef={this.editDeviceRef} title='编辑'></EditDevice>
             </div>
         )
     }

@@ -6,6 +6,7 @@ import IconFont from "../../../../utils/IconFont";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
+import * as echarts from 'echarts';
 
 const {Option} = Select
 const {TextArea} = Input
@@ -47,6 +48,9 @@ export default class DeviceHistoryData extends React.Component {
         this.setState({
             visible: true,
         });
+        setTimeout(()=>{
+            this.echartsData()
+        },600)
     };
     onClose = () => {
         this.setState({
@@ -162,18 +166,30 @@ export default class DeviceHistoryData extends React.Component {
         })
     }
 
-    selectCharts = (index) => {
+    selectChartsOrList = (index) => {
         this.setState({
             selectTabIndex: index,
             showScript: true,
             showResult: false,
         })
+        // if(index=='1'){
+        //     this.echartsData()
+        // }
     }
-    selectList = (index) => {
-        this.setState({
-            selectTabIndex: index,
-            showScript: false,
-            showResult: true,
+    echartsData(){
+        let myChart = echarts.init(document.getElementById("main"))
+        myChart.setOption({
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: [150, 230, 224, 218, 135, 147, 260],
+                type: 'line'
+            }]
         })
     }
     changePage = (page, pageSize) => {
@@ -248,11 +264,11 @@ export default class DeviceHistoryData extends React.Component {
                                 <div className="history-data-function-button">
                                     <div
                                         className={this.state.selectTabIndex == '1' ? 'history-data-charts-list-selected' : 'history-data-charts-list-unselected'}
-                                        onClick={() => this.selectCharts('1')}>图表
+                                        onClick={() => this.selectChartsOrList('1')}>图表
                                     </div>
                                     <div
                                         className={this.state.selectTabIndex == '2' ? 'history-data-charts-list-selected' : 'history-data-charts-list-unselected'}
-                                        onClick={() => this.selectList('2')}>列表
+                                        onClick={() => this.selectChartsOrList('2')}>列表
                                     </div>
                                     <div className="history-data-refresh"><IconFont
                                         type='icon-shuaxinicon' className="icon-font-offset-px"/><span>刷新</span>
@@ -272,6 +288,7 @@ export default class DeviceHistoryData extends React.Component {
                             >
                             </Etable>
                             }
+                            <div id="main" style={{ width: 1000, height: 400, display:this.state.selectTabIndex=='1'?'':'none'}}></div>
                         </div>
                     </div>
                 </Modal>
