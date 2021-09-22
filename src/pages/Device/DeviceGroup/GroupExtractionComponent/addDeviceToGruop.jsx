@@ -224,7 +224,7 @@ class AddDeviceToGruop extends React.Component {
         return (
             <div>
                 <Modal
-                    title={this.state.title}
+                    title={this.props.title}
                     visible={this.props.visible}
                     onCancel={this.resetModelFrom}
                     onOk={this.saveSubmit}

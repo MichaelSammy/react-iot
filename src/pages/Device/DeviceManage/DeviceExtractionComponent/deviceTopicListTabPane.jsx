@@ -5,6 +5,7 @@ import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
 import './../index.less'
+import BaseModel from "../../../../common/BaseModel";
 
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -39,7 +40,25 @@ export default class DeviceTopicListTabPane extends React.Component {
         // this.props.onRef(this);
         this.requestList();
     }
-
+    editTopic=()=>{
+        alert('编辑');
+    }
+    deleteTopic=()=>{
+        this.setState({
+            visibleBaseModel: true,
+            baseModelContent: '是否删除？'
+        })
+    }
+    submitOk = () => {
+        this.setState({
+            visibleBaseModel: false
+        })
+    }
+    submitCancel = () => {
+        this.setState({
+            visibleBaseModel: false
+        })
+    }
     //请求列表
     requestList() {
         request({
@@ -192,8 +211,18 @@ export default class DeviceTopicListTabPane extends React.Component {
             },
             {
                 title: '操作',
-                dataIndex: 'remark',
                 align: 'left',
+                render: (item) => {
+                    return (
+                        <div>
+                            <div className="function-table-option-buttion">
+                                <div className="option-button" onClick={this.editTopic.bind(this, item)}>编辑</div>
+                                <div className="split"></div>
+                                <div className="option-button" onClick={this.deleteTopic.bind(this, item)}>删除</div>
+                            </div>
+                        </div>
+                    )
+                }
             }
         ];
         return (
@@ -211,6 +240,12 @@ export default class DeviceTopicListTabPane extends React.Component {
                     type={this.state.type}
                 >
                 </Etable>
+                <BaseModel that={this}
+                           visible={this.state.visibleBaseModel}
+                           submitOk={this.submitOk}
+                           submitCancel={this.submitCancel}
+                           content={this.state.baseModelContent}
+                ></BaseModel>
             </div>
         )
     }

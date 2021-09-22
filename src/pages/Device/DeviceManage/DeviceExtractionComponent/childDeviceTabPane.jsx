@@ -7,7 +7,7 @@ import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
 import './../index.less'
-
+import AddDeviceToGruop from "../../DeviceGroup/GroupExtractionComponent/addDeviceToGruop";
 const {TextArea} = Input
 const FormItem = Form.Item
 
@@ -57,12 +57,6 @@ export default class ChildDeviceTabPane extends React.Component {
         // this.props.onRef(this);
         this.requestList();
     }
-
-    callBackFatherMethod = () => {
-        this.setState({
-            addDeviceToGroupModel: true,
-        })
-    }
     showDevice = () => {
         alert(2)
     }
@@ -91,7 +85,9 @@ export default class ChildDeviceTabPane extends React.Component {
         })
     }
     addChildDevice = () => {
-        alert('跳转子设备页面');
+        this.setState({
+            addDeviceToGroupModel: true,
+        })
     }
     tableColumnChange = () => {
         alert('21');
@@ -348,6 +344,11 @@ export default class ChildDeviceTabPane extends React.Component {
                            submitCancel={this.submitCancel}
                            content={this.state.baseModelContent}
                 ></BaseModel>
+                <AddDeviceToGruop
+                    visible={this.state.addDeviceToGroupModel}
+                    hideAddDviceToGroupModel={this.hideAddDviceToGroupModel}
+                    title={'添加子设备'}
+                ></AddDeviceToGruop>
             </div>
         )
     }

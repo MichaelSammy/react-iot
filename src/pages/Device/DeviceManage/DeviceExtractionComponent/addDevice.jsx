@@ -93,6 +93,17 @@ class AddDevice extends React.Component {
                                   ]}{...formItemLayout}>
                             <Input type="text" placeholder="请输入设备名称"/>
                         </FormItem>
+                        <FormItem label="备注名称"
+                                  name="loginName"
+                                  initialValue={detail.loginName}
+                                  rules={[
+                                      {
+                                          required: true,
+                                          message: '请输入备注名称'
+                                      },
+                                  ]}{...formItemLayout}>
+                            <Input type="text" placeholder="请输入备注名称"/>
+                        </FormItem>
                         <FormItem label="所属产品"
                                   name="name"
                                   rules={[

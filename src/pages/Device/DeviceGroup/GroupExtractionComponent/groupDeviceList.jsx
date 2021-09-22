@@ -323,6 +323,7 @@ class GroupDeviceList extends React.Component {
                 <AddDeviceToGruop
                     visible={this.state.addDeviceToGroupModel}
                     hideAddDviceToGroupModel={this.hideAddDviceToGroupModel}
+                    title={'添加设备到分组'}
                 ></AddDeviceToGruop>
             </div>
         )

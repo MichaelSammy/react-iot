@@ -6,6 +6,7 @@ import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../utils/request";
 import './../index.less'
+import InstructIssueInfo from "../../DeviceManage/DeviceExtractionComponent/instructIssueInfo";
 
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -54,7 +55,12 @@ export default class InstructIssueTabPane extends React.Component {
         detail: {},
         title: ''
     }
-
+    onRef=(ref)=>{
+        this.child = ref
+    }
+    showInstructIssueInfo=()=>{
+       this.child.showDrawer();
+    }
     componentDidMount() {
         // this.props.onRef(this);
         this.requestList();
@@ -232,8 +238,14 @@ export default class InstructIssueTabPane extends React.Component {
             },
             {
                 title: '操作',
-                dataIndex: 'remark',
                 align: 'left',
+                render: (item) => {
+                    return (
+                        <div className="function-table-option-buttion">
+                            <div className="option-button" onClick={this.showInstructIssueInfo.bind(this, item)}>查看</div>
+                        </div>
+                    )
+                }
             }
         ];
         return (
@@ -255,6 +267,7 @@ export default class InstructIssueTabPane extends React.Component {
                     type={this.state.type}
                 >
                 </Etable>
+                <InstructIssueInfo  onRef={this.onRef} title={'详情'}></InstructIssueInfo>
             </div>
         )
     }
