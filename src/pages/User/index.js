@@ -139,14 +139,22 @@ class User extends React.Component {
                             }
                         </Menu>
                     </Sider>
-                    <Layout style={{marginLeft: 200, marginTop: '50px'}}>
-                        <Content>
+                    <Layout style={{marginTop: '50px'}}>
+                        <Content style={{
+                            position: 'absolute',
+                            left: '0',
+                            top: '0',
+                            bottom: '0',
+                            right: '0',
+                            overflow: 'auto',
+                            marginLeft: '200px',
+                        }}>
                             {/*<Breadcrumb style={{ margin: '16px 16px' }}>*/}
                             {/*{*/}
                             {/*getBreadItem(breadList)*/}
                             {/*}*/}
                             {/*</Breadcrumb>*/}
-                            <div style={{padding: 0, background: '#fff',maxHeight:'92vh',overflow:'auto'}}>
+                            <div style={{padding: 0, background: '#fff',maxHeight:'97vh',overflow:'auto', minWidth:'1280px'}}>
                                 <Switch>
                                     {permissionList.map((value, key) => {
                                         return (

@@ -44,7 +44,13 @@ export const authChangeAction = (token) => {
 
 export const permissionAction = (path) => {
     return (dispatch) => {
-           getUserInfo().then(res => {
+           // getUserInfo().then(res => {
+              let res={
+                  data:{
+                      data:[]
+                  }
+              }
+                res.data.data=["index","order-manage","order-list","product-manage","product-list","review-manage","return-goods","goods","goods-list","goods-classify","permission","user-manage","role-manage","menu-manage"]
                 const allList = routes[2].children
                 res.data.data.push('index')
                res.data.data.push('work')
@@ -71,7 +77,7 @@ export const permissionAction = (path) => {
                 dispatch(action)
 
 
-            })
+            // })
     }
 }
 

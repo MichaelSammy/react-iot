@@ -1,6 +1,14 @@
 const proxy = require('http-proxy-middleware')
 module.exports = function (app) {
     // ...You can now register proxies as you wish!
+    app.use(proxy('/randy/rest', {
+        target: 'http://114.116.119.117:9086',
+        secure: false,
+        changeOrigin: true,
+        pathRewrite: {
+            "^/randy": "/"
+        },
+    }));
     app.use(proxy('/randy', {
         target: 'http://47.105.71.81:3306',
         secure: false,
