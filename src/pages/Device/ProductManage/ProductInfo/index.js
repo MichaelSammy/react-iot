@@ -2,7 +2,7 @@ import React from "react";
 import {Card, Modal, Form, Input, Button, List, Breadcrumb, Tabs} from "antd";
 import BaseModel from '../../../../common/BaseModel'
 import IconFont from '../../../../utils/IconFont';
-import request from '../../../../utils/request'
+import request from '../../../../api/request'
 import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../../utils";
 import deviceDefaultImg from '../../../../assets/images/deviceDefaultImg.jpg'
 import EditProduct from "../EditProduct";

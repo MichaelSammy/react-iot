@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import IconFont from "../../../../utils/IconFont";
-import request from "../../../../utils/request";
+import request from "../../../../api/request";
 import './../index.less'
 
 const {Option} = Select

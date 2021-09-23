@@ -3,7 +3,7 @@ import {Card, Modal, Form, Input, Button} from "antd";
 import BaseForm from '../../../../../common/BaseForm'
 import Etable from "../../../../../common/Etable";
 import {updateSelectedItem} from '../../../../../utils'
-import request from '../../../../../utils/request'
+import request from '../../../../../api/request'
 import './index.less'
 
 const FormItem = Form.Item

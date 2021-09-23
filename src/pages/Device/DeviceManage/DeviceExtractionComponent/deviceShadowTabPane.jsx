@@ -2,7 +2,7 @@ import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
 import IconFont from "../../../../utils/IconFont";
 import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../utils/request";
+import request from "../../../../api/request";
 import './../index.less'
 
 const {TextArea} = Input

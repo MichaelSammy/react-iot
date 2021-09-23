@@ -4,11 +4,12 @@ import BaseForm from '../../../common/BaseForm'
 import BaseModel from '../../../common/BaseModel'
 import AddGroup from './AddGroup'
 import IconFont from '../../../utils/IconFont';
-import request from '../../../utils/request'
+import request from '../../../api/request'
 import './index.less'
 import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../utils";
 import Etable from "../../../common/Etable";
 import AddGroupLabel from "./GroupExtractionComponent/addGroupLabel"
+import {getUserList} from "../../../api/api";
 
 const FormItem = Form.Item
 export default class DeviceGroup extends React.Component {
@@ -98,14 +99,11 @@ export default class DeviceGroup extends React.Component {
 
     //请求列表
     requestList() {
-        request({
-            url: '/user/list',
-            type: 'get',
-            params: {
-                page: this.params.page,
-                pageSize: this.params.pageSize
-            }
-        }).then(res => {
+        let  params= {
+            page: this.params.page,
+            pageSize: this.params.pageSize
+        }
+        getUserList(params).then(res => {
             if (res.code === 1) {
                 // let dataSource = res.data.map((item, index) => {
                 //     item.key = index;

@@ -2,8 +2,8 @@ import { Form, Icon, Input, Button } from 'antd'
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import connect from '../../utils/connect'
-import { login } from './service'
 import './index.less'
+import {login} from "../../api/api";
 @connect
 class NormalLoginForm extends React.Component {
     formRef = React.createRef();

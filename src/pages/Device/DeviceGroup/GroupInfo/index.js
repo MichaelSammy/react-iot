@@ -3,7 +3,7 @@ import {Card, Modal, Form, Input, Button, List, Breadcrumb, Tabs} from "antd";
 import IconFont from '../../../../utils/IconFont';
 import GroupDeviceList from "../GroupExtractionComponent/groupDeviceList"
 import GroupSubscrList from "../GroupExtractionComponent/groupSubscrList"
-import request from '../../../../utils/request'
+import request from '../../../../api/request'
 import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../../utils";
 import AddGroup from '../AddGroup'
 import AddGroupLabel from "../GroupExtractionComponent/addGroupLabel"

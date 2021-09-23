@@ -11,7 +11,7 @@ import IconFont from "../../../../utils/IconFont";
 const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
-export default class AddRole extends React.Component {
+export default class AddProduct extends React.Component {
     fromModeRef = React.createRef();
     state = {
         detail: {},
@@ -421,7 +421,6 @@ export default class AddRole extends React.Component {
                         <Button type="" onClick={this.handleCancel.bind(this)}>取消</Button>
                     </div>
                 </div>
-                ,
                 <SelectProductCategory title='选择产品类别' onRef={this.onRef}></SelectProductCategory>
             </div>
         )

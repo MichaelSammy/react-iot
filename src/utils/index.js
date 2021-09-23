@@ -1,7 +1,7 @@
 import React from "react"
 import {Menu, Icon, Breadcrumb, Select} from "antd"
 import {Link} from "react-router-dom"
-import request from './request'
+import request from '../api/request'
 import IconFont from './../utils/IconFont';
 import '../index.css'
 

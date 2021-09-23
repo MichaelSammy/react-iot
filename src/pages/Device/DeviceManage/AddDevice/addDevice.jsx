@@ -1,6 +1,6 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
-import './../index.less'
+import '../index.less'
 
 const {Option} = Select
 const {TextArea} = Input

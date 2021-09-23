@@ -4,7 +4,7 @@ import BaseForm from '../../../common/BaseForm'
 import BaseModel from '../../../common/BaseModel'
 import device from '../../../assets/images/device.png'
 import IconFont from '../../../utils/IconFont';
-import request from '../../../utils/request'
+import request from '../../../api/request'
 import './index.less'
 import './device.less'
 import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../utils";

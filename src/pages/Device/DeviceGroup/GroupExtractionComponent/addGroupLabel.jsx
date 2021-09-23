@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select} from "antd";
 import BaseModel from "../../../../common/BaseModel";
-import request from '../../../../utils/request'
+import request from '../../../../api/request'
 import IconFont from '../../../../utils/IconFont';
 
 const FormItem = Form.Item

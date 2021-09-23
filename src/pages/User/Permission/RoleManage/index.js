@@ -3,7 +3,8 @@ import {Card, Modal, Form, Input, Button} from "antd";
 import BaseForm from '../../../../common/BaseForm'
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from '../../../../utils'
-import request from '../../../../utils/request'
+import request from '../../../../api/request'
+import {getUserList} from "../../../../api/api";
 
 export default class RoleManage extends React.Component {
     params = {
@@ -79,14 +80,11 @@ export default class RoleManage extends React.Component {
 
     //请求列表
     requestList() {
-        request({
-            url: '/user/list',
-            type: 'get',
-            params: {
-                page:  this.params.page,
-                pageSize: this.params.pageSize
-            }
-        }).then(res => {
+        let  params= {
+            page: this.params.page,
+            pageSize: this.params.pageSize
+        }
+        getUserList(params).then(res => {
             if (res.code === 1) {
                 // let dataSource = res.data.map((item, index) => {
                 //     item.key = index;

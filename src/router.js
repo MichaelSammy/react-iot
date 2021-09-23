@@ -46,8 +46,8 @@ const routes = [
                 icon: 'icon-shebeiyunhangjiankong'
             },
             {
-                path: '/user/index',
-                pathName: 'index',
+                path: '/user/work',
+                pathName: 'work',
                 component: Index,
                 name: '运维工作台',
                 icon: 'icon-yunweigongzuotai'
@@ -147,7 +147,6 @@ const routes = [
                         component: DeviceManage,
                         name: '设备管理',
                     },
-
                     {
                         path: '/user/device/plugin',
                         pathName: 'plugin-manage',

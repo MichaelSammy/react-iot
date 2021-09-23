@@ -5,8 +5,9 @@ import moment from 'moment';
 import IconFont from "../../../../utils/IconFont";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../utils/request";
+import request from "../../../../api/request";
 import * as echarts from 'echarts';
+import {getUserList} from "../../../../api/api";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -59,14 +60,11 @@ export default class DeviceHistoryData extends React.Component {
     };
 
     requestList() {
-        request({
-            url: '/user/list',
-            type: 'get',
-            params: {
-                page: this.params.page,
-                pageSize: this.params.pageSize
-            }
-        }).then(res => {
+        let  params= {
+            page: this.params.page,
+            pageSize: this.params.pageSize
+        }
+        getUserList(params).then(res => {
             if (res.code === 1) {
                 this.params.total = 12;
                 let dataSource = [

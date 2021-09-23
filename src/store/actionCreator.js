@@ -2,9 +2,9 @@ import {AUTH_CHANGE, PERMISSION_CHANGE, CURRENT_CHANGE} from './actionTypes'
 import {createActions} from 'redux-actions';
 import {recursionRouter} from '../utils/recursion-router'
 import routes from '../router'
-import request from '../utils/request'
 import {filterRoutes} from '../utils'
 import {recursionRouterThree} from '../utils/recursion-router'
+import {getUserInfo} from "../api/api";
 
 // export const doAuthChangeAction = (res) => {
 //     return {
@@ -44,14 +44,11 @@ export const authChangeAction = (token) => {
 
 export const permissionAction = (path) => {
     return (dispatch) => {
-        request({
-            url: '/user/info',
-            method: 'get',
-        })
-            .then(res => {
+           getUserInfo().then(res => {
                 const allList = routes[2].children
                 res.data.data.push('index')
-                res.data.data.push('role/add')
+               res.data.data.push('work')
+               res.data.data.push('role/add')
                 res.data.data.push('product-manage')
                 res.data.data.push('device')
                 res.data.data.push('add-product')

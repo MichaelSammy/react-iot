@@ -5,8 +5,9 @@ import BaseForm from "../../../../common/BaseForm";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import ModelDetails from  "../ExtractionComponent/modelDetails";
-import request from "../../../../utils/request";
+import request from "../../../../api/request";
 import './../index.less'
+import {getUserList} from "../../../../api/api";
 
 const FormItem = Form.Item
 
@@ -99,14 +100,11 @@ class SelectProductCategory extends React.Component {
     }
     //请求列表
     requestList() {
-        request({
-            url: '/user/list',
-            type: 'get',
-            params: {
-                page:  this.params.page,
-                pageSize: this.params.pageSize
-            }
-        }).then(res => {
+        let  params= {
+            page: this.params.page,
+            pageSize: this.params.pageSize
+        }
+        getUserList(params).then(res => {
             if (res.code === 1) {
                 // let dataSource = res.data.map((item, index) => {
                 //     item.key = index;

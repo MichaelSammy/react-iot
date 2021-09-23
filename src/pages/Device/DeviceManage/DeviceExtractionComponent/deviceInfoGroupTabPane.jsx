@@ -3,8 +3,9 @@ import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
 import IconFont from "../../../../utils/IconFont";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../utils/request";
+import request from "../../../../api/request";
 import './../index.less'
+import {getUserList} from "../../../../api/api";
 
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -42,14 +43,11 @@ export default class DeviceInfoGroupTabPane extends React.Component {
 
     //请求列表
     requestList() {
-        request({
-            url: '/user/list',
-            type: 'get',
-            params: {
-                page: this.params.page,
-                pageSize: this.params.pageSize
-            }
-        }).then(res => {
+        let  params= {
+            page: this.params.page,
+            pageSize: this.params.pageSize
+        }
+        getUserList(params).then(res => {
             if (res.code === 1) {
                 this.params.total = 12;
                 let dataSource = [

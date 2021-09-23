@@ -2,8 +2,8 @@ import axios from 'axios'
 import baseURL from './baseUrl'
 import { getLocal } from '../utils'
 import { authChangeAction } from '../store/actionCreator'
+import whiteList from './httpWhiteRoster';
 import store from '../store'
-
 //创建axios实例
 const service = axios.create({
     baseURL: baseURL, // api的base_url
@@ -13,7 +13,9 @@ const service = axios.create({
 service.interceptors.request.use(config => {
     // 请求头添加token
     if (getLocal('authed')) {
+        if (whiteList.indexOf(config.url) === -1) {
         config.headers.Authorization = `Bearer ${getLocal('authed')}`
+        }
     }
     const flag = (config.data && config.data.loading !==false) || (config.params && config.params.loading !== false)
     if(flag){
@@ -69,4 +71,27 @@ service.interceptors.response.use(
         return Promise.reject(error)
     }
 )
-export default service
+export default {
+    POST(url, data) {
+        return service.post(url, data, {}).then();
+    },
+    GET(url, params) {
+        return service.get(url, {
+            params: {
+                _t: +(new Date()),
+                ...params
+            }
+        }).then();
+    },
+    DELETE(url, params) {
+        return service.delete(url, {
+            params: {
+                _t: +(new Date()),
+                ...params
+            }
+        }).then();
+    },
+    PUT(url, data) {
+        return service.put(url, data, {}).then();
+    }
+};

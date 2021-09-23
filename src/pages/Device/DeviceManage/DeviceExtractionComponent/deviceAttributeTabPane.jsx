@@ -1,9 +1,10 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, List, Breadcrumb, Pagination} from "antd";
 import IconFont from '../../../../utils/IconFont';
-import request from '../../../../utils/request'
+import request from '../../../../api/request'
 import '../DeviceInfo/deviceInfo.less'
 import DeviceHistoryData from './deviceHistoryData'
+import {getUserList} from "../../../../api/api";
 
 const FormItem = Form.Item
 export default class DeviceAttributeTabPane extends React.Component {
@@ -29,14 +30,11 @@ export default class DeviceAttributeTabPane extends React.Component {
 
     //请求列表
     requestList() {
-        request({
-            url: '/user/list',
-            type: 'get',
-            params: {
-                page: this.params.page,
-                pageSize: this.params.pageSize
-            }
-        }).then(res => {
+        let  params= {
+            page: this.params.page,
+            pageSize: this.params.pageSize
+        }
+        getUserList(params).then(res => {
             if (res.code === 1) {
                 let dataSource = res.data.map((item, index) => {
                     item.key = index;

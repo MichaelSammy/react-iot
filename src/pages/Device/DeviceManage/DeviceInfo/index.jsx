@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, List, Breadcrumb, Tabs} from "antd";
 import IconFont from '../../../../utils/IconFont';
-import request from '../../../../utils/request'
+import request from '../../../../api/request'
 import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../../utils";
 import DeviceAttributeTabPane from '../DeviceExtractionComponent/deviceAttributeTabPane'
 import EventRecordTabPane from '../DeviceExtractionComponent/eventRecordTabPane'
@@ -11,7 +11,7 @@ import DeviceTopicListTabPane from '../DeviceExtractionComponent/deviceTopicList
 import DeviceInfoGroupTabPane from '../DeviceExtractionComponent/deviceInfoGroupTabPane'
 import ChildDeviceTabPane from '../DeviceExtractionComponent/childDeviceTabPane'
 import DeviceShadowTabPane from '../DeviceExtractionComponent/deviceShadowTabPane'
-import EditDevice from '../DeviceExtractionComponent/editDevice'
+import EditDevice from '../EditDevice/editDevice'
 import '../../ProductManage/index.less'
 import AddGroup from "../../DeviceGroup/AddGroup";
 
