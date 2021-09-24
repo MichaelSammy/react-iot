@@ -15,6 +15,8 @@ import AddStandardFeatures from "../ExtractionComponent/addStandardFeatures";
 import AddLabel from "../ExtractionComponent/addLabel";
 import TopicListTab from "../ExtractionComponent/topicListTab";
 import ImportModel from "../ExtractionComponent/importModel";
+import * as qs from "qs";
+import {getProductInfo, getProductList} from "../../../../api/api";
 
 const {TabPane} = Tabs;
 const FormItem = Form.Item
@@ -84,9 +86,17 @@ export default class Permission extends React.Component {
         })
     }
    componentDidMount() {
-        // this.requestList()
-    }
+       const productInfo = qs.parse(this.props.location.search,{ignoreQueryPrefix: true});
+       this.getProductDetails({productId:productInfo.id});
 
+    }
+    getProductDetails=(params)=>{
+        getProductInfo(params).then(res => {
+            if (res.status === '1') {
+                debugger
+            }
+        })
+    }
     goBackPreviousPage = () => {
         this.props.history.go(-1)
     }
@@ -116,13 +126,7 @@ export default class Permission extends React.Component {
     }
     editProduct = () => {
         this.setState({
-            detail: {
-                loginName: '',
-                name: '',
-                mobile: '',
-                address: '',
-                email: ''
-            },
+            detail: this.props.location.params,
             editProductVisible: true,
             title: '编辑'
         })

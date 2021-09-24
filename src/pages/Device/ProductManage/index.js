@@ -8,7 +8,8 @@ import request from '../../../api/request'
 import './index.less'
 import {filterRoutes, getBreadItem} from "../../../utils";
 import AddLabel from "./ExtractionComponent/addLabel";
-import {getUserList} from "../../../api/api";
+import {getProductList, getUserList} from "../../../api/api";
+import * as qs from "qs";
 
 const FormItem = Form.Item
 export default class Permission extends React.Component {
@@ -40,7 +41,8 @@ export default class Permission extends React.Component {
         list: [],
         editProductVisible: false,
         detail: {},
-        title: ''
+        title: '',
+        dataSource:[],
     }
     onRef = (ref) => {
         this.child = ref
@@ -66,11 +68,11 @@ export default class Permission extends React.Component {
     requestList() {
       let  params= {
             page: this.params.page,
-            pageSize: this.params.pageSize
+            pageSize: this.params.pageSize,
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                let dataSource = res.data.map((item, index) => {
+        getProductList(params).then(res => {
+            if (res.status === '1') {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
@@ -85,23 +87,17 @@ export default class Permission extends React.Component {
         this.child.handleSubmit();
     }
     closeSubmit = () => {
+        this.child.closeSubmit()
         this.setState({
             editProductVisible: false
         })
-        this.child.closeSubmit()
     }
     createProduct = () => {
         this.props.history.push({'pathname': "/user/device/product/add", params: true});
     }
-    editProduct = () => {
+    editProduct = (item) => {
         this.setState({
-            detail: {
-                loginName: '',
-                name: '',
-                mobile: '',
-                address: '',
-                email: ''
-            },
+            detail:item ,
             visibleBaseModel: false,
             baseModelContent: '',
             editProductVisible: true,
@@ -124,8 +120,8 @@ export default class Permission extends React.Component {
             baseModelContent: '是否删除？'
         })
     }
-    showProductInfo = () => {
-        this.props.history.push({'pathname': "/user/device/product/info", params: true});
+    showProductInfo = (item) => {
+         this.props.history.push({ pathname: `/user/device/product/info`,  search: qs.stringify(item)})
     }
 
     render() {
@@ -206,43 +202,45 @@ export default class Permission extends React.Component {
                                 xl: 3,
                                 xxl: 3,
                             }}
-                            dataSource={list}
+                            dataSource={this.state.dataSource}
                             renderItem={item => (
                                 <List.Item>
-                                    <div className="card-tag">标准产品</div>
+                                    { item.productTypeId=="标准产品"&&
+                                    <div className="card-tag" >标准产品</div>
+                                    }
                                     <div className="card-info-height">
                                         <div className='card-title-info'>
                                             <div>
-                                                <span className='title-font' onClick={this.showProductInfo}>S270B</span>
+                                                <span className='title-font' onClick={()=>this.showProductInfo(item)}>{item.name}</span>
                                                 <span className="split-symbol"> / </span>
-                                                <span className='title-name-font'>S270B</span>
+                                                <span className='title-name-font'>{item.name}</span>
                                             </div>
-                                            <div className='card-title-option'><span onClick={this.editProduct}>
+                                            <div className='card-title-option'><span onClick={()=>this.editProduct(item)}>
                                   <IconFont style={{fontSize: '20px', color: '#89A0C2'}}
                                             type='icon-a-bianjicopy'/></span>
                                                 <span onClick={this.deleteProduct}> <IconFont
                                                     style={{fontSize: '20px', color: '#89A0C2'}}
                                                     type='icon-a-shanchucopy'/></span>
-                                                <span className="product-card-status"> 已发布</span></div>
+                                                <span className="product-card-status"> {item.isPublish=='0'?'未发布':'已发布'}</span></div>
                                         </div>
                                         <div className='row-split-line'></div>
                                         <div className='card-content-into'>
                                             <div className='card-content-left'>
                                                 <div className='card-content-left-info'>
                                                     <div>
-                                                        <div>节点类型：设备</div>
-                                                        <div>连网方式：wifi</div>
+                                                        <div>节点类型：{item.nodeType}</div>
+                                                        <div>连网方式：{item.netType}</div>
                                                     </div>
                                                     <div>
-                                                        <div>接入方式：直连</div>
-                                                        <div>通讯协议：MQTT</div>
+                                                        <div>接入方式：{item.accessMethod}</div>
+                                                        <div>通讯协议：{item.protocol}</div>
                                                     </div>
                                                 </div>
-                                                <div className='card-create-time'>创建时间：2018/12/20 09:43:33</div>
+                                                <div className='card-create-time'>创建时间：{item.createTime}</div>
                                             </div>
                                             <div className='column-spilt-line'></div>
                                             <div className='card-content-right'>
-                                                <div className='device-count-num'>852<span
+                                                <div className='device-count-num'>{item.num}<span
                                                     style={{fontSize: '14px', fontWeight: '500'}}></span></div>
                                                 <div className='device-count-desc'>设备总数</div>
                                             </div>
@@ -278,6 +276,8 @@ export default class Permission extends React.Component {
                         <EditProduct
                             detail={this.state.detail}
                             onRef={this.onRef}
+                            closeSubmit={this.closeSubmit}
+                            requestList={()=>this.requestList()}
                         />
                     </Modal>
                 }

@@ -1,5 +1,5 @@
 import React from "react"
-import {Menu, Icon, Breadcrumb, Select} from "antd"
+import {Menu, Icon, Breadcrumb, Select,message }from "antd"
 import {Link} from "react-router-dom"
 import request from '../api/request'
 import IconFont from './../utils/IconFont';
@@ -162,4 +162,51 @@ export const formateDate = time => {
     if (!time) return '';
     let date = new Date(time);
     return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+}
+
+export const handleCheckPhone = (rule, value, callback) =>{
+    const objRegExp = new RegExp(/^1(3|4|5|6|7|8|9)\d{9}$/, "g")
+    if(value && !objRegExp.test(value)){
+        return Promise.reject('请输入正确的手机号');
+    }
+    return Promise.resolve()//因为新版的Antd使用了React的hooks，表单中的字段校验方法进行了一些修改，原来的回调方法改成了返回一个Promise对象
+}
+
+export const handleCheckValueLenght = (rule, value, callback) =>{
+    if ((value == "" || value == undefined)&&rule.required) {
+        return Promise.reject('请输入'+rule.label);
+    }
+    if (value!= undefined&&(rule.lenght < getLength(value))) {
+        return Promise.reject(rule.label+'不能超过'+rule.lenght+'个字符！');
+    }
+    return Promise.resolve()
+}
+/* 获得字符串实际长度，中文2，英文1 */
+const  getLength=(str)=> {
+    //要获得长度的字符串
+    var realLength = 0, len = str.length, charCode = -1;
+    for (var i = 0; i < len; i++) {
+        charCode = str.charCodeAt(i);
+        if (charCode >= 0 && charCode <= 128) {
+            realLength += 1;
+        } else {
+            realLength += 2;
+        }
+    }
+    return realLength;
+}
+
+export const messageGlobal=(type,messageInfo)=>{
+    switch (type) {
+        case 'success':
+            message.success(messageInfo,1);
+            break;
+        case 'error':
+            message.error(messageInfo,1);
+            break;
+        case 'warning':
+            message.warning(messageInfo,1);
+            break;
+        default:
+    }
 }

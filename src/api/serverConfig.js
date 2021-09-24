@@ -3,6 +3,7 @@ if (!ServerConfig) {
     ServerConfig = {
         /**开发环境**/
         opensense_url: "http://114.116.119.117:9086/",
+        // opensense_url: "http://10.17.86.108:9087/",
     }
 }
 

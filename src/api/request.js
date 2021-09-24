@@ -8,7 +8,7 @@ import store from '../store'
 const service = axios.create({
     baseURL: baseURL, // api的base_url
     timeout: 200000, // 请求超时时间
-    withCredentials: true // 选项表明了是否是跨域请求
+    withCredentials: false // 选项表明了是否是跨域请求
 })
 service.interceptors.request.use(config => {
     // 请求头添加token
@@ -50,8 +50,8 @@ service.interceptors.response.use(config => {
 service.interceptors.response.use(
     response => {
         const res = response.data
-        if (res.code !== 1) {
-            res.code = res.data.code
+        if ((res.status!=undefined&&res.status !== '1')||(res.code !=undefined&&res.code !== 1)){
+            res.status = res.status
             res.message = res.response.data.msg
             return Promise.reject('error')
         } else {

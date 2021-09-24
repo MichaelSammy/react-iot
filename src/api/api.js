@@ -13,6 +13,8 @@ export const saveProduct = (params) => request.POST(config.saveProduct, params)
 export const updateOrPublishProduct = (params) => request.GET(config.updateOrPublishProduct, params);
 /**产品列表**/
 export const getProductList = (params) => request.POST(config.getProductList, params)
+/**产品详情**/
+export const getProductInfo=(params)=>request.GET(config.getProductInfo, params)
 /**
  * 1.物模型新增属性 六大类型：int、boolean、enum、struct、array
  * 2.物模型新增事件
