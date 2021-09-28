@@ -40,3 +40,7 @@ export const getStructInfo = (params) => request.GET(config.getStructInfo, param
 export const deleteProductModel = (params) => request.GET(config.deleteProductModel, params)
 /**查询单个参数详情**/
 export const getInOutInfo = (params) => request.GET(config.getInOutInfo, params)
+/**产品标签查询**/
+export const getProductLabels = (params) => request.GET(config.getProductLabels,params)
+    /**新增（修改）产品标签**/
+export const saveOrUpdateLabel = (params) => request.POST(config.saveOrUpdateLabel,params)

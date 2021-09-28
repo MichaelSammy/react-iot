@@ -143,7 +143,7 @@ class User extends React.Component {
                         <Content style={{
                             position: 'absolute',
                             left: '0',
-                            top: '0',
+                            top: '50px',
                             bottom: '0',
                             right: '0',
                             overflow: 'auto',
@@ -154,7 +154,7 @@ class User extends React.Component {
                             {/*getBreadItem(breadList)*/}
                             {/*}*/}
                             {/*</Breadcrumb>*/}
-                            <div style={{padding: 0, background: '#fff',maxHeight:'97vh',overflow:'auto', minWidth:'1280px'}}>
+                            <div style={{padding: 0, background: '#fff',minWidth:'1280px'}}>
                                 <Switch>
                                     {permissionList.map((value, key) => {
                                         return (

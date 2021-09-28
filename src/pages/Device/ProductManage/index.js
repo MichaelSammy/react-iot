@@ -84,7 +84,7 @@ export default class Permission extends React.Component {
     }
 
     saveSubmit = () => {
-        this.child.handleSubmit();
+        this.child.handleSubmit('list');
     }
     closeSubmit = () => {
         this.child.closeSubmit()

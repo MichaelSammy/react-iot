@@ -12,7 +12,7 @@ class EditProduct extends React.Component {
         this.props.onRef(this)
     }
 
-    handleSubmit = async () => {
+    handleSubmit = async (params) => {
         const form = this.fromModeRef.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             values.id=this.props.detail.id
@@ -20,7 +20,11 @@ class EditProduct extends React.Component {
                 this.props.closeSubmit();
                 if(res.status==1){
                     messageGlobal('success',res.msg);
-                    this.props.requestList();
+                    if(params=='list'){
+                        this.props.requestList();
+                    }else{
+                        this.props.getProductDetails({productId:values.id})
+                    }
                 }else{
                     messageGlobal('error',res.msg);
                 }

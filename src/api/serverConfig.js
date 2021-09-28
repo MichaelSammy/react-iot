@@ -42,4 +42,8 @@ export default {
     deleteProductModel: ServerConfig.opensense_url + 'rest/productModel/deleteProductModel',
     /**查询单个参数详情**/
     getInOutInfo: ServerConfig.opensense_url + 'rest/productModel/getInOutInfo',
+    /**产品标签查询**/
+    getProductLabels:ServerConfig.opensense_url+"rest/product/getProductLabels",
+    /**新增（修改）产品标签**/
+    saveOrUpdateLabel:ServerConfig.opensense_url+"rest/product/saveLabel",
 }

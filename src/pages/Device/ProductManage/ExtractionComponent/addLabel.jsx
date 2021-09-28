@@ -1,8 +1,9 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select} from "antd";
 import BaseModel from "../../../../common/BaseModel";
-import request from '../../../../api/request'
 import IconFont from '../../../../utils/IconFont';
+import {messageGlobal} from "../../../../utils";
+import {getProductInfo, saveOrUpdateLabel} from "../../../../api/api";
 
 const FormItem = Form.Item
 
@@ -13,7 +14,8 @@ class AddLabel extends React.Component {
         formList: [],
         title: '',
         visibleBaseModel: false,
-        baseModelContent: '是否删除？'
+        baseModelContent: '是否删除？',
+        productId:'',
     }
 
     componentDidMount() {
@@ -30,7 +32,7 @@ class AddLabel extends React.Component {
             visibleBaseModel: false
         })
     }
-    deleteTagColumn = () => {
+    deleteTagColumn = (params) => {
         this.setState({
             visibleBaseModel: true,
             baseModelContent: '是否删除？'
@@ -48,32 +50,61 @@ class AddLabel extends React.Component {
             title: '新增标签'
         })
     }
-    editTag = (item) => {
+    editTag = (item,id) => {
         this.setState({
             formList: item,
             addLabelVisible: true,
-            title: '编辑标签'
+            title: '编辑标签',
+            productId:id,
         })
     }
     saveSubmit = async () => {
-        const form = this.fromModeRef.current
-        form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
-            console.log('成功')
-            console.log(values)
-        }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
-            console.log('失败')
-            console.log(errInfo)
+      let  nextStep=true;
+        this.state.formList.map((item,index)=>{
+            if(item.key==""||item.value==""){
+                messageGlobal('error','请将表单填写完整！');
+                nextStep=false;
+                return;
+            }
         })
+        if(nextStep){
+            let params={
+                productId:this.state.productId,
+                list:this.state.formList
+            }
+            saveOrUpdateLabel(params).then(res => {
+                if (res.status === '1') {
+                    messageGlobal('success',"标签修改成功！")
+                }
+            })
+            this.closeSubmit()
+        }
+        console.log(nextStep)
+      //遍历 this.state.formList  校验表单
     }
     closeSubmit = () => {
-        const form = this.fromModeRef.current;
+        let params={
+            productId:this.state.productId,
+        }
+        this.props.getProductLabelList(params)
         this.setState({
             addLabelVisible: false
         })
-        form.resetFields();
     }
     addTagColumn = () => {
-        alert('addTagColumn')
+        const formList=this.state.formList;
+        formList[this.state.formList.length]={productId:this.state.productId,key:'',value:''};
+        this.setState({formList})
+        
+    }
+    onChange(type,index,e){
+        let formList=this.state.formList;
+        if(type=='key'){
+            formList[index]={productId:this.state.productId,key:e.target.value,value:formList[index].value};
+        }else{
+            formList[index]={productId:this.state.productId,key:formList[index].key,value:e.target.value};
+        }
+        this.setState({ formList })
     }
 
     render() {
@@ -81,7 +112,6 @@ class AddLabel extends React.Component {
             labelCol: {span: 5},
             wrapperCol: {span: 16}
         }
-        const formList = [{name: "1"}, {name: "2"}]
         return (
             <div>
                 {this.state.addLabelVisible &&
@@ -99,22 +129,17 @@ class AddLabel extends React.Component {
                     ]}
                 >
                     <Form ref={this.fromModeRef}>
-                        {formList.map((item, index) => (
-                            <FormItem label={index > 0 ? " " : "定义取值范围"} colon={index > 0 ? false : true} name="name"
-                                      rules={[{required: false}]} style={{marginBottom: -16}} {...formItemLayout}>
+                        {this.state.formList.map((item,index)=>{
+                        return    <FormItem label={index > 0 ? " " : "定义取值范围"} colon={index > 0 ? false : true}  style={{marginBottom: -16}} {...formItemLayout} key={index}>
                                 <FormItem
-                                    name="name"
-                                    rules={[{required: false}]}
                                     style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
                                 >
-                                    <Input placeholder="请输入标签key"/>
+                                    <Input placeholder="请输入标签key" defaultValue={item.key} name={'key'+index} onChange ={this.onChange.bind(this,'key',index) }/>
                                 </FormItem>
                                 <FormItem
-                                    name="name"
-                                    rules={[{required: false}]}
                                     style={{display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px'}}
                                 >
-                                    <Input placeholder="请输入标签value"/>
+                                    <Input placeholder="请输入标签value" name={'name'+index} defaultValue={item.value} onChange ={this.onChange.bind(this,'value',index) }/>
                                 </FormItem>
                                 <div style={{
                                     position: 'absolute',
@@ -123,10 +148,11 @@ class AddLabel extends React.Component {
                                     wordBreak: 'keep-all',
                                     marginTop: '-48px',
                                     color: '#2979E7',
-                                }} onClick={this.deleteTagColumn}>删除
+                                }} key={index} onClick={()=>this.deleteTagColumn(item)}>删除
                                 </div>
                             </FormItem>
-                        ))}
+                        })
+                        }
                         <div style={{color: '#2979E7', textAlign: 'center', position: 'relative'}}>
                             <span onClick={this.addTagColumn} style={{cursor: 'pointer'}}>
                             <IconFont style={{marginRight: '8px'}} type='icon-jiahao'/> 新增标签

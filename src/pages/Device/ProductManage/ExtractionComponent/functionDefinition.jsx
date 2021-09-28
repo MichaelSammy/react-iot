@@ -4,10 +4,10 @@ import IconFont from "../../../../utils/IconFont";
 import BaseForm from "../../../../common/BaseForm";
 import BaseModel from "../../../../common/BaseModel";
 import Etable from "../../../../common/Etable";
-import {updateSelectedItem} from "../../../../utils";
+import {messageGlobal, updateSelectedItem} from "../../../../utils";
 import request from "../../../../api/request";
 import './../index.less'
-import {getUserList} from "../../../../api/api";
+import {deleteProductModel, getProductList, getProductModelList, getUserList} from "../../../../api/api";
 
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -61,8 +61,10 @@ class FunctionDefinition extends React.Component {
         title: ''
     }
     componentDidMount() {
-        // this.props.onRef(this);
-        this.requestList();
+        this.props.onRef(this);
+        setTimeout(()=>{
+            this.requestList();
+        },1000)
     }
     callBackFatherMethod = () => {
         this.props.addCustomFeatures();
@@ -85,114 +87,46 @@ class FunctionDefinition extends React.Component {
     editFunctionDefinition = () => {
         alert(1)
     }
-    deleteFunctionDefinition=()=>{
+    deleteFunctionDefinition=(item)=>{
         this.setState({
+            modelInfo:item,
             visibleBaseModel:true,
             baseModelContent:'是否删除？'
         })
     }
     //请求列表
-    requestList() {
+    requestList=()=> {
         let  params= {
             page: this.params.page,
-            pageSize: this.params.pageSize
+            pageSize: this.params.pageSize,
+            'map[productId]':this.props.productInfo.id
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                this.params.total = 12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        getProductModelList(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
                     dataSource
                 })
+            }else{
+                this.setState({
+                    dataSource:[]
+                })
+            }
+        })
+    }
+    deleteModel(){
+        let params={
+            productId:this.props.productInfo.id,
+            fieldId:this.state.modelInfo.fieldId,
+            fieldType:this.state.modelInfo.fieldTypeId
+        }
+        deleteProductModel(params).then(res => {
+            if (res.status === '1') {
+                messageGlobal('success',res.msg)
+                this.requestList();
             }
         })
     }
@@ -200,6 +134,7 @@ class FunctionDefinition extends React.Component {
         this.setState({
             visibleBaseModel:false
         })
+        this.deleteModel()
     }
     submitCancel=()=>{
         this.setState({
@@ -229,32 +164,32 @@ class FunctionDefinition extends React.Component {
         const columns = [
             {
                 title: '功能类型',
-                dataIndex: 'roleName',
+                dataIndex: 'fieldType',
                 align: 'left'
             },
             {
                 title: '功能名称',
-                dataIndex: 'officeName',
+                dataIndex: 'name',
                 align: 'left',
             },
             {
                 title: '标识符',
-                dataIndex: 'createUser',
+                dataIndex: 'identifier',
                 align: 'left',
             },
             {
                 title: '数据类型',
-                dataIndex: 'createTime',
+                dataIndex: 'type',
                 align: 'left',
             },
             {
                 title: '数据值定义',
-                dataIndex: 'remark',
+                dataIndex: 'dataInfo',
                 align: 'left',
             },
             {
                 title: '读写类型',
-                dataIndex: 'remark',
+                dataIndex: 'accessMode',
                 align: 'left',
             },
             {

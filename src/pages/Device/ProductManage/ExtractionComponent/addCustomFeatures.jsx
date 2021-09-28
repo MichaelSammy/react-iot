@@ -5,6 +5,8 @@ import AddInOutputParameters from './addInOutputParameters'
 import AddStructureParameters from './addStructureParameters'
 import request from "../../../../api/request";
 import './../index.less'
+import {handleCheckValueLenght, messageGlobal} from "../../../../utils";
+import {getProductList, saveProductModel} from "../../../../api/api";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -71,11 +73,34 @@ class AddCustomFeatures extends React.Component {
             visible: true,
         });
     };
+    filterParamr(values){
+        let params=values
+        values.productId=this.props.productInfo.id
+        values.required=0
+        if(values.dataType=='int'){
+            values.dataType={
+                type:values.dataType,
+                specs:{
+                    min:values.min,
+                    max:values.max,
+                    unit:values.unit,
+                    step:values.step
+                }
+            }
+        }
+        return params;
+    }
     onSubmit = async () => {
         const form = this.fromModeRef.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
-            console.log('成功')
-            console.log(values)
+            let params=this.filterParamr(values)
+            saveProductModel(params).then(res => {
+                if (res.status === '1') {
+                    messageGlobal('success','添加成功！')
+
+                    this.props.refresFunctionList();
+                }
+            })
             this.onClose()
         }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
             console.log('失败')
@@ -117,7 +142,7 @@ class AddCustomFeatures extends React.Component {
     }
     changeDataType= (item) => {
        switch (item) {
-           case '1':
+           case 'int':
                this.setState({
                    numberDataVisible: true,
                    enumDataVisible:false,
@@ -128,7 +153,7 @@ class AddCustomFeatures extends React.Component {
                    arrayDataVisible:false,
                });
                break;
-           case '2':
+           case 'enum':
                this.setState({
                    numberDataVisible: false,
                    enumDataVisible:true,
@@ -139,7 +164,7 @@ class AddCustomFeatures extends React.Component {
                    arrayDataVisible:false,
                });
                break;
-           case '3':
+           case 'bool':
                this.setState({
                    numberDataVisible: false,
                    enumDataVisible:false,
@@ -150,7 +175,7 @@ class AddCustomFeatures extends React.Component {
                    arrayDataVisible:false,
                });
                break;
-           case '4':
+           case 'string':
                this.setState({
                    numberDataVisible: false,
                    enumDataVisible:false,
@@ -161,7 +186,7 @@ class AddCustomFeatures extends React.Component {
                    arrayDataVisible:false,
                });
                break;
-           case '5':
+           case 'struct':
                this.setState({
                    numberDataVisible: false,
                    enumDataVisible:false,
@@ -172,7 +197,7 @@ class AddCustomFeatures extends React.Component {
                    arrayDataVisible:false,
                });
                break;
-           case '6':
+           case 'date':
                this.setState({
                    numberDataVisible: false,
                    enumDataVisible:false,
@@ -183,7 +208,7 @@ class AddCustomFeatures extends React.Component {
                    arrayDataVisible:false,
                });
                break;
-           case '7':
+           case 'array':
                this.setState({
                    numberDataVisible: false,
                    enumDataVisible:false,
@@ -199,7 +224,7 @@ class AddCustomFeatures extends React.Component {
     }
     changeElementType= (item) => {
         switch (item) {
-            case '1':
+            case 'int':
                 this.setState({
                     elementNumberVisible:true,
                     elementStringVisible:false,
@@ -207,7 +232,7 @@ class AddCustomFeatures extends React.Component {
                     elementStructVisible:false,
                 })
                 break;
-            case  '4':
+            case  'string':
                 this.setState({
                     elementNumberVisible:false,
                     elementStringVisible:true,
@@ -215,7 +240,7 @@ class AddCustomFeatures extends React.Component {
                     elementStructVisible:false,
                 })
                 break;
-            case '5':
+            case 'date':
                 this.setState({
                     elementNumberVisible:false,
                     elementStringVisible:false,
@@ -223,7 +248,7 @@ class AddCustomFeatures extends React.Component {
                     elementStructVisible:true,
                 })
                 break;
-            case  '6':
+            case  'struct':
                 this.setState({
                     elementNumberVisible:false,
                     elementStringVisible:false,
@@ -258,12 +283,12 @@ class AddCustomFeatures extends React.Component {
             email: ''
         }
         const functionTypeList = [{id: '1', value: '1',name:'属性类型'}, {id: '2', value: '2',name:'事件类型'}, {id: '3', value: '3',name:'服务类型'}];
-        const dataTypeList=[{id: '1', value: '1',name:'int32(整数型)'}, {id: '2', value: '2',name:'enum(枚举)'}, {id: '3', value: '3',name:'bool(布尔)'}, {id: '4', value: '4',name:'string(字符串)'}, {id: '5', value: '5',name:'struct(结构体)'}, {id: '6', value: '6',name:'date(时间)'}, {id: '7', value: '7',name:'array(数组)'}];
-        const readWriteList=[{id: '1', value: '1',name:'读写'}, {id: '2', value: '2',name:'只读'}];
-        const unitList=[{id: '1', value: '1',name:'伏特/V'}, {id: '2', value: '2',name:'秒/s'}]
+        const dataTypeList=[{id: '1', value: 'int',name:'int32(整数型)'}, {id: '2', value: 'enum',name:'enum(枚举)'}, {id: '3', value: 'bool',name:'bool(布尔)'}, {id: '4', value: 'string',name:'string(字符串)'}, {id: '5', value: 'struct',name:'struct(结构体)'}, {id: '6', value: 'date',name:'date(时间)'}, {id: '7', value: 'array',name:'array(数组)'}];
+        const readWriteList=[{id: '1', value: 'rw',name:'读写'}, {id: '2', value: 'r',name:'只读'}];
+        const unitList=[{id: '1', value: 'v',name:'伏特/V'}, {id: '2', value: 's',name:'秒/s'}]
         const eventTypeList=[{id: '1', value: '1',name:'信息'}, {id: '2', value: '2',name:'告警'}, {id: '3', value: '3',name:'故障'}];
         const callTypeList= [{id: '1', value: '1',name:'同步'}, {id: '2', value: '2',name:'异步'}]
-        const elementTypeList=[{id: '1', value: '1',name:'int32(整数型)'},{id: '4', value: '4',name:'string(字符串)'}, {id: '5', value: '5',name:'struct(结构体)'}, {id: '6', value: '6',name:'date(时间)'}];
+        const elementTypeList=[{id: '1', value: 'int',name:'int32(整数型)'},{id: '4', value: 'string',name:'string(字符串)'}, {id: '5', value: 'struct',name:'struct(结构体)'}, {id: '6', value: 'date',name:'date(时间)'}];
         return (
             <div>
                 <Drawer
@@ -289,7 +314,8 @@ class AddCustomFeatures extends React.Component {
                 >
                     <Form ref={this.fromModeRef} layout="vertical">
                         <FormItem label="功能类型"
-                                  name="functionType"
+                                  name="fieldType"
+                                  initialValue={'1'}
                                   rules={[
                                       {
                                           required: true,
@@ -298,7 +324,7 @@ class AddCustomFeatures extends React.Component {
                                   ]}{...formItemLayout}>
                             <Select placeholder="请选择属性类型"  onChange={(value) => {
                                 this.changeFunctionType(value);
-                            }} defaultValue={'1'}>
+                            }}>
                                 {functionTypeList.map((item) => (
                                     <Option value={item.value} key={item.value}>
                                         {item.name}
@@ -307,26 +333,20 @@ class AddCustomFeatures extends React.Component {
                             </Select>
                         </FormItem>
                         <FormItem label="功能名称"
-                                  name="loginName"
-                                  initialValue={detail.loginName}
+                                  name="name"
+                                  initialValue={detail.name}
                                   rules={[
-                                      {
-                                          required: true,
-                                          message: '请输入功能名称'
-                                      },
+                                      {required: true,label:'功能名称',lenght:20,validator:handleCheckValueLenght},
                                   ]}{...formItemLayout}>
-                            <Input type="text" placeholder="1-32位，中文，英文，数字，特殊字符"/>
+                            <Input   disabled={false} type="text" placeholder="请输入功能名称"/>
                         </FormItem>
                         <FormItem label="标识符"
-                                  name="loginName"
-                                  initialValue={detail.loginName}
+                                  name="identifier"
+                                  initialValue={detail.identifier}
                                   rules={[
-                                      {
-                                          required: true,
-                                          message: '请输入标识符'
-                                      },
+                                      {required: true,label:'标识符',lenght:20,validator:handleCheckValueLenght},
                                   ]}{...formItemLayout}>
-                            <Input type="text" placeholder="1-32位，中文，英文，数字，特殊字符"/>
+                            <Input type="text" placeholder="请输入标识符"/>
                         </FormItem>
                         {this.state.serviceType==true &&
                         <div>
@@ -378,6 +398,7 @@ class AddCustomFeatures extends React.Component {
                             this.state.attributeType &&
                        <FormItem label="数据类型"
                                   name="dataType"
+                                 initialValue={'int'}
                                   rules={[
                                       {
                                           required: true,
@@ -386,7 +407,7 @@ class AddCustomFeatures extends React.Component {
                                   ]}{...formItemLayout}>
                             <Select placeholder="请选择数据类型"   onChange={(value) => {
                                 this.changeDataType(value);
-                            }} defaultValue={'1'}>
+                            }}>
                                 {dataTypeList.map((item) => (
                                     <Option value={item.value} key={item.value}>
                                         {item.name}
@@ -407,7 +428,7 @@ class AddCustomFeatures extends React.Component {
                                           ]}{...formItemLayout}>
                                     <Select placeholder="请选择元素类型"   onChange={(value) => {
                                         this.changeElementType(value);
-                                    }} defaultValue={'1'}>
+                                    }} defaultValue={'int'}>
                                         {elementTypeList.map((item) => (
                                             <Option value={item.value} key={item.value}>
                                                 {item.name}
@@ -433,14 +454,14 @@ class AddCustomFeatures extends React.Component {
                             <FormItem label="定义取值范围" name="name" rules={[{required: true, message: ' '}]}
                                       style={{marginBottom: 0}}>
                                 <FormItem
-                                    name="name"
+                                    name="min"
                                     rules={[{required: true, message: '请输入最小值'}]}
                                     style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
                                 >
                                     <Input placeholder="最小值"/>
                                 </FormItem>
                                 <FormItem
-                                    name="name"
+                                    name="max"
                                     rules={[{required: true, message: '请输入最大值'}]}
                                     style={{display: 'inline-block', width: 'calc(50%)', margin: '0px 0px 0px 8px'}}
                                 >
@@ -448,7 +469,7 @@ class AddCustomFeatures extends React.Component {
                                 </FormItem>
                             </FormItem>
                             <FormItem label="步长"
-                                      name="name"
+                                      name="step"
                                       rules={[
                                           {
                                               required: false,
@@ -458,7 +479,7 @@ class AddCustomFeatures extends React.Component {
                                 <Input placeholder="请输入步长"/>
                             </FormItem>
                             <FormItem label="单位"
-                                      name="name"
+                                      name="unit"
                                       rules={[
                                           {
                                               required: false,
@@ -484,14 +505,14 @@ class AddCustomFeatures extends React.Component {
                                 <FormItem label="" name="name" rules={[{required: true, message: ' '}]}
                                           style={{marginBottom: 0}}>
                                     <FormItem
-                                        name="name"
+                                        name="min"
                                         rules={[{required: true, message: '请输入最小值'}]}
                                         style={{display: 'inline-block', width: 'calc(35% - 8px)'}}
                                     >
                                         <Input placeholder="最小值"/>
                                     </FormItem>
                                     <FormItem
-                                        name="name"
+                                        name="max"
                                         rules={[{required: true, message: '请输入最大值'}]}
                                         style={{display: 'inline-block', width: 'calc(55%)', margin: '0px 0px 0px 8px'}}
                                     >
@@ -552,7 +573,8 @@ class AddCustomFeatures extends React.Component {
                         {
                             this.state.attributeType &&
                             <FormItem label="读写类型"
-                                      name="name"
+                                      name="accessMode"
+                                      initialValue={'rw'}
                                       rules={[
                                           {
                                               required: true,
@@ -561,7 +583,7 @@ class AddCustomFeatures extends React.Component {
                                       ]}{...formItemLayout}>
                                 <Select placeholder="请选择读写类型" onChange={(value) => {
                                     this.changeReadWrite(value)
-                                }} defaultValue={'1'}>
+                                }} defaultValue={'rw'}>
                                     {readWriteList.map((item) => (
                                         <Option value={item.value} key={item.value}>
                                             {item.name}
@@ -571,8 +593,8 @@ class AddCustomFeatures extends React.Component {
                             </FormItem>
                         }
                         <FormItem label="描述"
-                                  name="loginName"
-                                  initialValue={detail.loginName}
+                                  name="desc"
+                                  initialValue={detail.desc}
                                   rules={[
                                       {
                                           required: false,

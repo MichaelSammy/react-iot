@@ -2,8 +2,7 @@ import React from "react";
 import {Card, Modal, Form, Input, Button, List, Breadcrumb, Tabs} from "antd";
 import BaseModel from '../../../../common/BaseModel'
 import IconFont from '../../../../utils/IconFont';
-import request from '../../../../api/request'
-import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../../utils";
+import {filterRoutes, getBreadItem, messageGlobal, updateSelectedItem} from "../../../../utils";
 import deviceDefaultImg from '../../../../assets/images/deviceDefaultImg.jpg'
 import EditProduct from "../EditProduct";
 import './index.less'
@@ -16,7 +15,7 @@ import AddLabel from "../ExtractionComponent/addLabel";
 import TopicListTab from "../ExtractionComponent/topicListTab";
 import ImportModel from "../ExtractionComponent/importModel";
 import * as qs from "qs";
-import {getProductInfo, getProductList} from "../../../../api/api";
+import {getProductInfo, getProductLabels, getProductList, updateOrPublishProduct} from "../../../../api/api";
 
 const {TabPane} = Tabs;
 const FormItem = Form.Item
@@ -28,6 +27,8 @@ export default class Permission extends React.Component {
         title: '',
         visibleBaseModel: false,
         baseModelContent: '',
+        productInfo:{},
+        productLabelList:[],
     }
     data = [
         {
@@ -63,9 +64,31 @@ export default class Permission extends React.Component {
     importModelRef= (ref) => {
         this.importModelRefChild = ref
     }
+    functionDefinitionRef= (ref) => {
+        this.functionDefinitionRefChild=ref
+    }
     submitOk = () => {
+        this.publishProduct(this.state.productInfo)
         this.setState({
             visibleBaseModel: false
+        })
+    }
+    publishProduct = async (params) => {
+        let values={
+            id:params.id,
+            isPublish:params.isPublish==1?0:1
+        }
+            updateOrPublishProduct(values).then(res => {
+                if(res.status==1){
+                   const productInfo=this.state.productInfo;
+                    productInfo.isPublish=values.isPublish;
+                    this.setState({productInfo})
+                    messageGlobal('success',res.msg);
+                }else{
+                    messageGlobal('error',res.msg);
+                }
+        }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
+
         })
     }
     submitCancel = () => {
@@ -87,14 +110,36 @@ export default class Permission extends React.Component {
     }
    componentDidMount() {
        const productInfo = qs.parse(this.props.location.search,{ignoreQueryPrefix: true});
-       this.getProductDetails({productId:productInfo.id});
+       let productParams={
+           productId:productInfo.id
+       }
+       this.getProductDetails(productParams);
+       this.setState({
+           deviceCount:productInfo.num
+       })
 
+       this.getProductLabelList(productParams)
+       console.log(1234)
     }
     getProductDetails=(params)=>{
         getProductInfo(params).then(res => {
+            res.result.num=this.state.deviceCount
             if (res.status === '1') {
-                debugger
+                this.setState({
+                    productInfo:res.result
+                })
             }
+        })
+    }
+    getProductLabelList=(params)=>{
+        getProductLabels(params).then(res => {
+            if (res.status === '1') {
+                this.setState({
+                    productLabelList:res.result
+                })
+            }
+            console.log(this.state.productLabelList)
+
         })
     }
     goBackPreviousPage = () => {
@@ -103,17 +148,21 @@ export default class Permission extends React.Component {
     addTag = () => {
         this.addLabelRefChild.addTag()
     }
-    editTag = (item) => {
-        this.addLabelRefChild.editTag(item)
+    editTag = () => {
+        this.addLabelRefChild.editTag(this.state.productLabelList,this.state.productInfo.id)
     }
     saveSubmit = () => {
-        this.child.handleSubmit();
+        this.child.handleSubmit('info');
     }
     closeSubmit = () => {
+        this.child.closeSubmit()
         this.setState({
             editProductVisible: false
         })
-        this.child.closeSubmit()
+    }
+    refresFunctionList=()=>{
+
+        this.functionDefinitionRefChild.requestList()
     }
     addCustomFeatures = () => {
         this.addCustomFeaturesRefChild.showDrawer()
@@ -124,9 +173,10 @@ export default class Permission extends React.Component {
     importModelFrom = () => {
         this.importModelRefChild.showDrawer()
     }
-    editProduct = () => {
+    editProduct = (params) => {
+
         this.setState({
-            detail: this.props.location.params,
+            detail: params,
             editProductVisible: true,
             title: '编辑'
         })
@@ -203,32 +253,35 @@ export default class Permission extends React.Component {
                                     <span className='title-desc'>产品信息</span>
                                     <IconFont style={{fontSize: '15px', color: '#2979E7', marginRight: '7px'}}
                                               type='icon-a-bianjicopy'/>
-                                    <span className='edit-card-title-option' onClick={this.editProduct}> 编辑</span>
+                                    <span className='edit-card-title-option' onClick={()=>this.editProduct(this.state.productInfo)}> 编辑</span>
                                 </div>
+                                {this.state.productInfo.isPublish == 0 &&
                                 <div className='product-release' onClick={this.releaseProduct}> <div><IconFont type='icon-fabuicon' className="icon-font-offset-px"/>发布</div></div>
-                                {this.state.visibleBaseModel != false &&
+                                }
+                                {this.state.productInfo.isPublish == 1 &&
                                 <div className='product-release' onClick={this.unpublishProduct}><div><IconFont type='icon-fabuicon' className="icon-font-offset-px"/>取消发布</div></div>}
                             </div>
                             <div className='card-top-spilt-line'></div>
                             <div>
                                 <div className='product-filed-item product-filed-item-border-right'>
-                                    <div>产品ID：a9r2uwwJ1n</div>
-                                    <div>产品ID：a9r2uwwJ1n</div>
-                                    <div>产品ID：a9r2uwwJ1n</div>
-                                    <div>产品ID：a9r2uwwJ1n</div>
-                                    <div>产品ID：a9r2uwwJ1n</div>
+                                    <div>产品ID：{this.state.productInfo.id}</div>
+                                    <div>数据协议：{this.state.productInfo.dataType}</div>
+                                    <div>接入协议：{this.state.productInfo.protocol}</div>
+                                    <div>产品类别：{this.state.productInfo.productModel}</div>
+                                    <div>认证：{this.state.productInfo.encryption}</div>
                                 </div>
                                 <div className='product-filed-item product-filed-item-border-right'>
-                                    <div>产品ID：a9r2uwwJ1n</div>
-                                    <div>产品ID：a9r2uwwJ1n</div>
-                                    <div>产品ID：a9r2uwwJ1n</div>
-                                    <div>产品ID：a9r2uwwJ1n</div>
+                                    <div>节点类型：{this.state.productInfo.nodeType}</div>
+                                    <div>创建时间：{this.state.productInfo.createTime}</div>
+                                    <div>ProductSecret：{this.state.productInfo.productSecret}</div>
+                                    <div>设备数量：{this.state.productInfo.num}</div>
                                     <div></div>
                                 </div>
                                 <div className='product-filed-item'>
-                                    <div>产品ID：a9r2uwwJ1n</div>
-                                    <div>产品ID：a9r2uwwJ1n</div>
-                                    <div>产品ID：a9r2uwwJ1n</div>
+                                    <div>连网类型：{this.state.productInfo.netType}</div>
+                                    <div>产品厂商：{this.state.productInfo.productVendor}</div>
+                                    <div>产品型号：{this.state.productInfo.productKey}</div>
+                                    <div>产品描述：{this.state.productInfo.productDesc}</div>
                                 </div>
                             </div>
                             <div style={{padding: '10px 0px'}}>
@@ -240,15 +293,10 @@ export default class Permission extends React.Component {
                                 </div>
                                 <div style={{float: 'left', margin: '5px 0px'}}>产品标签：</div>
                                 <div className='product-tag-list'>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    {/*<div className='tag-option'>*/}
-                                        {/*<span onClick={this.editTag}> 编辑</span>*/}
-                                        {/*/<span onClick={this.addTag}>添加</span></div>*/}
+                                    {  this.state.productLabelList.map((item,index)=>{
+                                      return   <div className='tag-name' >{item.key+' : '+item.value}</div>
+                                      })
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -260,6 +308,8 @@ export default class Permission extends React.Component {
                         <FunctionDefinition addCustomFeatures={this.addCustomFeatures}
                                             addStandardFeatures={this.addStandardFeatures}
                                             importModelFrom={this.importModelFrom}
+                                            productInfo={this.state.productInfo}
+                                            onRef={this.functionDefinitionRef}
                         ></FunctionDefinition>
                     </TabPane>
                     <TabPane tab="数据解析" key="2">
@@ -288,12 +338,15 @@ export default class Permission extends React.Component {
                         <EditProduct
                             detail={this.state.detail}
                             onRef={this.onRef}
+                            closeSubmit={this.closeSubmit}
+                            getProductDetails={this.getProductDetails}
                         />
                     </Modal>
                 }
-                <AddCustomFeatures onRef={this.addCustomFeaturesRef}></AddCustomFeatures>
+                <AddCustomFeatures onRef={this.addCustomFeaturesRef}  refresFunctionList={this.refresFunctionList}  productInfo={this.state.productInfo}></AddCustomFeatures>
                 <AddStandardFeatures onRef={this.addStandardFeaturesRef}></AddStandardFeatures>
-                <AddLabel onRef={this.addLabelRef}></AddLabel>
+                <AddLabel onRef={this.addLabelRef}
+                          getProductLabelList={this.getProductLabelList}></AddLabel>
                 <BaseModel that={this}
                            visible={this.state.visibleBaseModel}
                            submitOk={this.submitOk}
