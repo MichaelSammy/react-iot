@@ -19,6 +19,7 @@ export default class AddProduct extends React.Component {
         showOption: false,
         showOtherOption: true,
         closeOtherOption: false,
+        initIndex:0,
     }
     onRef = (ref) => {
         this.child = ref
@@ -65,7 +66,10 @@ export default class AddProduct extends React.Component {
     goBackPreviousPage = () => {
         this.props.history.go(-1)
     }
-    selectDeviceType = (item, index) => {
+    selectDeviceType = (item,index) => {
+        this.setState({
+            initIndex:item
+        })
 
     }
     onChangeTypeRadio = (item) => {
@@ -232,15 +236,7 @@ export default class AddProduct extends React.Component {
                         {/*<Radio.Group>*/}
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             {nodeList.map((item, index) => (
-                                <div style={{
-                                    width: '32%',
-                                    height: '80px',
-                                    border: '1px solid #2979E7',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    cursor: 'pointer'
-                                }} onClick={this.selectDeviceType.bind(item)}>
+                                <div className={this.state.initIndex==index?'selected-node-type':'select-node-type'} onClick={this.selectDeviceType.bind(item,index)}>
                                     <div style={{
                                         width: '90px',
                                         height: '80px',
@@ -255,9 +251,11 @@ export default class AddProduct extends React.Component {
                                         lineHeight: '80px'
                                     }}>{item.id == '1' ? '设备' : (item.id == '2' ? '网关' : '子设备')}
                                     </div>
+                                    {this.state.initIndex==index &&
                                     <div ref={'abc' + index} className='select-device-type'>
                                         <IconFont className="select-device-type-icon" type='icon-duihao'/>
                                     </div>
+                                    }
                                 </div>
 
                             ))}

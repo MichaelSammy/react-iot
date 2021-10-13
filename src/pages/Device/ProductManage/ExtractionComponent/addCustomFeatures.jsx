@@ -5,7 +5,7 @@ import AddInOutputParameters from './addInOutputParameters'
 import AddStructureParameters from './addStructureParameters'
 import request from "../../../../api/request";
 import './../index.less'
-import {handleCheckValueLenght, messageGlobal} from "../../../../utils";
+import {guid, handleCheckValueLenght, messageGlobal} from "../../../../utils";
 import {getProductList, saveProductModel} from "../../../../api/api";
 
 const {Option} = Select
@@ -42,7 +42,9 @@ class AddCustomFeatures extends React.Component {
         elementStructVisible:false,
 
         title:'',
-
+        enumList:[{uuid:guid(),value:'',remark:''}],
+        childrenParamsList:[],
+        childrenParams:{},
     }
     showAddStructureParameters=(item)=>{
         switch (item) {
@@ -73,11 +75,11 @@ class AddCustomFeatures extends React.Component {
             visible: true,
         });
     };
-    filterParamr(values){
+    filterParams(values){
         let params=values
         values.productId=this.props.productInfo.id
         values.required=0
-        if(values.dataType=='int'){
+        if(values.dataType=='int'||values.dataType=='float'||values.dataType=='double'){
             values.dataType={
                 type:values.dataType,
                 specs:{
@@ -88,12 +90,120 @@ class AddCustomFeatures extends React.Component {
                 }
             }
         }
+        if (values.dataType == 'enum') {
+                values.dataType = {
+                    type: values.dataType,
+                    specs: this.state.enumList
+                }
+        }
+        if (values.dataType == 'bool') {
+                values.dataType = {
+                    type:values.dataType,
+                    specs:{
+                        zero: values.zero,
+                        one: values.one
+                    },
+                }
+        }
+        if (values.dataType == 'struct') {
+            values.dataType = {
+                type:values.dataType,
+                specs:this.state.childrenParamsList,
+            }
+        }
+        if(values.dataType == 'string'){
+            values.dataType = {
+                type:values.dataType,
+                specs:{
+                    length:values.length,
+                    remark:values.desc,
+                }
+            }
+        }
+        if(values.dataType == 'date'){
+            values.dataType = {
+                type:values.dataType,
+                specs:{
+                    data:'',
+                }
+            }
+        }
+        if(values.dataType == 'array'){
+            if(values.elementType=='int'){
+                values.dataType = {
+                    type:values.dataType,
+                    specs:{
+                        size:values.elementSize,
+                        item:{
+                            type:values.elementType,
+                            specs:{
+                                min:values.min,
+                                max:values.max,
+                                unit:values.unit,
+                                step:values.step
+                            }
+                        },
+                    }
+                }
+            }
+            if(values.elementType=='date'){
+                values.dataType = {
+                    type:values.dataType,
+                    specs:{
+                        size:values.elementSize,
+                        item:{
+                            type:values.elementType,
+                            specs:{
+                                data:'',
+                            }
+                        },
+                    }
+                }
+            }
+            if(values.elementType=='string'){
+                values.dataType = {
+                    type:values.dataType,
+                    specs:{
+                        size:values.elementSize,
+                        item:{
+                            type:values.elementType,
+                            specs:{
+                                length:values.length,
+                                remark:values.desc,
+                            }
+                        },
+                    }
+                }
+            }
+            if(values.elementType=='struct'){
+                values.dataType = {
+                    type:values.dataType,
+                    specs:{
+                        size:values.elementSize,
+                        item:{
+                            type:values.elementType,
+                            specs:this.state.childrenParamsList,
+                        },
+                    }
+                }
+            }
+        }
         return params;
+    }
+
+    onChange(type,index,e){
+        let enumList=this.state.enumList;
+        if(type=='value'){
+            enumList[index]={uuid:enumList[index].uuid,value:e.target.value,remark:enumList[index].remark};
+        }else{
+            enumList[index]={uuid:enumList[index].uuid,value:enumList[index].value,remark:e.target.value};
+        }
+        this.setState({ enumList })
     }
     onSubmit = async () => {
         const form = this.fromModeRef.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
-            let params=this.filterParamr(values)
+            let params=this.filterParams(values)
             saveProductModel(params).then(res => {
                 if (res.status === '1') {
                     messageGlobal('success','添加成功！')
@@ -244,16 +354,16 @@ class AddCustomFeatures extends React.Component {
                 this.setState({
                     elementNumberVisible:false,
                     elementStringVisible:false,
-                    elementDateVisible:false,
-                    elementStructVisible:true,
+                    elementDateVisible:true,
+                    elementStructVisible:false,
                 })
                 break;
             case  'struct':
                 this.setState({
                     elementNumberVisible:false,
                     elementStringVisible:false,
-                    elementDateVisible:true,
-                    elementStructVisible:false,
+                    elementDateVisible:false,
+                    elementStructVisible:true,
                 })
                 break;
             default:
@@ -269,7 +379,46 @@ class AddCustomFeatures extends React.Component {
     requestList() {
 
     }
+    addEnum=()=>{
+        const enumList=this.state.enumList;
+        enumList[this.state.enumList.length]={uuid:guid(),value:'',remark:''};
+        this.setState({enumList})
 
+    }
+    deleteTagColumn=(item,index)=>{
+        const enumList=[];
+        this.state.enumList.map((item1,index1)=>{
+            if(index1!=index){
+                enumList.push(item1)
+            }
+         })
+        this.setState({
+            enumList
+        })
+    }
+    refresChildrenParams=(childrenParamsList)=>{
+        this.setState({
+            childrenParamsList
+        })
+}
+    editChildrenParams=(item,index)=>{
+        this.addStructureParametersChildRef.showDrawer(item,index)
+        this.setState({
+            title:'编辑参数',
+        })
+    }
+    deleteChildrenParams=(item,index)=>{
+        const childrenParamsList=[];
+        this.state.childrenParamsList.map((item1,index1)=>{
+            if(index1!=index){
+                childrenParamsList.push(item1)
+            }
+        })
+        this.setState({
+            childrenParamsList
+        })
+        this.addStructureParametersChildRef.setChildrenParameters(childrenParamsList);
+    }
     render() {
         const formItemLayout = {}
         const detail = {
@@ -283,7 +432,7 @@ class AddCustomFeatures extends React.Component {
             email: ''
         }
         const functionTypeList = [{id: '1', value: '1',name:'属性类型'}, {id: '2', value: '2',name:'事件类型'}, {id: '3', value: '3',name:'服务类型'}];
-        const dataTypeList=[{id: '1', value: 'int',name:'int32(整数型)'}, {id: '2', value: 'enum',name:'enum(枚举)'}, {id: '3', value: 'bool',name:'bool(布尔)'}, {id: '4', value: 'string',name:'string(字符串)'}, {id: '5', value: 'struct',name:'struct(结构体)'}, {id: '6', value: 'date',name:'date(时间)'}, {id: '7', value: 'array',name:'array(数组)'}];
+        const dataTypeList=[{id: '1', value: 'int',name:'int32(整数型)'}, {id: '2', value: 'enum',name:'enum(枚举)'}, {id: '3', value: 'bool',name:'bool(布尔)'}, {id: '4', value: 'string',name:'string(字符串)'}, {id: '5', value: 'struct',name:'struct(结构体)'}, {id: '6', value: 'date',name:'date(时间)'}, {id: '7', value: 'array',name:'array(数组)'},{id: '8', value: 'float',name:'float(浮点型)'}, {id: '9', value: 'double',name:'double(浮点型)'}];
         const readWriteList=[{id: '1', value: 'rw',name:'读写'}, {id: '2', value: 'r',name:'只读'}];
         const unitList=[{id: '1', value: 'v',name:'伏特/V'}, {id: '2', value: 's',name:'秒/s'}]
         const eventTypeList=[{id: '1', value: '1',name:'信息'}, {id: '2', value: '2',name:'告警'}, {id: '3', value: '3',name:'故障'}];
@@ -297,18 +446,9 @@ class AddCustomFeatures extends React.Component {
                     onClose={this.onClose}
                     visible={this.state.visible}
                     footer={
-                        <div
-                            style={{
-                                textAlign: 'right',
-                            }}
-                        >
-                            <Button onClick={this.onSubmit} type="primary" style={{marginRight: 8}}>
-                                添加
-                            </Button>
-                            <Button onClick={this.onClose}>
-                                关闭
-                            </Button>
-
+                        <div style={{ textAlign: 'right', }} >
+                            <Button onClick={this.onSubmit} type="primary" style={{marginRight: 8}}>添加</Button>
+                            <Button onClick={this.onClose}> 关闭</Button>
                         </div>
                     }
                 >
@@ -420,6 +560,7 @@ class AddCustomFeatures extends React.Component {
                             <div>
                                 <FormItem label="元素类型"
                                           name="elementType"
+                                          initialValue={'int'}
                                           rules={[
                                               {
                                                   required: true,
@@ -428,7 +569,7 @@ class AddCustomFeatures extends React.Component {
                                           ]}{...formItemLayout}>
                                     <Select placeholder="请选择元素类型"   onChange={(value) => {
                                         this.changeElementType(value);
-                                    }} defaultValue={'int'}>
+                                    }}>
                                         {elementTypeList.map((item) => (
                                             <Option value={item.value} key={item.value}>
                                                 {item.name}
@@ -437,8 +578,7 @@ class AddCustomFeatures extends React.Component {
                                     </Select>
                                 </FormItem>
                                 <FormItem label="元素个数"
-                                          name="loginName"
-                                          initialValue={detail.loginName}
+                                          name="elementSize"
                                           rules={[
                                               {
                                                   required: true,
@@ -458,14 +598,14 @@ class AddCustomFeatures extends React.Component {
                                     rules={[{required: true, message: '请输入最小值'}]}
                                     style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
                                 >
-                                    <Input placeholder="最小值"/>
+                                    <Input placeholder="最小值" />
                                 </FormItem>
                                 <FormItem
                                     name="max"
                                     rules={[{required: true, message: '请输入最大值'}]}
                                     style={{display: 'inline-block', width: 'calc(50%)', margin: '0px 0px 0px 8px'}}
                                 >
-                                    <Input placeholder="最大值"/>
+                                    <Input placeholder="最大值" />
                                 </FormItem>
                             </FormItem>
                             <FormItem label="步长"
@@ -501,34 +641,31 @@ class AddCustomFeatures extends React.Component {
                             <div>
                                <div><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 枚举值</span></div>
                                 <div style={{display:'flex',padding:'8px 0px'}}><div style={{width:'40%',float:'left',marginLeft:'10px'}}>参数值</div><div style={{width:'55%',float:'right'}}>参数类型</div></div>
-
-                                <FormItem label="" name="name" rules={[{required: true, message: ' '}]}
-                                          style={{marginBottom: 0}}>
-                                    <FormItem
-                                        name="min"
-                                        rules={[{required: true, message: '请输入最小值'}]}
-                                        style={{display: 'inline-block', width: 'calc(35% - 8px)'}}
-                                    >
-                                        <Input placeholder="最小值"/>
+                                {this.state.enumList.map((item,index)=> {
+                                  return  <FormItem label=""  rules={[{required: true, message: ' '}]}
+                                              style={{marginBottom: 0}}>
+                                        <FormItem
+                                            name={'value'+item.uuid}
+                                            rules={[{required: true, message: '请输入最小值'}]}
+                                            style={{display: 'inline-block', width: 'calc(35% - 8px)'}}
+                                        >
+                                            <Input placeholder="最小值" onChange ={this.onChange.bind(this,'value',index) }/>
+                                        </FormItem>
+                                        <FormItem
+                                            name={'remark'+item.uuid}
+                                            rules={[{required: true, message: '请输入最大值'}]}
+                                            style={{ display: 'inline-block',width: 'calc(55%)', margin: '0px 0px 0px 8px'}}
+                                        >
+                                            <Input placeholder="最大值" onChange ={this.onChange.bind(this,'remark',index) }/>
+                                        </FormItem>
+                                      {index>0&&
+                                          <div style={{ position: 'absolute',cursor: 'pointer',marginLeft: '93%', wordBreak: 'keep-all', marginTop: '-50px',color: '#2979E7', }}
+                                               onClick={()=>this.deleteTagColumn(item,index)}>删除</div>
+                                      }
                                     </FormItem>
-                                    <FormItem
-                                        name="max"
-                                        rules={[{required: true, message: '请输入最大值'}]}
-                                        style={{display: 'inline-block', width: 'calc(55%)', margin: '0px 0px 0px 8px'}}
-                                    >
-                                        <Input placeholder="最大值"/>
-                                    </FormItem>
-                                    <div style={{
-                                        position: 'absolute',
-                                        cursor: 'pointer',
-                                        marginLeft: '93%',
-                                        wordBreak: 'keep-all',
-                                        marginTop: '-50px',
-                                        color: '#2979E7',
-                                    }} onClick={this.deleteTagColumn}>删除
-                                    </div>
-                                </FormItem>
-                                <div style={{marginBottom:'24px',color:'#2979E7',cursor:'pointer'}}> <IconFont  type='icon-jiahao'/>添加枚举项</div>
+                                })
+                                }
+                                <div style={{marginBottom:'24px',color:'#2979E7',cursor:'pointer'}} onClick={this.addEnum}> <IconFont  type='icon-jiahao'/>添加枚举项</div>
                             </div>
                         }
                         {
@@ -536,12 +673,12 @@ class AddCustomFeatures extends React.Component {
                             <div>
                                 <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 布尔值</span></div>
                                 <div style={{float: 'left', lineHeight: '32px',padding:'0px 10px 0px 10px'}}>0 -</div>
-                                <FormItem label="" name="name" rules={[{required: true, message: ' '}]}
+                                <FormItem label="" name="zero" rules={[{required: true, message: ' '}]}
                                           {...formItemLayout}>
                                    <Input placeholder="如  关"/>
                                 </FormItem>
                                 <div style={{float: 'left', lineHeight: '32px',padding:'0px 10px 0px 10px'}}>1 -</div>
-                                <FormItem label="" name="name" rules={[{required: true, message: ' '}]}
+                                <FormItem label="" name="one" rules={[{required: true, message: ' '}]}
                                           {...formItemLayout}>
                                     <Input placeholder="如  开"/>
                                 </FormItem>
@@ -550,7 +687,7 @@ class AddCustomFeatures extends React.Component {
                          }
                         {((this.state.dateDataVisible==true  && this.state.attributeType)||(this.state.arrayDataVisible==true  && this.state.attributeType&&this.state.elementDateVisible)) &&
                             <div>
-                                <FormItem label="时间格式" name="name" rules={[{required: false, message: ' '}]}
+                                <FormItem label="时间格式" name="dateType" rules={[{required: false, message: ' '}]}
                                           {...formItemLayout}>
                                     <Input placeholder="String类型的UTC时间戳（毫秒）" disabled={true}/>
                                 </FormItem>
@@ -558,7 +695,7 @@ class AddCustomFeatures extends React.Component {
                         }
                         {((this.state.stringDataVisible==true  && this.state.attributeType) ||(this.state.arrayDataVisible==true  && this.state.attributeType&&this.state.elementStringVisible))&&
                         <div>
-                            <FormItem label="数据长度" name="name" rules={[{required: true, message: ' '}]}
+                            <FormItem label="数据长度" name="length" rules={[{required: true, message: ' '}]}
                                       {...formItemLayout}>
                                 <Input placeholder="" addonAfter="字节"/>
                             </FormItem>
@@ -566,7 +703,22 @@ class AddCustomFeatures extends React.Component {
                         }
                         {((this.state.structDataVisible==true && this.state.attributeType) ||(this.state.arrayDataVisible==true && this.state.attributeType &&this.state.elementStructVisible)) &&
                         <div>
-                            <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> Json对象</span></div>
+                            <div><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> Json对象</span></div>
+                            {
+                                this.state.childrenParamsList.map((item,index)=>{
+                                    return   <div className="json-children-params" key={index}>
+                                        <div>{item.name}</div>
+                                        <div>{item.identifier} </div>
+                                        <div>{item.dataType.type}</div>
+                                        <div className="function-table-option-buttion">
+                                            <div className="option-button" onClick={()=>this.editChildrenParams(item,index)}>编辑</div>
+                                            <div className="split"></div>
+                                            <div className="option-button" onClick={()=>this.deleteChildrenParams( item,index)}>删除</div>
+                                        </div>
+                                    </div>
+                                })
+                            }
+
                             <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'1')}> <IconFont  type='icon-jiahao'/>添加参数</div>
                         </div>
                         }
@@ -607,7 +759,7 @@ class AddCustomFeatures extends React.Component {
                     </Form>
                 </Drawer>
                 <AddInOutputParameters  onRef={this.addInOutputParametersRef} title={this.state.title}></AddInOutputParameters>
-                <AddStructureParameters onRef={this.addStructureParametersRef} title={this.state.title}></AddStructureParameters>
+                <AddStructureParameters onRef={this.addStructureParametersRef} title={this.state.title}   refresChildrenParams={this.refresChildrenParams}></AddStructureParameters>
             </div>
         )
     }
