@@ -50,10 +50,11 @@ class AddStructureParameters extends React.Component {
         // }
     }
     showDrawer = (params,index) => {
+        debugger
         this.setState({
             visible: true,
             childrenParams:params!=undefined?params:'',
-            editIndex:index!=undefined?index:''
+            editIndex:index!=undefined?index:'',
         });
         setTimeout(()=>{
             if(params){
@@ -64,12 +65,15 @@ class AddStructureParameters extends React.Component {
                 this.setState({
                     enumList:params.dataType.specs
                 })
+
                 if(params.dataType.type=='bool'){
                     this.fromModeRefs.current.setFieldsValue({
                         zero:params.dataType.specs.zero,
                         one:params.dataType.specs.one,
                     })
                 }
+            }else{
+
             }
         },100)
 
@@ -107,7 +111,7 @@ class AddStructureParameters extends React.Component {
                 type:values.dataType,
                 specs:{
                     length:values.length,
-                    remark:values.desc,
+                    remark:values.remark,
                 }
             }
         }
@@ -121,11 +125,25 @@ class AddStructureParameters extends React.Component {
         }
         return params;
     }
+    resetData=()=>{
+        this.setState({
+            childrenAttribute:[]
+        })
+    }
+    initData=(params)=>{
+        this.setState({
+            childrenAttribute:params
+        })
+    }
     onSubmit = async () => {
+        debugger
         const form = this.fromModeRefs.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             let params=this.filterParams(values)
             let temp=this.state.childrenAttribute;
+            console.log(1)
+            console.log(this.state.childrenAttribute)
+            debugger
             if(this.state.editIndex!==''){
                temp[this.state.editIndex]= params
             }else{
@@ -134,6 +152,8 @@ class AddStructureParameters extends React.Component {
             this.setState({
                 childrenAttribute:temp
             })
+            console.log(2)
+            console.log(this.state.childrenAttribute)
             this.props.refresChildrenParams(this.state.childrenAttribute)
             this.onClose()
         }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息

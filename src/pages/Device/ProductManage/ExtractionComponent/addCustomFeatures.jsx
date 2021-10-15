@@ -44,6 +44,7 @@ class AddCustomFeatures extends React.Component {
         title:'',
         enumList:[{uuid:guid(),value:'',remark:''}],
         childrenParamsList:[],
+        inPutParamsList:[],
         childrenParams:{},
     }
     showAddStructureParameters=(item)=>{
@@ -56,15 +57,15 @@ class AddCustomFeatures extends React.Component {
                 break;
             case '2':
                 this.setState({
-                    title:'添加输出参数'
+                    title:'添加输出参数',
                 })
-                this.addInOutputParametersChildRef.showDrawer()
+                this.addInOutputParametersChildRef.showDrawer('','',"out_put_params")
                 break;
             case '3':
                 this.setState({
-                    title:'添加输入参数'
+                    title:'添加输入参数',
                 })
-                this.addInOutputParametersChildRef.showDrawer()
+                this.addInOutputParametersChildRef.showDrawer('','',"in_put_params")
                 break;
             default:
         }
@@ -77,26 +78,28 @@ class AddCustomFeatures extends React.Component {
     };
     filterParams(values){
         let params=values
+        debugger
         values.productId=this.props.productInfo.id
         values.required=0
-        if(values.dataType=='int'||values.dataType=='float'||values.dataType=='double'){
-            values.dataType={
-                type:values.dataType,
-                specs:{
-                    min:values.min,
-                    max:values.max,
-                    unit:values.unit,
-                    step:values.step
+        if(values.fieldType=='1'){
+            if(values.dataType=='int'||values.dataType=='float'||values.dataType=='double'){
+                values.dataType={
+                    type:values.dataType,
+                    specs:{
+                        min:values.min,
+                        max:values.max,
+                        unit:values.unit,
+                        step:values.step
+                    }
                 }
             }
-        }
-        if (values.dataType == 'enum') {
+            if (values.dataType == 'enum') {
                 values.dataType = {
                     type: values.dataType,
                     specs: this.state.enumList
                 }
-        }
-        if (values.dataType == 'bool') {
+            }
+            if (values.dataType == 'bool') {
                 values.dataType = {
                     type:values.dataType,
                     specs:{
@@ -104,89 +107,97 @@ class AddCustomFeatures extends React.Component {
                         one: values.one
                     },
                 }
-        }
-        if (values.dataType == 'struct') {
-            values.dataType = {
-                type:values.dataType,
-                specs:this.state.childrenParamsList,
             }
-        }
-        if(values.dataType == 'string'){
-            values.dataType = {
-                type:values.dataType,
-                specs:{
-                    length:values.length,
-                    remark:values.desc,
+            if (values.dataType == 'struct') {
+                values.dataType = {
+                    type:values.dataType,
+                    specs:this.state.childrenParamsList,
                 }
             }
-        }
-        if(values.dataType == 'date'){
-            values.dataType = {
-                type:values.dataType,
-                specs:{
-                    data:'',
-                }
-            }
-        }
-        if(values.dataType == 'array'){
-            if(values.elementType=='int'){
+            if(values.dataType == 'string'){
                 values.dataType = {
                     type:values.dataType,
                     specs:{
-                        size:values.elementSize,
-                        item:{
-                            type:values.elementType,
-                            specs:{
-                                min:values.min,
-                                max:values.max,
-                                unit:values.unit,
-                                step:values.step
-                            }
-                        },
+                        length:values.length,
+                        remark:values.remark,
                     }
                 }
             }
-            if(values.elementType=='date'){
+            if(values.dataType == 'date'){
                 values.dataType = {
                     type:values.dataType,
                     specs:{
-                        size:values.elementSize,
-                        item:{
-                            type:values.elementType,
-                            specs:{
-                                data:'',
-                            }
-                        },
+                        data:'',
                     }
                 }
             }
-            if(values.elementType=='string'){
-                values.dataType = {
-                    type:values.dataType,
-                    specs:{
-                        size:values.elementSize,
-                        item:{
-                            type:values.elementType,
-                            specs:{
-                                length:values.length,
-                                remark:values.desc,
-                            }
-                        },
+            if(values.dataType == 'array'){
+                if(values.elementType=='int'){
+                    values.dataType = {
+                        type:values.dataType,
+                        specs:{
+                            size:values.elementSize,
+                            item:{
+                                type:values.elementType,
+                                specs:{
+                                    min:values.min,
+                                    max:values.max,
+                                    unit:values.unit,
+                                    step:values.step
+                                }
+                            },
+                        }
+                    }
+                }
+                if(values.elementType=='date'){
+                    values.dataType = {
+                        type:values.dataType,
+                        specs:{
+                            size:values.elementSize,
+                            item:{
+                                type:values.elementType,
+                                specs:{
+                                    data:'',
+                                }
+                            },
+                        }
+                    }
+                }
+                if(values.elementType=='string'){
+                    values.dataType = {
+                        type:values.dataType,
+                        specs:{
+                            size:values.elementSize,
+                            item:{
+                                type:values.elementType,
+                                specs:{
+                                    length:values.length,
+                                    remark:values.remark,
+                                }
+                            },
+                        }
+                    }
+                }
+                if(values.elementType=='struct'){
+                    values.dataType = {
+                        type:values.dataType,
+                        specs:{
+                            size:values.elementSize,
+                            item:{
+                                type:values.elementType,
+                                specs:this.state.childrenParamsList,
+                            },
+                        }
                     }
                 }
             }
-            if(values.elementType=='struct'){
-                values.dataType = {
-                    type:values.dataType,
-                    specs:{
-                        size:values.elementSize,
-                        item:{
-                            type:values.elementType,
-                            specs:this.state.childrenParamsList,
-                        },
-                    }
-                }
-            }
+        }
+        if(values.fieldType=='2'){
+            values.outputData=this.state.childrenParamsList
+        }
+        if(values.fieldType=='3'){
+            values.outputData=this.state.childrenParamsList;
+            values.inputData=this.state.inPutParamsList
         }
         return params;
     }
@@ -396,28 +407,70 @@ class AddCustomFeatures extends React.Component {
             enumList
         })
     }
-    refresChildrenParams=(childrenParamsList)=>{
-        this.setState({
-            childrenParamsList
-        })
+    refresChildrenParams=(childrenParamsList,type)=>{
+        debugger
+        if('out_put_params'==type){
+            this.setState({
+                childrenParamsList
+            })
+        }else if("in_put_params"==type){
+            this.setState({
+               inPutParamsList:childrenParamsList
+            })
+        }else{
+            this.setState({
+                childrenParamsList
+            })
+        }
+
 }
-    editChildrenParams=(item,index)=>{
-        this.addStructureParametersChildRef.showDrawer(item,index)
-        this.setState({
-            title:'编辑参数',
-        })
+    editChildrenParams=(item,index,type)=>{
+        debugger
+        if(type=='child_json'){
+            this.addStructureParametersChildRef.showDrawer(item,index)
+            this.setState({
+                title:'编辑参数',
+            })
+        }else{
+            this.addInOutputParametersChildRef.showDrawer(item,index,type)
+            this.setState({
+                title:'编辑输出参数',
+            })
+        }
     }
-    deleteChildrenParams=(item,index)=>{
+    deleteChildrenParams=(item,index,type)=>{
         const childrenParamsList=[];
-        this.state.childrenParamsList.map((item1,index1)=>{
-            if(index1!=index){
-                childrenParamsList.push(item1)
-            }
-        })
-        this.setState({
-            childrenParamsList
-        })
-        this.addStructureParametersChildRef.setChildrenParameters(childrenParamsList);
+        if("in_put_params"==type){
+            this.state.inPutParamsList.map((item1,index1)=>{
+                if(index1!=index){
+                    childrenParamsList.push(item1)
+                }
+            })
+            this.setState({
+                inPutParamsList:childrenParamsList
+            })
+            this.addInOutputParametersChildRef.setChildrenParameters(childrenParamsList,"in_put_params");
+        }else if('out_put_params'==type){
+            this.state.childrenParamsList.map((item1,index1)=>{
+                if(index1!=index){
+                    childrenParamsList.push(item1)
+                }
+            })
+            this.setState({
+                childrenParamsList
+            })
+            this.addInOutputParametersChildRef.setChildrenParameters(childrenParamsList,"out_put_params");
+        }else{
+            this.state.childrenParamsList.map((item1,index1)=>{
+                if(index1!=index){
+                    childrenParamsList.push(item1)
+                }
+            })
+            this.setState({
+                childrenParamsList
+            })
+            this.addStructureParametersChildRef.setChildrenParameters(childrenParamsList);
+        }
     }
     render() {
         const formItemLayout = {}
@@ -435,7 +488,7 @@ class AddCustomFeatures extends React.Component {
         const dataTypeList=[{id: '1', value: 'int',name:'int32(整数型)'}, {id: '2', value: 'enum',name:'enum(枚举)'}, {id: '3', value: 'bool',name:'bool(布尔)'}, {id: '4', value: 'string',name:'string(字符串)'}, {id: '5', value: 'struct',name:'struct(结构体)'}, {id: '6', value: 'date',name:'date(时间)'}, {id: '7', value: 'array',name:'array(数组)'},{id: '8', value: 'float',name:'float(浮点型)'}, {id: '9', value: 'double',name:'double(浮点型)'}];
         const readWriteList=[{id: '1', value: 'rw',name:'读写'}, {id: '2', value: 'r',name:'只读'}];
         const unitList=[{id: '1', value: 'v',name:'伏特/V'}, {id: '2', value: 's',name:'秒/s'}]
-        const eventTypeList=[{id: '1', value: '1',name:'信息'}, {id: '2', value: '2',name:'告警'}, {id: '3', value: '3',name:'故障'}];
+        const eventTypeList=[{id: '1', value: 'info',name:'信息'}, {id: '2', value: 'alarm',name:'告警'}, {id: '3', value: 'fault',name:'故障'}];
         const callTypeList= [{id: '1', value: '1',name:'同步'}, {id: '2', value: '2',name:'异步'}]
         const elementTypeList=[{id: '1', value: 'int',name:'int32(整数型)'},{id: '4', value: 'string',name:'string(字符串)'}, {id: '5', value: 'struct',name:'struct(结构体)'}, {id: '6', value: 'date',name:'date(时间)'}];
         return (
@@ -491,14 +544,14 @@ class AddCustomFeatures extends React.Component {
                         {this.state.serviceType==true &&
                         <div>
                             <FormItem label="调用方式"
-                                      name="name"
+                                      name="callType"
                                       rules={[
                                           {
                                               required: true,
                                               message: '请选择调用方式'
                                           },
                                       ]}{...formItemLayout}>
-                                <Select placeholder="请选择调用方式"  defaultValue={'1'}>
+                                <Select placeholder="请选择调用方式">
                                     {callTypeList.map((item) => (
                                         <Option value={item.value} key={item.value}>
                                             {item.name}
@@ -507,22 +560,55 @@ class AddCustomFeatures extends React.Component {
                                 </Select>
                             </FormItem>
                             <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 输入参数</span></div>
+
+                            {
+                                this.state.inPutParamsList.map((item,index)=>{
+                                    return   <div className="json-children-params" key={index}>
+                                        <div>{item.name}</div>
+                                        <div>{item.identifier} </div>
+                                        <div>{item.dataType.type}</div>
+                                        <div className="function-table-option-buttion">
+                                            <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'in_put_params')}>编辑</div>
+                                            <div className="split"></div>
+                                            <div className="option-button" onClick={()=>this.deleteChildrenParams( item,index,'in_put_params')}>删除</div>
+                                        </div>
+                                    </div>
+                                })
+                            }
                             <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'3')}> <IconFont  type='icon-jiahao'/>添加参数</div>
+
+
                             <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 输出参数</span></div>
+
+                            {
+                                this.state.childrenParamsList.map((item,index)=>{
+                                    return   <div className="json-children-params" key={index}>
+                                        <div>{item.name}</div>
+                                        <div>{item.identifier} </div>
+                                        <div>{item.dataType.type}</div>
+                                        <div className="function-table-option-buttion">
+                                            <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'out_put_params')}>编辑</div>
+                                            <div className="split"></div>
+                                            <div className="option-button" onClick={()=>this.deleteChildrenParams( item,index,'out_put_params')}>删除</div>
+                                        </div>
+                                    </div>
+                                })
+                            }
                             <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'2')}> <IconFont  type='icon-jiahao'/>添加参数</div>
                         </div>
                         }
                         {this.state.eventType==true &&
                     <div>
                         <FormItem label="事件类型"
-                                  name="name"
+                                  name="type"
+                                  initialValue={'info'}
                                   rules={[
                                       {
                                           required: true,
                                           message: '请选择事件类型'
                                       },
                                   ]}{...formItemLayout}>
-                            <Select placeholder="请选择事件类型"  defaultValue={'1'}>
+                            <Select placeholder="请选择事件类型">
                                 {eventTypeList.map((item) => (
                                     <Option value={item.value} key={item.value}>
                                         {item.name}
@@ -531,6 +617,20 @@ class AddCustomFeatures extends React.Component {
                             </Select>
                         </FormItem>
                         <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 输出参数</span></div>
+                        {
+                            this.state.childrenParamsList.map((item,index)=>{
+                                return   <div className="json-children-params" key={index}>
+                                    <div>{item.name}</div>
+                                    <div>{item.identifier} </div>
+                                    <div>{item.dataType.type}</div>
+                                    <div className="function-table-option-buttion">
+                                        <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'out_put_params')}>编辑</div>
+                                        <div className="split"></div>
+                                        <div className="option-button" onClick={()=>this.deleteChildrenParams( item,index,'out_put_params')}>删除</div>
+                                    </div>
+                                </div>
+                            })
+                        }
                         <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'2')}> <IconFont  type='icon-jiahao'/>添加参数</div>
                     </div>
                     }
@@ -711,9 +811,9 @@ class AddCustomFeatures extends React.Component {
                                         <div>{item.identifier} </div>
                                         <div>{item.dataType.type}</div>
                                         <div className="function-table-option-buttion">
-                                            <div className="option-button" onClick={()=>this.editChildrenParams(item,index)}>编辑</div>
+                                            <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'child_json')}>编辑</div>
                                             <div className="split"></div>
-                                            <div className="option-button" onClick={()=>this.deleteChildrenParams( item,index)}>删除</div>
+                                            <div className="option-button" onClick={()=>this.deleteChildrenParams( item,index,'child_json')}>删除</div>
                                         </div>
                                     </div>
                                 })
@@ -745,8 +845,8 @@ class AddCustomFeatures extends React.Component {
                             </FormItem>
                         }
                         <FormItem label="描述"
-                                  name="desc"
-                                  initialValue={detail.desc}
+                                  name="remark"
+                                  initialValue={detail.remark}
                                   rules={[
                                       {
                                           required: false,
@@ -758,7 +858,7 @@ class AddCustomFeatures extends React.Component {
                         </FormItem>
                     </Form>
                 </Drawer>
-                <AddInOutputParameters  onRef={this.addInOutputParametersRef} title={this.state.title}></AddInOutputParameters>
+                <AddInOutputParameters  onRef={this.addInOutputParametersRef} title={this.state.title} refresChildrenParams={this.refresChildrenParams}></AddInOutputParameters>
                 <AddStructureParameters onRef={this.addStructureParametersRef} title={this.state.title}   refresChildrenParams={this.refresChildrenParams}></AddStructureParameters>
             </div>
         )
