@@ -50,6 +50,7 @@ service.interceptors.response.use(config => {
 service.interceptors.response.use(
     response => {
         const res = response.data
+        debugger
         if ((res.status!=undefined&&res.status !== '1')||(res.code !=undefined&&res.code !== 1)){
             res.status = res.status
             res.message = res.response.data.msg

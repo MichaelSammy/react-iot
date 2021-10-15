@@ -1,12 +1,13 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Breadcrumb} from "antd";
-import {getBreadItem, updateSelectedItem} from '../../../../utils'
+import {getBreadItem, messageGlobal, updateSelectedItem} from '../../../../utils'
 import './index.less'
 import SelectProductCategory from "../ExtractionComponent/selectProductCategory";
 import device from '../../../../assets/images/device.png'
 import gateway from '../../../../assets/images/gateway.png'
 import childDevice from '../../../../assets/images/childDevice.png'
 import IconFont from "../../../../utils/IconFont";
+import {saveProduct, updateOrPublishProduct} from "../../../../api/api";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -46,11 +47,26 @@ export default class AddProduct extends React.Component {
     handleSubmit = async () => {
         const form = this.fromModeRef.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
+            this.addProduct(values)
             console.log('成功')
             console.log(values)
         }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
             console.log('失败')
             console.log(errInfo)
+        })
+    }
+    addProduct = async (values) => {
+        values.createBy="1"
+        debugger
+        saveProduct(values).then(res => {
+            debugger
+            if(res.status==1){
+                messageGlobal('success',res.msg);
+            }else{
+                messageGlobal('error',res.msg);
+            }
+        }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
+            debugger
         })
     }
     handleCancel = () => {
@@ -67,10 +83,13 @@ export default class AddProduct extends React.Component {
         this.props.history.go(-1)
     }
     selectDeviceType = (item,index) => {
+        debugger
         this.setState({
-            initIndex:item
+            initIndex:index
         })
-
+        this.fromModeRef.current.setFieldsValue({
+            nodeType:item.value,
+        })
     }
     onChangeTypeRadio = (item) => {
         if(item=='1'){
@@ -101,12 +120,16 @@ export default class AddProduct extends React.Component {
             email: ''
         }
         const typeList = [{id: '1', label: '标准类别',value:'1'}, {id: '2', label: '自定义类别',value:'2'}];
-        const accessList = [{id: '1', value: '设备接入'}, {id: '2', value: '平台接入'}];
-        const nodeList = [{id: '1', value: '设备'}, {id: '2', value: '网关'}, {id: '3', value: '子设备'}];
-        const nameList = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
-            id: '4',
-            value: 'cyan'
-        }];
+        const productCategoryList=[];
+        const accessList = [{id: '0', label: '设备接入',value:'0'}, {id: '1', label: '平台接入',value:'1'}];
+        const nodeList = [{id: '1', label: '设备',value:'1'}, {id: '2', label: '网关',value:'2'}, {id: '3', label: '子设备',value:'3'}];
+        const authenMethodList=[{id: '1', label: '秘钥',value:'1'}];
+        const safeTypeList=[{id: '1', label: '一机一密',value:'1'},{id: '2', label: '一型一密',value:'2'}];
+        const netTypeList = [{id: '1', label: '蜂窝',value:'1'}, {id: '2', label: 'NB-iot',value:'2'}, {id: '3', label: 'lora',value:'3'}];
+        const protocolTypeList = [{id: '1', label: 'MQTT',value:'1'}, {id: '2', label: 'CoAP',value:'2'}, {id: '3', label: 'HTTP',value:'3'}];
+        const dataTypeList = [{id: '1', label: 'JSON',value:'1'},{id: '2', label: '自定义',value:'2'}];
+        const encryptionTypeList = [{id: '1', label: '明文',value:'1'},{id: '2', label: 'SSL',value:'2'}];
+        const productVendorList = [{id: '1', label: '软通',value:'1'}];
         const breadList = [
             {
                 "path": "/user/device",
@@ -150,8 +173,7 @@ export default class AddProduct extends React.Component {
                 <div style={{clear: 'both'}}></div>
                 <Form ref={this.fromModeRef} style={{width: '1150px', marginBottom: '10vh'}}>
                     <FormItem label="产品名称"
-                              name="loginName"
-                              initialValue={detail.loginName}
+                              name="name"
                               rules={[
                                   {
                                       required: true,
@@ -161,7 +183,7 @@ export default class AddProduct extends React.Component {
                         <Input type="text" placeholder="请输入产品名称"/>
                     </FormItem>
                     <FormItem label="所属类别" name="type"
-                        // initialValue={detail.mobile}
+                        initialValue={'1'}
                               rules={[
                                   {
                                       required: true,
@@ -170,7 +192,7 @@ export default class AddProduct extends React.Component {
                               ]}{...formItemLayout}>
                         <Radio.Group  onChange={(e) => {
                                 this.onChangeTypeRadio(e.target.value);
-                        }} defaultValue={'1'}>
+                        }} >
                             {typeList.map((item) => (
                                 <Radio value={item.value}>
                                     {item.label}
@@ -190,9 +212,9 @@ export default class AddProduct extends React.Component {
                                   },
                               ]}{...formItemLayout}>
                         <Select placeholder="请选择标准类别" onClick={this.selectProductCategory} open={false}>
-                            {nameList.map((item) => (
-                                <Option value={item.id} key={item.id}>
-                                    {item.value}
+                            {productCategoryList.map((item) => (
+                                <Option value={item.value} key={item.value}>
+                                    {item.label}
                                 </Option>
                             ))}
                         </Select>
@@ -207,8 +229,9 @@ export default class AddProduct extends React.Component {
                         </div>
                     </FormItem>
                     }
-                    <FormItem label="接入方式" name="mobile"
-                        // initialValue={detail.mobile}
+                    <FormItem label="接入方式"
+                              name="accessMethod"
+                              initialValue={'0'}
                               rules={[
                                   {
                                       required: true,
@@ -217,16 +240,16 @@ export default class AddProduct extends React.Component {
                               ]}{...formItemLayout}>
                         <Radio.Group onChange={(e) => {
                             this.onChangeAccessRadio(e.target.value);
-                        }} defaultValue={'1'}>
+                        }} >
                             {accessList.map((item) => (
-                                <Radio value={item.id}>
-                                    {item.value}
+                                <Radio value={item.value}>
+                                    {item.label}
                                 </Radio>
                             ))}
                         </Radio.Group>
                     </FormItem>
-                    <FormItem label="节点类型" name="mobile"
-                        // initialValue={detail.mobile}
+                    <FormItem label="节点类型" name="nodeType"
+                              initialValue={'1'}
                               rules={[
                                   {
                                       required: true,
@@ -236,7 +259,7 @@ export default class AddProduct extends React.Component {
                         {/*<Radio.Group>*/}
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             {nodeList.map((item, index) => (
-                                <div className={this.state.initIndex==index?'selected-node-type':'select-node-type'} onClick={this.selectDeviceType.bind(item,index)}>
+                                <div className={this.state.initIndex==index?'selected-node-type':'select-node-type'} onClick={()=>this.selectDeviceType(item,index)}>
                                     <div style={{
                                         width: '90px',
                                         height: '80px',
@@ -249,7 +272,7 @@ export default class AddProduct extends React.Component {
                                         float: 'left',
                                         width: '50px',
                                         lineHeight: '80px'
-                                    }}>{item.id == '1' ? '设备' : (item.id == '2' ? '网关' : '子设备')}
+                                    }}>{item.value == '1' ? '设备' : (item.value == '2' ? '网关' : '子设备')}
                                     </div>
                                     {this.state.initIndex==index &&
                                     <div ref={'abc' + index} className='select-device-type'>
@@ -263,7 +286,7 @@ export default class AddProduct extends React.Component {
                         {/*</Radio.Group>*/}
                     </FormItem>
                     <FormItem label="认证方式"
-                              name="name"
+                              name="authenMethod"
                               rules={[
                                   {
                                       required: true,
@@ -271,15 +294,15 @@ export default class AddProduct extends React.Component {
                                   },
                               ]}{...formItemLayout}>
                         <Select placeholder="请选择认证方式">
-                            {nameList.map((item) => (
-                                <Option value={item.id} key={item.id}>
-                                    {item.value}
+                            {authenMethodList.map((item) => (
+                                <Option value={item.value} key={item.value}>
+                                    {item.label}
                                 </Option>
                             ))}
                         </Select>
                     </FormItem>
                     <FormItem label="安全类型"
-                              name="name"
+                              name="safeType"
                               rules={[
                                   {
                                       required: true,
@@ -287,15 +310,15 @@ export default class AddProduct extends React.Component {
                                   },
                               ]}{...formItemLayout}>
                         <Select placeholder="请选择安全类型">
-                            {nameList.map((item) => (
-                                <Option value={item.id} key={item.id}>
-                                    {item.value}
+                            {safeTypeList.map((item) => (
+                                <Option value={item.value} key={item.value}>
+                                    {item.label}
                                 </Option>
                             ))}
                         </Select>
                     </FormItem>
                     <FormItem label="连网方式"
-                              name="name"
+                              name="netType"
                               rules={[
                                   {
                                       required: true,
@@ -303,15 +326,15 @@ export default class AddProduct extends React.Component {
                                   },
                               ]}{...formItemLayout}>
                         <Select placeholder="请选择连网方式">
-                            {nameList.map((item) => (
-                                <Option value={item.id} key={item.id}>
-                                    {item.value}
+                            {netTypeList.map((item) => (
+                                <Option value={item.value} key={item.value}>
+                                    {item.label}
                                 </Option>
                             ))}
                         </Select>
                     </FormItem>
                     <FormItem label="通讯协议"
-                              name="name"
+                              name="protocol"
                               rules={[
                                   {
                                       required: true,
@@ -319,15 +342,15 @@ export default class AddProduct extends React.Component {
                                   },
                               ]}{...formItemLayout}>
                         <Select placeholder="请选择通讯协议">
-                            {nameList.map((item) => (
-                                <Option value={item.id} key={item.id}>
-                                    {item.value}
+                            {protocolTypeList.map((item) => (
+                                <Option value={item.value} key={item.value}>
+                                    {item.label}
                                 </Option>
                             ))}
                         </Select>
                     </FormItem>
                     <FormItem label="数据格式"
-                              name="name"
+                              name="dataType"
                               rules={[
                                   {
                                       required: true,
@@ -335,16 +358,16 @@ export default class AddProduct extends React.Component {
                                   },
                               ]}{...formItemLayout}>
                         <Select placeholder="请选择数据格式">
-                            {nameList.map((item) => (
-                                <Option value={item.id} key={item.id}>
-                                    {item.value}
+                            {dataTypeList.map((item) => (
+                                <Option value={item.value} key={item.value}>
+                                    {item.label}
                                 </Option>
                             ))}
                         </Select>
                     </FormItem>
                     <div className={this.state.showOption == true ? 'word-style' : 'word-style-hide'}>
                         <FormItem label="加密方式"
-                                  name="name"
+                                  name="encryption"
                                   rules={[
                                       {
                                           required: true,
@@ -352,16 +375,15 @@ export default class AddProduct extends React.Component {
                                       },
                                   ]}{...formItemLayout}>
                             <Select placeholder="请选择加密方式">
-                                {nameList.map((item) => (
-                                    <Option value={item.id} key={item.id}>
-                                        {item.value}
+                                {encryptionTypeList.map((item) => (
+                                    <Option value={item.value} key={item.value}>
+                                        {item.label}
                                     </Option>
                                 ))}
                             </Select>
                         </FormItem>
                         <FormItem label="产品型号"
-                                  name="loginName"
-                                  initialValue={detail.loginName}
+                                  name="productModel"
                                   rules={[
                                       {
                                           required: true,
@@ -371,7 +393,7 @@ export default class AddProduct extends React.Component {
                             <Input type="text" placeholder="请输入产品型号"/>
                         </FormItem>
                         <FormItem label="产品厂商"
-                                  name="name"
+                                  name="productVendor"
                                   rules={[
                                       {
                                           required: false,
@@ -379,15 +401,15 @@ export default class AddProduct extends React.Component {
                                       },
                                   ]}{...formItemLayout}>
                             <Select placeholder="请选择产品厂商">
-                                {nameList.map((item) => (
-                                    <Option value={item.id} key={item.id}>
-                                        {item.value}
+                                {productVendorList.map((item) => (
+                                    <Option value={item.value} key={item.value}>
+                                        {item.label}
                                     </Option>
                                 ))}
                             </Select>
                         </FormItem>
                         <FormItem label="产品描述"
-                                  name="loginName"
+                                  name="productDesc"
                                   initialValue={detail.loginName}
                                   rules={[
                                       {
