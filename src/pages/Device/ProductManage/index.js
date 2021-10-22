@@ -15,7 +15,7 @@ const FormItem = Form.Item
 export default class Permission extends React.Component {
     params = {
         page: 1,
-        pageSize: 5
+        pageSize: 6
     }
     data = [
         {
@@ -28,11 +28,11 @@ export default class Permission extends React.Component {
         },
         {
             type: 'select',
-            // initialValue: '',
+            initialValue: null,
             label: '',
             placeholder: '请选择产品标签',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
+            list: [{id: '1', label: '超级管理员',value:'1'}, {id: '2', label: '普通用户',value:'2'}],
+            field: 'productLabel',
             width: '150px',
             open:false
         }
@@ -43,6 +43,7 @@ export default class Permission extends React.Component {
         detail: {},
         title: '',
         dataSource:[],
+        cfromList:[],
     }
     onRef = (ref) => {
         this.child = ref
@@ -52,12 +53,22 @@ export default class Permission extends React.Component {
     }
     //查询
     handleSearch = (data) => {
+        debugger
         //日期转换
         // data.beginTime= data.beginTime.format("YYYY-MM-DD HH:mm:ss");
         console.log(data)
     }
+    setSearchLabel=(data)=>{
+        this.setState({
+            cfromList:data
+        })
+        this.data[1].initialValue='1';
+        this.forceUpdate()
+       debugger
+    }
     clickSelect = (data) => {
-        this.addLabelRefChild.filterTag()
+        debugger
+        this.addLabelRefChild.filterTag(this.state.cfromList)
     }
 
     componentDidMount() {
@@ -67,6 +78,7 @@ export default class Permission extends React.Component {
     //请求列表
     requestList() {
       let  params= {
+            "map[name]":'name',
             page: this.params.page,
             pageSize: this.params.pageSize,
         }
@@ -281,7 +293,7 @@ export default class Permission extends React.Component {
                         />
                     </Modal>
                 }
-                <AddLabel onRef={this.addLabelRef}></AddLabel>
+                <AddLabel onRef={this.addLabelRef} setSearchLabel={this.setSearchLabel}></AddLabel>
                 <BaseModel that={this}
                            visible={this.state.visibleBaseModel}
                            submitOk={this.submitOk}

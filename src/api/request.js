@@ -1,6 +1,6 @@
 import axios from 'axios'
 import baseURL from './baseUrl'
-import { getLocal } from '../utils'
+import {getLocal, messageGlobal} from '../utils'
 import { authChangeAction } from '../store/actionCreator'
 import whiteList from './httpWhiteRoster';
 import store from '../store'
@@ -53,7 +53,8 @@ service.interceptors.response.use(
         debugger
         if ((res.status!=undefined&&res.status !== '1')||(res.code !=undefined&&res.code !== 1)){
             res.status = res.status
-            res.message = res.response.data.msg
+            res.message = res.msg||res.response.data.msg
+            messageGlobal('error',res.msg);
             return Promise.reject('error')
         } else {
             return response.data

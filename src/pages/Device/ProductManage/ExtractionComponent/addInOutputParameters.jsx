@@ -156,6 +156,7 @@ class AddInOutputParameters extends React.Component {
     }
     filterParams(values){
         let params=values
+        params.type=values.dataType
         if(values.dataType=='int'||values.dataType=='float'||values.dataType=='double'){
             values.dataType={
                 type:values.dataType,
@@ -585,7 +586,7 @@ class AddInOutputParameters extends React.Component {
                             </FormItem>
                         </div>
                         }
-                        {((this.state.numberDataVisible == true) || (this.state.arrayDataVisible && this.state.elementNumberVisible)) &&
+                        {((this.state.numberDataVisible == true)) &&
                         <div>
                             <FormItem label="定义取值范围" name="name" rules={[{required: true, message: ' '}]}
                                       style={{marginBottom: 0}}>
@@ -713,7 +714,7 @@ class AddInOutputParameters extends React.Component {
                             </div>
 
                         }
-                        {((this.state.dateDataVisible == true) || (this.state.arrayDataVisible == true && this.state.elementDateVisible)) &&
+                        {((this.state.dateDataVisible == true)) &&
                         <div>
                             <FormItem label="时间格式" name="dateType" rules={[{required: false, message: ' '}]}
                                       {...formItemLayout}>
@@ -721,7 +722,7 @@ class AddInOutputParameters extends React.Component {
                             </FormItem>
                         </div>
                         }
-                        {((this.state.stringDataVisible == true) || (this.state.arrayDataVisible == true && this.state.elementStringVisible)) &&
+                        {((this.state.stringDataVisible == true) ) &&
                         <div>
                             <FormItem label="数据长度" name="length" rules={[{required: true, message: ' '}]}
                                       {...formItemLayout}>

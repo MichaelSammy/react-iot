@@ -7,7 +7,13 @@ import Etable from "../../../../common/Etable";
 import {messageGlobal, updateSelectedItem} from "../../../../utils";
 import request from "../../../../api/request";
 import './../index.less'
-import {deleteProductModel, getProductList, getProductModelList, getUserList} from "../../../../api/api";
+import {
+    deleteProductModel,
+    getProductList,
+    getProductModelInfo,
+    getProductModelList,
+    getUserList
+} from "../../../../api/api";
 
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -81,8 +87,24 @@ class FunctionDefinition extends React.Component {
             baseModelContent:'是否批量删除？'
         })
     }
-    showFunctionDefinition = () => {
-        alert(2)
+    showFunctionDefinition = (item,state) => {
+        debugger
+        let  params= {
+            productId:this.props.productInfo.id,
+            fieldType:item.fieldTypeId,
+            fieldId:item.fieldId,
+            type:item.type
+        }
+        getProductModelInfo(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                res.result.fieldTypeId=item.fieldTypeId;
+                res.result.fieldId=item.fieldId;
+                res.result.productId=this.props.productInfo.id;
+                this.props.addCustomFeatures(res.result,state)
+            }else{
+
+            }
+        })
     }
     editFunctionDefinition = () => {
         alert(1)
@@ -198,11 +220,11 @@ class FunctionDefinition extends React.Component {
                 render: (item) => {
                     return (
                         <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.showFunctionDefinition.bind(this, item)}>查看</div>
+                            <div className="option-button" onClick={()=>this.showFunctionDefinition(item,false)}>查看</div>
                             <div className="split"></div>
-                            <div className="option-button" onClick={this.editFunctionDefinition.bind(this, item)}>编辑</div>
+                            <div className="option-button" onClick={()=>this.showFunctionDefinition(item,true)}>编辑</div>
                             <div className="split"></div>
-                            <div className="option-button" onClick={this.deleteFunctionDefinition.bind(this, item)}>删除</div>
+                            <div className="option-button" onClick={()=>this.deleteFunctionDefinition(item)}>删除</div>
                         </div>
                     )
                 }

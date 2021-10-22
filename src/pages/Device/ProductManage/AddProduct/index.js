@@ -21,6 +21,7 @@ export default class AddProduct extends React.Component {
         showOtherOption: true,
         closeOtherOption: false,
         initIndex:0,
+        accessState:false
     }
     onRef = (ref) => {
         this.child = ref
@@ -62,6 +63,11 @@ export default class AddProduct extends React.Component {
             debugger
             if(res.status==1){
                 messageGlobal('success',res.msg);
+                this.props.history.push({
+                    'pathname': "/user/device/product/",
+                    params: true,
+                    from: this.props.location.pathname
+                });
             }else{
                 messageGlobal('error',res.msg);
             }
@@ -103,8 +109,15 @@ export default class AddProduct extends React.Component {
         }
     }
     onChangeAccessRadio = (item) => {
+        debugger
         if(item=='1'){
+            this.setState({
+                accessState:true
+            });
         }else{
+            this.setState({
+                accessState:false
+            });
         }
     }
     render() {
@@ -123,6 +136,7 @@ export default class AddProduct extends React.Component {
         const productCategoryList=[];
         const accessList = [{id: '0', label: '设备接入',value:'0'}, {id: '1', label: '平台接入',value:'1'}];
         const nodeList = [{id: '1', label: '设备',value:'1'}, {id: '2', label: '网关',value:'2'}, {id: '3', label: '子设备',value:'3'}];
+        const platformList=[{id: '1', label: '软通智慧',value:'1'}, {id: '2', label: '软通动力',value:'2'}]
         const authenMethodList=[{id: '1', label: '秘钥',value:'1'}];
         const safeTypeList=[{id: '1', label: '一机一密',value:'1'},{id: '2', label: '一型一密',value:'2'}];
         const netTypeList = [{id: '1', label: '蜂窝',value:'1'}, {id: '2', label: 'NB-iot',value:'2'}, {id: '3', label: 'lora',value:'3'}];
@@ -248,6 +262,38 @@ export default class AddProduct extends React.Component {
                             ))}
                         </Radio.Group>
                     </FormItem>
+                    {this.state.accessState &&
+                    <div>
+                        <FormItem label="平台标识"
+                                  name="platformId"
+                                  rules={[
+                                      {
+                                          required: true,
+                                          message: '请选择平台标识'
+                                      },
+                                  ]}{...formItemLayout}>
+                            <Select placeholder="请选择平台标识">
+                                {platformList.map((item) => (
+                                    <Option value={item.value} key={item.value}>
+                                        {item.label}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </FormItem>
+                        <FormItem label="访问地址"
+                                  name="platformUrl"
+                                  rules={[
+                                      {
+                                          required: true,
+                                          message: '请输入访问地址'
+                                      },
+                                  ]}{...formItemLayout}>
+                            <Input type="text" placeholder="请输入访问地址"/>
+                        </FormItem>
+                    </div>
+                    }
+                    {!this.state.accessState &&
+                    <div>
                     <FormItem label="节点类型" name="nodeType"
                               initialValue={'1'}
                               rules={[
@@ -349,6 +395,8 @@ export default class AddProduct extends React.Component {
                             ))}
                         </Select>
                     </FormItem>
+                    </div>
+                    }
                     <FormItem label="数据格式"
                               name="dataType"
                               rules={[

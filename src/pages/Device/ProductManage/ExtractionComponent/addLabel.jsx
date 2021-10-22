@@ -11,7 +11,8 @@ class AddLabel extends React.Component {
     fromModeRef = React.createRef();
     state = {
         addLabelVisible: false,
-        formList: [],
+        isSearchLabel:false,
+        formList: [{value: '', key: ''}],
         title: '',
         visibleBaseModel: false,
         baseModelContent: '是否删除？',
@@ -32,16 +33,27 @@ class AddLabel extends React.Component {
             visibleBaseModel: false
         })
     }
-    deleteTagColumn = (params) => {
-        this.setState({
-            visibleBaseModel: true,
-            baseModelContent: '是否删除？'
+    deleteTagColumn = (params,index) => {
+        let formListTemp= []
+        this.state.formList.map((item,index1)=>{
+            if(index!=index1){
+                formListTemp.push(item)
+            }
         })
-    }
-    filterTag = () => {
         this.setState({
+            formList:formListTemp
+        })
+        // this.setState({
+        //     visibleBaseModel: true,
+        //     baseModelContent: '是否删除？'
+        // })
+    }
+    filterTag = (item) => {
+        this.setState({
+            formList: item.length==0?this.state.formList:item,
             addLabelVisible: true,
-            title: '筛选标签'
+            title: '筛选标签',
+            isSearchLabel:true,
         })
     }
     addTag = () => {
@@ -51,8 +63,9 @@ class AddLabel extends React.Component {
         })
     }
     editTag = (item,id) => {
+        debugger
         this.setState({
-            formList: item,
+            formList: item.length==0?this.state.formList:item,
             addLabelVisible: true,
             title: '编辑标签',
             productId:id,
@@ -68,31 +81,36 @@ class AddLabel extends React.Component {
             }
         })
         if(nextStep){
-            let params={
-                productId:this.state.productId,
-                list:this.state.formList
-            }
-            saveOrUpdateLabel(params).then(res => {
-                if (res.status === '1') {
-                    messageGlobal('success',"标签修改成功！")
+            if(this.state.isSearchLabel==false){//标签新增修改
+                let params={
+                    productId:this.state.productId,
+                    list:this.state.formList
                 }
-            })
+                saveOrUpdateLabel(params).then(res => {
+                    if (res.status === '1') {
+                        messageGlobal('success',"标签修改成功！");
+                        this.props.getProductLabelList(params)
+                    }
+                })
+            }else{//根据标签筛选数据
+                this.props.setSearchLabel(this.state.formList)
+            }
+
             this.closeSubmit()
         }
         console.log(nextStep)
       //遍历 this.state.formList  校验表单
     }
     closeSubmit = () => {
-        let params={
-            productId:this.state.productId,
-        }
-        this.props.getProductLabelList(params)
         this.setState({
-            addLabelVisible: false
+            addLabelVisible: false,
+            isSearchLabel:false,
+            formList: [{value: '', key: ''}],
         })
     }
     addTagColumn = () => {
         const formList=this.state.formList;
+        debugger
         formList[this.state.formList.length]={productId:this.state.productId,key:'',value:''};
         this.setState({formList})
         
@@ -130,7 +148,9 @@ class AddLabel extends React.Component {
                 >
                     <Form ref={this.fromModeRef}>
                         {this.state.formList.map((item,index)=>{
-                        return    <FormItem label={index > 0 ? " " : "定义取值范围"} colon={index > 0 ? false : true}  style={{marginBottom: -16}} {...formItemLayout} key={index}>
+                            console.log(item.key+'');
+                            debugger
+                        return    <FormItem label={index > 0 ? " " : "定义取值范围"} colon={index > 0 ? false : true}  style={{marginBottom: -16}} {...formItemLayout} key={item.id}>
                                 <FormItem
                                     style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
                                 >
@@ -148,7 +168,7 @@ class AddLabel extends React.Component {
                                     wordBreak: 'keep-all',
                                     marginTop: '-48px',
                                     color: '#2979E7',
-                                }} key={index} onClick={()=>this.deleteTagColumn(item)}>删除
+                                }} key={index} onClick={()=>this.deleteTagColumn(item,index)}>删除
                                 </div>
                             </FormItem>
                         })

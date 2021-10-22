@@ -164,8 +164,9 @@ export default class Permission extends React.Component {
 
         this.functionDefinitionRefChild.requestList()
     }
-    addCustomFeatures = () => {
-        this.addCustomFeaturesRefChild.showDrawer()
+    addCustomFeatures = (item,state) => {
+        debugger
+        this.addCustomFeaturesRefChild.showDrawer(item,state)
     }
     addStandardFeatures = () => {
         this.addStandardFeaturesRefChild.showDrawer()
@@ -293,9 +294,15 @@ export default class Permission extends React.Component {
                                 </div>
                                 <div style={{float: 'left', margin: '5px 0px'}}>产品标签：</div>
                                 <div className='product-tag-list'>
-                                    {  this.state.productLabelList.map((item,index)=>{
+                                    {
+                                        this.state.productLabelList.map((item,index)=>{
                                       return   <div className='tag-name' >{item.key+' : '+item.value}</div>
                                       })
+
+                                    }
+                                    {
+                                        this.state.productLabelList.length==0&&
+                                        <div>无标签信息</div>
                                     }
                                 </div>
                             </div>

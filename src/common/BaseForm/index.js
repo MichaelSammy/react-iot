@@ -16,7 +16,7 @@ class BaseForm extends React.Component {
                 case 'input':
                     const inputItem = <FormItem key={field} name={field} label={label} initialValue={initialValue}>
                         {
-                            <Input style={{width}} type="text" placeholder={placeholder} bordered={bordered} onSearch={this.onSearch}/>
+                            <Input style={{width}} type="text" placeholder={placeholder}  bordered={bordered} onSearch={this.onSearch}/>
                         }
                     </FormItem>
                     list.push(inputItem);
@@ -31,6 +31,7 @@ class BaseForm extends React.Component {
                     list.push(searchItem);
                     break;
                 case 'select':
+                    debugger
                     const selectItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue} onClick={this.clickSelect}>
                         {
                             <Select style={{width}} open={open} placeholder={placeholder}>
@@ -38,6 +39,7 @@ class BaseForm extends React.Component {
                             </Select>
                         }
                     </FormItem>
+                    debugger
                     list.push(selectItem);
                     break;
                 case 'chooseTime':
@@ -52,6 +54,7 @@ class BaseForm extends React.Component {
                 default:
             }
         })
+        //
         return list;
     }
     reset = () => {
@@ -60,17 +63,20 @@ class BaseForm extends React.Component {
     handleFilterSubmit = (values) => {
         this.props.handleSearch(values);
     }
-    onSearch=()=>{
+    onSearch=(values)=>{
+        this.props.handleSearch(values)
         console.log('123')
     }
+
     clickSelect=()=>{
         console.log('123')
         this.props.clickSelect&&this.props.clickSelect()
     }
     render() {
+        debugger
         return (
             <Form onFinish={this.handleFilterSubmit} ref={this.formRef} layout='inline'>
-                {this.creatFormList()}
+                {this.creatFormList() }
                 { this.props.show!=false&& <FormItem >
                     <Button type="primary" htmlType="submit" style={{margin: '0 20px'}}>查询</Button>
                     <Button onClick={this.reset}>重置</Button>

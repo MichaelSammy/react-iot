@@ -3,7 +3,8 @@ import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import IconFont from "../../../../utils/IconFont";
 import request from "../../../../api/request";
 import './../index.less'
-import {guid} from "../../../../utils";
+import {guid, messageGlobal} from "../../../../utils";
+import {getStructInfo, updateProductModel} from "../../../../api/api";
 const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -50,36 +51,65 @@ class AddStructureParameters extends React.Component {
         // }
     }
     showDrawer = (params,index) => {
-        debugger
-        this.setState({
-            visible: true,
-            childrenParams:params!=undefined?params:'',
-            editIndex:index!=undefined?index:'',
-        });
-        setTimeout(()=>{
-            if(params){
-                this.changeDataType(params.dataType.type)
-                this.fromModeRefs.current.setFieldsValue({
-                    dataType:params.dataType.type,
-                })
-                this.setState({
-                    enumList:params.dataType.specs
-                })
-
-                if(params.dataType.type=='bool'){
+            this.setState({
+                visible: true,
+                // childrenParams:params!=undefined?params:'',
+                editIndex:index!=undefined?index:'',
+            });
+            setTimeout(()=>{
+                if(params){
+                    debugger
+                    this.changeDataType(params.dataType.type)
                     this.fromModeRefs.current.setFieldsValue({
-                        zero:params.dataType.specs.zero,
-                        one:params.dataType.specs.one,
+                        dataType:params.dataType.type,
+                        name:params.name,
+                        identifier:params.identifier,
+                        remark:params.remark,
                     })
+                    if(params.dataType.type=='int'||params.dataType.type=='float'||params.dataType.type=='double'){
+                        this.fromModeRefs.current.setFieldsValue({
+                            dataType:params.dataType.type,
+                            max:params.dataType.specs.max,
+                            min:params.dataType.specs.min,
+                            step:params.dataType.specs.step,
+                            unit:params.dataType.specs.unit,
+                            accessMode:params.accessMode
+                        })
+                    }
+                    debugger
+                    if(params.dataType.type=='enum'){
+                        this.setState({
+                            enumList:params.dataType.specs
+                        })
+                    }
+                    debugger
+                    if(params.dataType.type=='bool'){
+                        this.fromModeRefs.current.setFieldsValue({
+                            zero:params.dataType.specs.zero,
+                            one:params.dataType.specs.one,
+                        })
+                    }
+                    debugger
+                    if(params.dataType.type=='string'){
+                        this.fromModeRefs.current.setFieldsValue({
+                        length:params.dataType.specs.length
+                        })
+                    }
+
+                    if(params.dataType.type=='date'){
+                        this.fromModeRefs.current.setFieldsValue({
+                            date:params.dataType.specs.date
+                        })
+                    }
+                }else{
+
                 }
-            }else{
-
-            }
-        },100)
-
+            },100)
     };
     filterParams(values){
+        debugger
         let params=values
+        params.type=values.dataType
         if(values.dataType=='int'||values.dataType=='float'||values.dataType=='double'){
             values.dataType={
                 type:values.dataType,
@@ -139,6 +169,7 @@ class AddStructureParameters extends React.Component {
         debugger
         const form = this.fromModeRefs.current
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
+            debugger
             let params=this.filterParams(values)
             let temp=this.state.childrenAttribute;
             console.log(1)
@@ -333,7 +364,7 @@ class AddStructureParameters extends React.Component {
 
     render() {
         const formItemLayout = {}
-        const detail = this.state.childrenParams;
+        // const detail = this.state.childrenParams;
         const dataTypeList=[{id: '1', value: 'int',name:'int32(整数型)'}, {id: '2', value: 'enum',name:'enum(枚举)'}, {id: '3', value: 'bool',name:'bool(布尔)'}, {id: '4', value: 'string',name:'string(字符串)'}, {id: '5', value: 'double',name:'double(浮点型)'},{id: '6', value: 'date',name:'date(时间)'},{id: '7', value: 'float',name:'float(浮点型)'}];
         const unitList=[{id: '1', value: '1',name:'伏特/V'}, {id: '2', value: '2',name:'秒/s'}]
         const elementTypeList=[{id: '1', value: '1',name:'int32(整数型)'},{id: '4', value: '4',name:'string(字符串)'}, {id: '6', value: '6',name:'date(时间)'}];
@@ -363,7 +394,7 @@ class AddStructureParameters extends React.Component {
                     <Form ref={this.fromModeRefs} layout="vertical">
                         <FormItem label="参数名称"
                                   name="name"
-                                  initialValue={detail.name}
+                                  // initialValue={detail.name}
                                   rules={[
                                       {
                                           required: true,
@@ -374,7 +405,7 @@ class AddStructureParameters extends React.Component {
                         </FormItem>
                         <FormItem label="标识符"
                                   name="identifier"
-                                  initialValue={detail.identifier}
+                                  // initialValue={detail.identifier}
                                   rules={[
                                       {
                                           required: true,
@@ -423,7 +454,7 @@ class AddStructureParameters extends React.Component {
                             </FormItem>
                             <FormItem label="元素个数"
                                       name="size"
-                                      initialValue={detail.size}
+                                      // initialValue={detail.size}
                                       rules={[
                                           {
                                               required: true,
@@ -440,7 +471,7 @@ class AddStructureParameters extends React.Component {
                                       style={{marginBottom: 0}}>
                                 <FormItem
                                     name="min"
-                                    initialValue={detail.min}
+                                    // initialValue={detail.min}
                                     rules={[{required: true, message: '请输入最小值'}]}
                                     style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
                                 >
@@ -448,7 +479,7 @@ class AddStructureParameters extends React.Component {
                                 </FormItem>
                                 <FormItem
                                     name="max"
-                                    initialValue={detail.max}
+                                    // initialValue={detail.max}
                                     rules={[{required: true, message: '请输入最大值'}]}
                                     style={{display: 'inline-block', width: 'calc(50%)', margin: '0px 0px 0px 8px'}}
                                 >
@@ -457,7 +488,7 @@ class AddStructureParameters extends React.Component {
                             </FormItem>
                             <FormItem label="步长"
                                       name="step"
-                                      initialValue={detail.step}
+                                      // initialValue={detail.step}
                                       rules={[
                                           {
                                               required: false,
@@ -468,7 +499,7 @@ class AddStructureParameters extends React.Component {
                             </FormItem>
                             <FormItem label="单位"
                                       name="unit"
-                                      initialValue={detail.unit}
+                                      // initialValue={detail.unit}
                                       rules={[
                                           {
                                               required: false,
