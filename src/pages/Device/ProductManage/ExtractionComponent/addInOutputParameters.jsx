@@ -65,7 +65,20 @@ class AddInOutputParameters extends React.Component {
                 this.changeDataType(params.dataType.type)
                 this.fromModeRef.current.setFieldsValue({
                     dataType:params.dataType.type,
+                    name:params.name,
+                    identifier:params.identifier,
+                    remark:params.remark,
                 })
+                if(params.dataType.type=='int'||params.dataType.type=='float'||params.dataType.type=='double'){
+                    this.fromModeRef.current.setFieldsValue({
+                        dataType:params.dataType.type,
+                        max:params.dataType.specs.max,
+                        min:params.dataType.specs.min,
+                        step:params.dataType.specs.step,
+                        unit:params.dataType.specs.unit,
+                        accessMode:params.accessMode
+                    })
+                }
                 if(params.dataType.type==' enum') {
                     this.setState({
                         enumList: params.dataType.specs
@@ -95,7 +108,17 @@ class AddInOutputParameters extends React.Component {
                         one:params.dataType.specs.one,
                     })
                 }
-            }else{
+                if(params.dataType.type=='string'){
+                    this.fromModeRefs.current.setFieldsValue({
+                        length:params.dataType.specs.length
+                    })
+                }
+
+                if(params.dataType.type=='date'){
+                    this.fromModeRefs.current.setFieldsValue({
+                        date:params.dataType.specs.date
+                    })
+                }
             }
         },100)
         this.setState({
@@ -279,6 +302,7 @@ class AddInOutputParameters extends React.Component {
             dateDataVisible: false,
             stringDataVisible: false,
             arrayDataVisible:false,
+            structDataVisible:false,
         });
         const form = this.fromModeRef.current;
         form.resetFields();
@@ -484,7 +508,7 @@ class AddInOutputParameters extends React.Component {
     }
     render() {
         const formItemLayout = {}
-        const detail = this.state.childrenParams;
+        // const detail = this.state.childrenParams;
         const dataTypeList=[{id: '1', value: 'int',name:'int32(整数型)'}, {id: '2', value: 'enum',name:'enum(枚举)'}, {id: '3', value: 'bool',name:'bool(布尔)'}, {id: '4', value: 'string',name:'string(字符串)'}, {id: '5', value: 'struct',name:'struct(结构体)'}, {id: '6', value: 'date',name:'date(时间)'}, {id: '7', value: 'array',name:'array(数组)'}];
         const unitList=[{id: '1', value: '1',name:'伏特/V'}, {id: '2', value: '2',name:'秒/s'}]
         const elementTypeList=[{id: '1', value: 'int',name:'int32(整数型)'},{id: '4', value: 'string',name:'string(字符串)'}, {id: '5', value: 'struct',name:'struct(结构体)'}, {id: '6', value: 'date',name:'date(时间)'}];
@@ -497,24 +521,16 @@ class AddInOutputParameters extends React.Component {
                     visible={this.state.visible}
                     footer={
                         <div
-                            style={{
-                                textAlign: 'right',
-                            }}
-                        >
-                            <Button onClick={this.onSubmit} type="primary" style={{marginRight: 8}}>
-                                添加
-                            </Button>
-                            <Button onClick={this.onClose}>
-                                关闭
-                            </Button>
-
+                            style={{textAlign: 'right', }}>
+                            <Button onClick={this.onSubmit} type="primary" style={{marginRight: 8}}> 添加</Button>
+                            <Button onClick={this.onClose}>关闭</Button>
                         </div>
                     }
                 >
                     <Form ref={this.fromModeRef} layout="vertical">
                         <FormItem label="参数名称"
                                   name="name"
-                                  initialValue={detail.name}
+                                  // initialValue={detail.name}
                                   rules={[
                                       {
                                           required: true,
@@ -525,7 +541,7 @@ class AddInOutputParameters extends React.Component {
                         </FormItem>
                         <FormItem label="标识符"
                                   name="identifier"
-                                  initialValue={detail.identifier}
+                                  // initialValue={detail.identifier}
                                   rules={[
                                       {
                                           required: true,
@@ -592,7 +608,7 @@ class AddInOutputParameters extends React.Component {
                                       style={{marginBottom: 0}}>
                                 <FormItem
                                     name="min"
-                                    initialValue={detail.min}
+                                    // initialValue={detail.min}
                                     rules={[{required: true, message: '请输入最小值'}]}
                                     style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
                                 >
@@ -600,7 +616,7 @@ class AddInOutputParameters extends React.Component {
                                 </FormItem>
                                 <FormItem
                                     name="max"
-                                    initialValue={detail.max}
+                                    // initialValue={detail.max}
                                     rules={[{required: true, message: '请输入最大值'}]}
                                     style={{display: 'inline-block', width: 'calc(50%)', margin: '0px 0px 0px 8px'}}
                                 >
@@ -609,7 +625,7 @@ class AddInOutputParameters extends React.Component {
                             </FormItem>
                             <FormItem label="步长"
                                       name="step"
-                                      initialValue={detail.step}
+                                      // initialValue={detail.step}
                                       rules={[
                                           {
                                               required: false,
@@ -620,7 +636,7 @@ class AddInOutputParameters extends React.Component {
                             </FormItem>
                             <FormItem label="单位"
                                       name="unit"
-                                      initialValue={detail.unit}
+                                      // initialValue={detail.unit}
                                       rules={[
                                           {
                                               required: false,
@@ -640,15 +656,12 @@ class AddInOutputParameters extends React.Component {
                         {
                             this.state.enumDataVisible == true &&
                             <div>
-                                <div><span style={{
-                                    color: '#ff4d4f',
-                                    fontFamily: 'SimSun, sans-serif'
+                                <div><span style={{ color: '#ff4d4f',fontFamily: 'SimSun, sans-serif'
                                 }}>*</span><span> 枚举值</span></div>
                                 <div style={{display: 'flex', padding: '8px 0px'}}>
                                     <div style={{width: '40%', float: 'left', marginLeft: '10px'}}>参数值</div>
                                     <div style={{width: '55%', float: 'right'}}>参数类型</div>
                                 </div>
-
                                 {this.state.enumList.map((item, index) => {
                                     return <FormItem label="" rules={[{required: true, message: ' '}]}
                                                      style={{marginBottom: 0}}>
@@ -769,5 +782,4 @@ class AddInOutputParameters extends React.Component {
         )
     }
 }
-
 export default AddInOutputParameters

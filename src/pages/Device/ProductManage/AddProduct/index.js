@@ -208,7 +208,7 @@ export default class AddProduct extends React.Component {
                                 this.onChangeTypeRadio(e.target.value);
                         }} >
                             {typeList.map((item) => (
-                                <Radio value={item.value}>
+                                <Radio value={item.value} key={item.value}>
                                     {item.label}
                                 </Radio>
                             ))}
@@ -256,7 +256,7 @@ export default class AddProduct extends React.Component {
                             this.onChangeAccessRadio(e.target.value);
                         }} >
                             {accessList.map((item) => (
-                                <Radio value={item.value}>
+                                <Radio value={item.value} key={item.value}>
                                     {item.label}
                                 </Radio>
                             ))}
@@ -305,7 +305,7 @@ export default class AddProduct extends React.Component {
                         {/*<Radio.Group>*/}
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             {nodeList.map((item, index) => (
-                                <div className={this.state.initIndex==index?'selected-node-type':'select-node-type'} onClick={()=>this.selectDeviceType(item,index)}>
+                                <div className={this.state.initIndex==index?'selected-node-type':'select-node-type'} onClick={()=>this.selectDeviceType(item,index)} key={item.value}>
                                     <div style={{
                                         width: '90px',
                                         height: '80px',

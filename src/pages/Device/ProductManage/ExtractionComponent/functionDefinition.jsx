@@ -22,16 +22,16 @@ class FunctionDefinition extends React.Component {
     // fromModeRef = React.createRef();
     params = {
         page: 1,
-        pageSize: 5
+        pageSize: 10
     }
     data = [
         {
             type: 'select',
-            initialValue: '1',
+            initialValue: '0',
             placeholder: '',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            list:[{id: '0', value: '0',label:'功能类型（全部）'},{id: '1', value: '1',label:'属性类型'}, {id: '2', value: '2',label:'事件类型'}, {id: '3', value: '3',label:'服务类型'}],
             field: 'power',
-            width: '130px'
+            width: '160px'
         },
         {
             type: 'search',
@@ -55,7 +55,7 @@ class FunctionDefinition extends React.Component {
             pageSizeOptions: ['10', '20', '30'],
             pageSize: this.params.pageSize,
             current: this.params.page,
-            total: this.params.total,
+            total: 0,
             onChange: (page, pageSize) => this.changePage(page, pageSize),
             showTotal: (total) => `共${total}条`,
         },
@@ -116,12 +116,34 @@ class FunctionDefinition extends React.Component {
             baseModelContent:'是否删除？'
         })
     }
+    handleSearch = (data) => {
+        debugger
+        this.setState({
+            fildName:data
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
+    }
+    changeSelect = (data) => {
+        debugger
+        this.setState({
+            fildType:data==0?"":data
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
+    }
     //请求列表
     requestList=()=> {
         let  params= {
-            page: this.params.page,
+            currentPage: this.params.page,
             pageSize: this.params.pageSize,
-            'map[productId]':this.props.productInfo.id
+            'map[productId]':this.props.productInfo.id,
+            'map[fildType]':this.state.fildType,
+            'map[fildName]':this.state.fildName
         }
         getProductModelList(params).then(res => {
             if (res.status === '1'&&res.result!=null) {
@@ -130,11 +152,25 @@ class FunctionDefinition extends React.Component {
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    pagination: {
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        hideOnSinglePage: false,
+                        pageSizeOptions: ['10', '20', '30'],
+                        pageSize: this.params.pageSize,
+                        current: this.params.page,
+                        total: res.result.recordCount,
+                        onChange: (page, pageSize) => this.changePage(page, pageSize),
+                        showTotal: (total) => `共${total}条`,
+                    }
                 })
             }else{
                 this.setState({
-                    dataSource:[]
+                    dataSource:[],
+                    pagination:{
+                        total:0
+                    }
                 })
             }
         })
@@ -257,6 +293,7 @@ class FunctionDefinition extends React.Component {
                         data={this.data}
                         handleSearch={this.handleSearch}
                         show={false}
+                        changeSelect={this.changeSelect}
                     />
                 </div>
                 <Etable

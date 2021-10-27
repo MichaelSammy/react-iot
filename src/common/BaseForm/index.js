@@ -7,6 +7,11 @@ const FormItem = Form.Item
 
 class BaseForm extends React.Component {
     formRef = React.createRef();
+    componentWillReceiveProps(nextProps){
+        this.formRef.current.setFieldsValue({
+            productLabel:nextProps.productLabel
+        })
+    }
     creatFormList = () => {
         const data = this.props.data;
         const list = [];
@@ -34,7 +39,9 @@ class BaseForm extends React.Component {
                     debugger
                     const selectItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue} onClick={this.clickSelect}>
                         {
-                            <Select style={{width}} open={open} placeholder={placeholder}>
+                            <Select style={{width}} open={open} placeholder={placeholder} onChange={(value) => {
+                                this.changeSelect(value);
+                            }}>
                                 {getOptionsList(item.list)}
                             </Select>
                         }
@@ -67,7 +74,9 @@ class BaseForm extends React.Component {
         this.props.handleSearch(values)
         console.log('123')
     }
-
+    changeSelect=(item)=>{
+        this.props.changeSelect&&this.props.changeSelect(item)
+    }
     clickSelect=()=>{
         console.log('123')
         this.props.clickSelect&&this.props.clickSelect()

@@ -6,7 +6,7 @@ import EditProduct from './EditProduct'
 import IconFont from '../../../utils/IconFont';
 import request from '../../../api/request'
 import './index.less'
-import {filterRoutes, getBreadItem} from "../../../utils";
+import {filterRoutes, getBreadItem, messageGlobal} from "../../../utils";
 import AddLabel from "./ExtractionComponent/addLabel";
 import {getProductList, getUserList} from "../../../api/api";
 import * as qs from "qs";
@@ -20,10 +20,10 @@ export default class Permission extends React.Component {
     data = [
         {
             type: 'search',
-            initialValue: '',
+            // initialValue: '',
             label: '',
             placeholder: '请输入搜索内容',
-            field: 'username',
+            field: 'name',
             width: '300px'
         },
         {
@@ -44,6 +44,8 @@ export default class Permission extends React.Component {
         title: '',
         dataSource:[],
         cfromList:[],
+        productLabel:null,
+        total:0,
     }
     onRef = (ref) => {
         this.child = ref
@@ -54,42 +56,88 @@ export default class Permission extends React.Component {
     //查询
     handleSearch = (data) => {
         debugger
+        this.setState({
+            name:data
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
         //日期转换
         // data.beginTime= data.beginTime.format("YYYY-MM-DD HH:mm:ss");
         console.log(data)
     }
     setSearchLabel=(data)=>{
-        this.setState({
-            cfromList:data
+        let label=[];
+        data.map((item,index)=>{
+               label.push(item.key+":"+item.value)
         })
-        this.data[1].initialValue='1';
-        this.forceUpdate()
-       debugger
+        this.setState({
+            cfromList:data,
+            productLabel:label.length>0?label.join(";"):null
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },300)
     }
     clickSelect = (data) => {
-        debugger
         this.addLabelRefChild.filterTag(this.state.cfromList)
     }
 
     componentDidMount() {
         this.requestList()
     }
+    prevPage=()=>{
+        if(this.params.page>1){
+            this.params.page= this.params.page-1;
+            setTimeout(()=>{
+                this.requestList()
+            },500)
+        }else{
+            messageGlobal('warning','已经是第一页啦~');
+        }
+    }
+    nextPage=()=>{
+      let  result= this.state.total/this.params.pageSize
+        if(this.params.page<result){
+            this.params.page= this.params.page+1;
+            setTimeout(()=>{
+                this.requestList()
+            },500)
+        }else{
+            messageGlobal('warning','已经是最后一页啦~');
+        }
+    }
 
+    changePage=(page,pageSize)=>{
+        this.params.page=page;
+        this.params.pageSize=pageSize;
+        this.requestList()
+    }
     //请求列表
     requestList() {
+        debugger
       let  params= {
-            "map[name]":'name',
-            page: this.params.page,
+            name:this.state.name,
+            currentPage: this.params.page,
             pageSize: this.params.pageSize,
+            label:this.state.cfromList
         }
         getProductList(params).then(res => {
-            if (res.status === '1') {
+            if (res.status === '1'&&res.result!=null) {
                 let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
@@ -182,6 +230,7 @@ export default class Permission extends React.Component {
                     <div className="product-list-card-search">
                         <div style={{float: 'left'}}>
                             <BaseForm
+                                productLabel={this.state.productLabel}
                                 data={this.data}
                                 show={false}
                                 handleSearch={this.handleSearch}
@@ -196,11 +245,11 @@ export default class Permission extends React.Component {
                     </div>
                     <div style={{clear: 'both'}}></div>
                     <div>
-                        <div className="product-left-arrow">
+                        <div className="product-left-arrow" onClick={()=>this.prevPage()}>
                             <IconFont style={{fontSize: '20px', color: '#ffffff'}}
                                       type='icon-jiantou-zuo'/>
                         </div>
-                        <div className="product-right-arrow">
+                        <div className="product-right-arrow" onClick={()=>this.nextPage()}>
                             <IconFont style={{fontSize: '20px', color: '#ffffff'}}
                                       type='icon-jiantou-you'/>
                         </div>
@@ -263,10 +312,14 @@ export default class Permission extends React.Component {
                         />
                         <Pagination
                             style={{textAlign: "right"}}
-                            total={85}
+                            total={this.state.total}
                             showSizeChanger
+                            current={this.params.page}
+                            pageSizeOptions={[6, 12, 24, 36]}
+                            defaultPageSize={6}
+                            onChange={(page,pageSize)=>this.changePage(page,pageSize)}
                             showQuickJumper
-                            showTotal={total => `共 ${total} 条`}
+                            showTotal={total => `共 ${this.state.total} 条`}
                         />
 
                     </div>

@@ -150,7 +150,7 @@ class AddLabel extends React.Component {
                         {this.state.formList.map((item,index)=>{
                             console.log(item.key+'');
                             debugger
-                        return    <FormItem label={index > 0 ? " " : "定义取值范围"} colon={index > 0 ? false : true}  style={{marginBottom: -16}} {...formItemLayout} key={item.id}>
+                        return    <FormItem label={index > 0 ? " " : "定义取值范围"} colon={index > 0 ? false : true}  style={{marginBottom: -16}} {...formItemLayout} key={item.value}>
                                 <FormItem
                                     style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
                                 >

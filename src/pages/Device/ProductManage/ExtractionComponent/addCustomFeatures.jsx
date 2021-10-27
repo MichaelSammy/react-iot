@@ -56,7 +56,8 @@ class AddCustomFeatures extends React.Component {
                 this.setState({
                     title:'添加参数'
                 })
-                this.addStructureParametersChildRef.showDrawer()
+                this.addStructureParametersChildRef.showDrawer();
+                this.addStructureParametersChildRef.setChildrenParameters(this.state.childrenParamsList);
                 break;
             case '2':
                 this.setState({
@@ -168,6 +169,19 @@ class AddCustomFeatures extends React.Component {
                 fieldType:item.fieldTypeId.toString(),
                 name:item.name,
                 identifier:item.identifier,
+                remark:item.remark,
+                type:item.type,
+            })
+        }else{
+            this.changeFunctionType(item.fieldTypeId.toString())
+            this.setState({
+                childrenParamsList:item.outputData
+            })
+            this.fromModeRef.current.setFieldsValue({
+                fieldType:item.fieldTypeId.toString(),
+                name:item.name,
+                identifier:item.identifier,
+                callType:item.call_type,
                 remark:item.remark,
                 type:item.type,
             })
@@ -548,11 +562,13 @@ class AddCustomFeatures extends React.Component {
         debugger
         if(type=='child_json'){
             this.addStructureParametersChildRef.showDrawer(item,index)
+            this.addStructureParametersChildRef.setChildrenParameters(this.state.childrenParamsList);
             this.setState({
                 title:'编辑参数',
             })
         }else{
-            this.addInOutputParametersChildRef.showDrawer(item,index,type)
+            this.addInOutputParametersChildRef.showDrawer(item,index,type);
+            this.addInOutputParametersChildRef.setChildrenParameters(this.state.childrenParamsList,type);
             this.setState({
                 title:'编辑输出参数',
             })
@@ -628,7 +644,7 @@ class AddCustomFeatures extends React.Component {
                                           message: '请选择属性类型'
                                       },
                                   ]}{...formItemLayout}>
-                            <Select placeholder="请选择属性类型" disabled={this.state.isEdit==true?'disabled':''}  onChange={(value) => {
+                            <Select placeholder="请选择属性类型" disabled={(this.state.isEdit==true||this.state.isEdit==false)?'disabled':''}  onChange={(value) => {
                                 this.changeFunctionType(value);
                             }}>
                                 {functionTypeList.map((item) => (
@@ -644,7 +660,7 @@ class AddCustomFeatures extends React.Component {
                                   rules={[
                                       {required: true,label:'功能名称',lenght:20,validator:handleCheckValueLenght},
                                   ]}{...formItemLayout}>
-                            <Input   disabled={false} type="text" placeholder="请输入功能名称"/>
+                            <Input   disabled={this.state.isEdit==false?'disabled':''} type="text" placeholder="请输入功能名称"/>
                         </FormItem>
                         <FormItem label="标识符"
                                   name="identifier"
@@ -652,7 +668,7 @@ class AddCustomFeatures extends React.Component {
                                   rules={[
                                       {required: true,label:'标识符',lenght:20,validator:handleCheckValueLenght},
                                   ]}{...formItemLayout}>
-                            <Input type="text" placeholder="请输入标识符"/>
+                            <Input type="text"  disabled={this.state.isEdit==false?'disabled':''} placeholder="请输入标识符"/>
                         </FormItem>
                         {this.state.serviceType==true &&
                         <div>
@@ -732,10 +748,11 @@ class AddCustomFeatures extends React.Component {
                         <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 输出参数</span></div>
                         {
                             this.state.childrenParamsList.map((item,index)=>{
+                                debugger
                                 return   <div className="json-children-params" key={index}>
                                     <div>{item.name}</div>
                                     <div>{item.identifier} </div>
-                                    <div>{item.type}</div>
+                                    <div>{item.dataType.type}</div>
                                     <div className="function-table-option-buttion">
                                         <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'out_put_params')}>编辑</div>
                                         <div className="split"></div>
@@ -758,7 +775,7 @@ class AddCustomFeatures extends React.Component {
                                           message: '请选择数据类型'
                                       },
                                   ]}{...formItemLayout}>
-                            <Select placeholder="请选择数据类型"   onChange={(value) => {
+                            <Select placeholder="请选择数据类型"  disabled={this.state.isEdit==false?'disabled':''}  onChange={(value) => {
                                 this.changeDataType(value);
                             }}>
                                 {dataTypeList.map((item) => (
@@ -780,7 +797,7 @@ class AddCustomFeatures extends React.Component {
                                                   message: '请选择元素类型'
                                               },
                                           ]}{...formItemLayout}>
-                                    <Select placeholder="请选择元素类型"   onChange={(value) => {
+                                    <Select placeholder="请选择元素类型"   disabled={this.state.isEdit==false?'disabled':''} onChange={(value) => {
                                         this.changeElementType(value);
                                     }}>
                                         {elementTypeList.map((item) => (
@@ -798,7 +815,7 @@ class AddCustomFeatures extends React.Component {
                                                   message: '请输入元素个数'
                                               },
                                           ]}{...formItemLayout}>
-                                    <Input type="text" placeholder="请输入元素个数"/>
+                                    <Input type="text"  disabled={this.state.isEdit==false?'disabled':''} placeholder="请输入元素个数"/>
                                 </FormItem>
                             </div>
                         }
@@ -811,14 +828,14 @@ class AddCustomFeatures extends React.Component {
                                     rules={[{required: true, message: '请输入最小值'}]}
                                     style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
                                 >
-                                    <Input placeholder="最小值" />
+                                    <Input placeholder="最小值" disabled={this.state.isEdit==false?'disabled':''} />
                                 </FormItem>
                                 <FormItem
                                     name="max"
                                     rules={[{required: true, message: '请输入最大值'}]}
                                     style={{display: 'inline-block', width: 'calc(50%)', margin: '0px 0px 0px 8px'}}
                                 >
-                                    <Input placeholder="最大值" />
+                                    <Input placeholder="最大值" disabled={this.state.isEdit==false?'disabled':''}/>
                                 </FormItem>
                             </FormItem>
                             <FormItem label="步长"
@@ -829,7 +846,7 @@ class AddCustomFeatures extends React.Component {
                                               message: '请输入步长'
                                           },
                                       ]}{...formItemLayout}>
-                                <Input placeholder="请输入步长"/>
+                                <Input placeholder="请输入步长" disabled={this.state.isEdit==false?'disabled':''}/>
                             </FormItem>
                             <FormItem label="单位"
                                       name="unit"
@@ -839,7 +856,7 @@ class AddCustomFeatures extends React.Component {
                                               message: '请选择单位'
                                           },
                                       ]}{...formItemLayout}>
-                                <Select placeholder="请选择单位">
+                                <Select placeholder="请选择单位" disabled={this.state.isEdit==false?'disabled':''}>
                                     {unitList.map((item) => (
                                         <Option value={item.value} key={item.value}>
                                             {item.name}
@@ -864,7 +881,7 @@ class AddCustomFeatures extends React.Component {
                                             rules={[{required: true, message: '请输入最小值'}]}
                                             style={{display: 'inline-block', width: 'calc(35% - 8px)'}}
                                         >
-                                            <Input placeholder="最小值" onChange ={this.onChange.bind(this,'value',index) }/>
+                                            <Input placeholder="最小值" onChange ={this.onChange.bind(this,'value',index) } disabled={this.state.isEdit==false?'disabled':''}/>
                                         </FormItem>
                                         <FormItem
                                             name={'remark'+item.id}
@@ -872,16 +889,19 @@ class AddCustomFeatures extends React.Component {
                                             rules={[{required: true, message: '请输入最大值'}]}
                                             style={{ display: 'inline-block',width: 'calc(55%)', margin: '0px 0px 0px 8px'}}
                                         >
-                                            <Input placeholder="最大值" onChange ={this.onChange.bind(this,'remark',index) }/>
+                                            <Input placeholder="最大值" onChange ={this.onChange.bind(this,'remark',index) } disabled={this.state.isEdit==false?'disabled':''}/>
                                         </FormItem>
-                                      {index>0&&
+                                      {index>0&&this.state.isEdit!=false&&
                                           <div style={{ position: 'absolute',cursor: 'pointer',marginLeft: '93%', wordBreak: 'keep-all', marginTop: '-50px',color: '#2979E7', }}
                                                onClick={()=>this.deleteTagColumn(item,index)}>删除</div>
                                       }
                                     </FormItem>
                                 })
                                 }
-                                <div style={{marginBottom:'24px',color:'#2979E7',cursor:'pointer'}} onClick={this.addEnum}> <IconFont  type='icon-jiahao'/>添加枚举项</div>
+                                {this.state.isEdit!=false&&
+                                    <div style={{marginBottom: '24px', color: '#2979E7', cursor: 'pointer'}}
+                                         onClick={this.addEnum}><IconFont type='icon-jiahao'/>添加枚举项</div>
+                                }
                             </div>
                         }
                         {
@@ -891,12 +911,12 @@ class AddCustomFeatures extends React.Component {
                                 <div style={{float: 'left', lineHeight: '32px',padding:'0px 10px 0px 10px'}}>0 -</div>
                                 <FormItem label="" name="zero" rules={[{required: true, message: ' '}]}
                                           {...formItemLayout}>
-                                   <Input placeholder="如  关"/>
+                                   <Input placeholder="如  关" disabled={this.state.isEdit==false?'disabled':''}/>
                                 </FormItem>
                                 <div style={{float: 'left', lineHeight: '32px',padding:'0px 10px 0px 10px'}}>1 -</div>
                                 <FormItem label="" name="one" rules={[{required: true, message: ' '}]}
                                           {...formItemLayout}>
-                                    <Input placeholder="如  开"/>
+                                    <Input placeholder="如  开" disabled={this.state.isEdit==false?'disabled':''}/>
                                 </FormItem>
                             </div>
 
@@ -913,7 +933,7 @@ class AddCustomFeatures extends React.Component {
                         <div>
                             <FormItem label="数据长度" name="length" rules={[{required: true, message: ' '}]}
                                       {...formItemLayout}>
-                                <Input placeholder="" addonAfter="字节"/>
+                                <Input placeholder="" addonAfter="字节" disabled={this.state.isEdit==false?'disabled':''}/>
                             </FormItem>
                         </div>
                         }
@@ -928,15 +948,28 @@ class AddCustomFeatures extends React.Component {
                                         <div>{item.identifier} </div>
                                         <div>{item.dataType.type}</div>
                                         <div className="function-table-option-buttion">
-                                            <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'child_json')}>编辑</div>
-                                            <div className="split"></div>
-                                            <div className="option-button" onClick={()=>this.deleteChildrenParams( item,index,'child_json')}>删除</div>
-                                        </div>
+                                            { this.state.isEdit!=false&&
+                                            <div>
+                                                <div className="option-button"
+                                                  onClick={() => this.editChildrenParams(item, index, 'child_json')}>编辑</div>
+                                            < div className="split"></div>
+                                                <div className="option-button" onClick={() => this.deleteChildrenParams(item, index, 'child_json')}>删除</div>
+                                            </div>
+                                            }
+                                            {
+                                                this.state.isEdit==false&&
+                                                <div className="option-button"
+                                                     onClick={() => this.editChildrenParams(item, index, 'child_json')}>查看</div>
+                                            }
+                                          </div>
                                     </div>
                                 })
                             }
-
-                            <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'1')}> <IconFont  type='icon-jiahao'/>添加参数</div>
+                            {this.state.isEdit != false &&
+                            <div style={{marginBottom: '8px', color: '#2979E7', cursor: 'pointer'}}
+                                 onClick={this.showAddStructureParameters.bind(this, '1')}><IconFont
+                                type='icon-jiahao'/>添加参数</div>
+                            }
                         </div>
                         }
                         {
@@ -950,7 +983,7 @@ class AddCustomFeatures extends React.Component {
                                               message: '请选择读写类型'
                                           },
                                       ]}{...formItemLayout}>
-                                <Select placeholder="请选择读写类型" onChange={(value) => {
+                                <Select placeholder="请选择读写类型"  disabled={this.state.isEdit==false?'disabled':''} onChange={(value) => {
                                     this.changeReadWrite(value)
                                 }} defaultValue={'rw'}>
                                     {readWriteList.map((item) => (
@@ -970,7 +1003,7 @@ class AddCustomFeatures extends React.Component {
                                           message: '请输入描述信息'
                                       },
                                   ]}{...formItemLayout}>
-                            <TextArea id='textAreaId' rows={5} maxLength={100} showCount
+                            <TextArea id='textAreaId' rows={5}  disabled={this.state.isEdit==false?'disabled':''} maxLength={100} showCount
                                       placeholder="请输入描述信息"></TextArea>
                         </FormItem>
                     </Form>
