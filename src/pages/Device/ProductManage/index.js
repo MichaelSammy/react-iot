@@ -4,11 +4,10 @@ import BaseForm from '../../../common/BaseForm'
 import BaseModel from '../../../common/BaseModel'
 import EditProduct from './EditProduct'
 import IconFont from '../../../utils/IconFont';
-import request from '../../../api/request'
 import './index.less'
 import {filterRoutes, getBreadItem, messageGlobal} from "../../../utils";
 import AddLabel from "./ExtractionComponent/addLabel";
-import {getProductList, getUserList} from "../../../api/api";
+import {getProductList} from "../../../api/api";
 import * as qs from "qs";
 
 const FormItem = Form.Item
@@ -55,7 +54,6 @@ export default class Permission extends React.Component {
     }
     //查询
     handleSearch = (data) => {
-        debugger
         this.setState({
             name:data
         })
@@ -84,7 +82,6 @@ export default class Permission extends React.Component {
     clickSelect = (data) => {
         this.addLabelRefChild.filterTag(this.state.cfromList)
     }
-
     componentDidMount() {
         this.requestList()
     }
@@ -109,7 +106,6 @@ export default class Permission extends React.Component {
             messageGlobal('warning','已经是最后一页啦~');
         }
     }
-
     changePage=(page,pageSize)=>{
         this.params.page=page;
         this.params.pageSize=pageSize;
@@ -117,7 +113,6 @@ export default class Permission extends React.Component {
     }
     //请求列表
     requestList() {
-        debugger
       let  params= {
             name:this.state.name,
             currentPage: this.params.page,
@@ -142,7 +137,6 @@ export default class Permission extends React.Component {
             }
         })
     }
-
     saveSubmit = () => {
         this.child.handleSubmit('list');
     }
@@ -183,7 +177,6 @@ export default class Permission extends React.Component {
     showProductInfo = (item) => {
          this.props.history.push({ pathname: `/user/device/product/info`,  search: qs.stringify(item)})
     }
-
     render() {
         const list = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
             id: '4',
@@ -209,9 +202,7 @@ export default class Permission extends React.Component {
             }
         ]
         return (
-
             <div>
-
                 <div className='product-list-title-background'>
                     {/*<div>*/}
                     <Breadcrumb>
@@ -321,10 +312,8 @@ export default class Permission extends React.Component {
                             showQuickJumper
                             showTotal={total => `共 ${this.state.total} 条`}
                         />
-
                     </div>
                 </div>
-
                 {
                     this.state.editProductVisible &&
                     <Modal

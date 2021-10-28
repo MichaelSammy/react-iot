@@ -3,10 +3,9 @@ import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import IconFont from "../../../../utils/IconFont";
 import AddInOutputParameters from './addInOutputParameters'
 import AddStructureParameters from './addStructureParameters'
-import request from "../../../../api/request";
 import './../index.less'
 import {guid, handleCheckValueLenght, messageGlobal} from "../../../../utils";
-import {getProductList, saveProductModel, updateProductModel} from "../../../../api/api";
+import {saveProductModel, updateProductModel} from "../../../../api/api";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -44,7 +43,7 @@ class AddCustomFeatures extends React.Component {
         elementDateVisible:false,
         elementStructVisible:false,
 
-        title:'',
+        // title:'',
         enumList:[{id:guid(),value:'',remark:''}],
         childrenParamsList:[],
         inPutParamsList:[],
@@ -53,49 +52,37 @@ class AddCustomFeatures extends React.Component {
     showAddStructureParameters=(item)=>{
         switch (item) {
             case '1':
-                this.setState({
-                    title:'添加参数'
-                })
                 this.addStructureParametersChildRef.showDrawer();
                 this.addStructureParametersChildRef.setChildrenParameters(this.state.childrenParamsList);
                 break;
             case '2':
-                this.setState({
-                    title:'添加输出参数',
-                })
                 this.addInOutputParametersChildRef.showDrawer('','',"out_put_params")
+                this.addInOutputParametersChildRef.setChildrenParameters(this.state.childrenParamsList,"out_put_params");
                 break;
             case '3':
-                this.setState({
-                    title:'添加输入参数',
-                })
                 this.addInOutputParametersChildRef.showDrawer('','',"in_put_params")
+                this.addInOutputParametersChildRef.setChildrenParameters(this.state.inPutParamsList,"in_put_params");
                 break;
             default:
         }
 
     }
     showDrawer = (item,state) => {
-        debugger
         this.setState({
-            // detail:item!=undefined?item:{},
             showButton:state!=undefined?state:true,
             drawerTitle:state==false?'查看自定义功能点':(state==true?'编辑自定义功能点':'添加自定义功能点'),
             isEdit:state,
             visible: true
         });
-        debugger
         if(item){
             this.setValue(item)
         }
     };
     setValue(item){
-        debugger
         this.setState({
             fieldId:item.fieldId
         })
         if(item.fieldTypeId=='1'){//属性
-            debugger
             this.changeFunctionType(item.fieldTypeId.toString())
             this.fromModeRef.current.setFieldsValue({
                 fieldType:item.fieldTypeId.toString(),
@@ -106,7 +93,6 @@ class AddCustomFeatures extends React.Component {
                 accessMode:item.accessMode
             })
             this.changeDataType(item.type);
-            debugger
             if(item.type=='int'||item.type=='float'||item.type=='double'){
                 this.fromModeRef.current.setFieldsValue({
                     max:item.dataType.specs.max,
@@ -122,7 +108,6 @@ class AddCustomFeatures extends React.Component {
                     one: item.dataType.specs.one,
                 })
             }
-            debugger
             if(item.type=='enum'){
                 this.setState({
                    enumList:item.dataType.specs
@@ -138,29 +123,24 @@ class AddCustomFeatures extends React.Component {
                     date:item.dataType.specs.date
                 })
             }
-            debugger
             if(item.type=='struct'){
                 this.setState({
                     childrenParamsList:item.dataType.specs
                 })
             }
-
             if(item.type=='array'){
                 this.fromModeRef.current.setFieldsValue({
                     elementType:item.dataType.specs.item.type,
                     elementSize:item.dataType.specs.size,
                 })
-                debugger
                 this.changeElementType(item.dataType.specs.item.type)
                 if(item.dataType.specs.item.type=='struct'){
-                    debugger
                     this.setState({
                         childrenParamsList:item.dataType.specs.item.specs
                     })
                 }
             }
         }else if(item.fieldTypeId=='2'){
-            debugger
             this.changeFunctionType(item.fieldTypeId.toString())
             this.setState({
                 childrenParamsList:item.outputData
@@ -175,7 +155,8 @@ class AddCustomFeatures extends React.Component {
         }else{
             this.changeFunctionType(item.fieldTypeId.toString())
             this.setState({
-                childrenParamsList:item.outputData
+                childrenParamsList:item.outputData,
+                inPutParamsList:item.inputData
             })
             this.fromModeRef.current.setFieldsValue({
                 fieldType:item.fieldTypeId.toString(),
@@ -189,7 +170,6 @@ class AddCustomFeatures extends React.Component {
      }
     filterParams(values){
         let params=values
-        debugger
         values.productId=this.props.productInfo.id
         values.fieldId=this.state.fieldId
         values.required=0
@@ -315,7 +295,6 @@ class AddCustomFeatures extends React.Component {
     }
 
     onChange(type,index,e){
-        debugger
         let enumList=this.state.enumList;
         if(type=='value'){
             enumList[index]={id:enumList[index].id,value:e.target.value,remark:enumList[index].remark};
@@ -326,7 +305,7 @@ class AddCustomFeatures extends React.Component {
     }
     onSubmit = async () => {
         const form = this.fromModeRef.current
-        form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
+        form.validateFields().then((values) => {
             let params=this.filterParams(values)
             if(values.fieldId){
                 updateProductModel(params).then(res => {
@@ -365,6 +344,7 @@ class AddCustomFeatures extends React.Component {
             stringDataVisible:false,
             structDataVisible:false,
             arrayDataVisible:false,
+            elementStructVisible:false
         });
         const form = this.fromModeRef.current;
         form.resetFields();
@@ -520,7 +500,6 @@ class AddCustomFeatures extends React.Component {
         this.props.onRef(this);
         this.requestList()
     }
-
     requestList() {
 
     }
@@ -542,7 +521,6 @@ class AddCustomFeatures extends React.Component {
         })
     }
     refresChildrenParams=(childrenParamsList,type)=>{
-        debugger
         if('out_put_params'==type){
             this.setState({
                 childrenParamsList
@@ -556,22 +534,18 @@ class AddCustomFeatures extends React.Component {
                 childrenParamsList
             })
         }
-
-}
-    editChildrenParams=(item,index,type)=>{
-        debugger
+    }
+    editChildrenParams=(item,index,type,state)=>{
         if(type=='child_json'){
-            this.addStructureParametersChildRef.showDrawer(item,index)
+            this.addStructureParametersChildRef.showDrawer(item,index,state)
             this.addStructureParametersChildRef.setChildrenParameters(this.state.childrenParamsList);
-            this.setState({
-                title:'编辑参数',
-            })
         }else{
-            this.addInOutputParametersChildRef.showDrawer(item,index,type);
-            this.addInOutputParametersChildRef.setChildrenParameters(this.state.childrenParamsList,type);
-            this.setState({
-                title:'编辑输出参数',
-            })
+            this.addInOutputParametersChildRef.showDrawer(item,index,type,state);
+            if(type=='out_put_params'){
+                this.addInOutputParametersChildRef.setChildrenParameters(this.state.childrenParamsList,type);
+            }else{
+                this.addInOutputParametersChildRef.setChildrenParameters(this.state.inPutParamsList,type);
+            }
         }
     }
     deleteChildrenParams=(item,index,type)=>{
@@ -610,8 +584,6 @@ class AddCustomFeatures extends React.Component {
     }
     render() {
         const formItemLayout = {}
-        // const detail = this.state.detail;
-        debugger
         const functionTypeList = [{id: '1', value: '1',name:'属性类型'}, {id: '2', value: '2',name:'事件类型'}, {id: '3', value: '3',name:'服务类型'}];
         const dataTypeList=[{id: '1', value: 'int',name:'int32(整数型)'}, {id: '2', value: 'enum',name:'enum(枚举)'}, {id: '3', value: 'bool',name:'bool(布尔)'}, {id: '4', value: 'string',name:'string(字符串)'}, {id: '5', value: 'struct',name:'struct(结构体)'}, {id: '6', value: 'date',name:'date(时间)'}, {id: '7', value: 'array',name:'array(数组)'},{id: '8', value: 'float',name:'float(浮点型)'}, {id: '9', value: 'double',name:'double(浮点型)'}];
         const readWriteList=[{id: '1', value: 'rw',name:'读写'}, {id: '2', value: 'r',name:'只读'}];
@@ -656,7 +628,6 @@ class AddCustomFeatures extends React.Component {
                         </FormItem>
                         <FormItem label="功能名称"
                                   name="name"
-                                  // initialValue={detail.name}
                                   rules={[
                                       {required: true,label:'功能名称',lenght:20,validator:handleCheckValueLenght},
                                   ]}{...formItemLayout}>
@@ -680,7 +651,7 @@ class AddCustomFeatures extends React.Component {
                                               message: '请选择调用方式'
                                           },
                                       ]}{...formItemLayout}>
-                                <Select placeholder="请选择调用方式">
+                                <Select placeholder="请选择调用方式"  disabled={this.state.isEdit==false?'disabled':''}>
                                     {callTypeList.map((item) => (
                                         <Option value={item.value} key={item.value}>
                                             {item.name}
@@ -689,7 +660,6 @@ class AddCustomFeatures extends React.Component {
                                 </Select>
                             </FormItem>
                             <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 输入参数</span></div>
-
                             {
                                 this.state.inPutParamsList.map((item,index)=>{
                                     return   <div className="json-children-params" key={index}>
@@ -697,16 +667,30 @@ class AddCustomFeatures extends React.Component {
                                         <div>{item.identifier} </div>
                                         <div>{item.dataType.type}</div>
                                         <div className="function-table-option-buttion">
-                                            <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'in_put_params')}>编辑</div>
-                                            <div className="split"></div>
-                                            <div className="option-button" onClick={()=>this.deleteChildrenParams( item,index,'in_put_params')}>删除</div>
+                                            {
+                                                this.state.isEdit != false && <div>
+                                                    <div className="option-button"
+                                                         onClick={() => this.editChildrenParams(item, index, 'in_put_params', true)}>编辑
+                                                    </div>
+                                                    <div className="split"></div>
+                                                    <div className="option-button"
+                                                         onClick={() => this.deleteChildrenParams(item, index, 'in_put_params')}>删除
+                                                    </div>
+                                                </div>
+                                            }
+                                            {this.state.isEdit==false&&
+                                            <div className="option-button"
+                                                 onClick={() => this.editChildrenParams(item, index, 'in_put_params', false)}>查看
+                                            </div>
+                                            }
                                         </div>
                                     </div>
                                 })
                             }
+                            {
+                                this.state.isEdit != false &&
                             <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'3')}> <IconFont  type='icon-jiahao'/>添加参数</div>
-
-
+                            }
                             <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 输出参数</span></div>
 
                             {
@@ -714,16 +698,29 @@ class AddCustomFeatures extends React.Component {
                                     return   <div className="json-children-params" key={index}>
                                         <div>{item.name}</div>
                                         <div>{item.identifier} </div>
-                                        <div>{item.type}</div>
+                                        <div>{item.dataType.type}</div>
                                         <div className="function-table-option-buttion">
-                                            <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'out_put_params')}>编辑</div>
+                                            {
+                                                this.state.isEdit != false && <div>
+                                            <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'out_put_params',true)}>编辑</div>
                                             <div className="split"></div>
                                             <div className="option-button" onClick={()=>this.deleteChildrenParams( item,index,'out_put_params')}>删除</div>
+                                                </div>
+                                            }
+                                            {this.state.isEdit==false&&
+                                            <div className="option-button"
+                                                 onClick={() => this.editChildrenParams(item, index, 'out_put_params', false)}>查看
+                                            </div>
+                                            }
                                         </div>
                                     </div>
                                 })
                             }
-                            <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'2')}> <IconFont  type='icon-jiahao'/>添加参数</div>
+                            {this.state.isEdit != false &&
+                            <div style={{marginBottom: '8px', color: '#2979E7', cursor: 'pointer'}}
+                                 onClick={this.showAddStructureParameters.bind(this, '2')}><IconFont
+                                type='icon-jiahao'/>添加参数</div>
+                            }
                         </div>
                         }
                         {this.state.eventType==true &&
@@ -737,7 +734,7 @@ class AddCustomFeatures extends React.Component {
                                           message: '请选择事件类型'
                                       },
                                   ]}{...formItemLayout}>
-                            <Select placeholder="请选择事件类型">
+                            <Select placeholder="请选择事件类型"  disabled={this.state.isEdit==false?'disabled':''}>
                                 {eventTypeList.map((item) => (
                                     <Option value={item.value} key={item.value}>
                                         {item.name}
@@ -748,20 +745,30 @@ class AddCustomFeatures extends React.Component {
                         <div style={{padding:'0px 0px 8px'}}><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 输出参数</span></div>
                         {
                             this.state.childrenParamsList.map((item,index)=>{
-                                debugger
                                 return   <div className="json-children-params" key={index}>
                                     <div>{item.name}</div>
                                     <div>{item.identifier} </div>
                                     <div>{item.dataType.type}</div>
                                     <div className="function-table-option-buttion">
-                                        <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'out_put_params')}>编辑</div>
+                                        {
+                                            this.state.isEdit!=false&&  <div>
+                                        <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'out_put_params',true)}>编辑</div>
                                         <div className="split"></div>
                                         <div className="option-button" onClick={()=>this.deleteChildrenParams( item,index,'out_put_params')}>删除</div>
+                                        </div>
+                                        }
+                                        { this.state.isEdit==false&&
+                                        <div className="option-button" onClick={()=>this.editChildrenParams(item,index,'out_put_params',false)}>查看</div>
+                                        }
                                     </div>
                                 </div>
                             })
                         }
-                        <div style={{marginBottom:'8px',color:'#2979E7',cursor:'pointer'}} onClick={this.showAddStructureParameters.bind(this,'2')}> <IconFont  type='icon-jiahao'/>添加参数</div>
+                        {this.state.isEdit != false &&
+                        <div style={{marginBottom: '8px', color: '#2979E7', cursor: 'pointer'}}
+                             onClick={this.showAddStructureParameters.bind(this, '2')}><IconFont type='icon-jiahao'/>添加参数
+                        </div>
+                        }
                     </div>
                     }
                         {
@@ -872,7 +879,6 @@ class AddCustomFeatures extends React.Component {
                                <div><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> 枚举值</span></div>
                                 <div style={{display:'flex',padding:'8px 0px'}}><div style={{width:'40%',float:'left',marginLeft:'10px'}}>参数值</div><div style={{width:'55%',float:'right'}}>参数类型</div></div>
                                 {this.state.enumList.map((item,index)=> {
-                                    debugger
                                 return    <FormItem label=""  rules={[{required: true, message: ' '}]}
                                               style={{marginBottom: 0}} key={index}>
                                         <FormItem
@@ -919,7 +925,6 @@ class AddCustomFeatures extends React.Component {
                                     <Input placeholder="如  开" disabled={this.state.isEdit==false?'disabled':''}/>
                                 </FormItem>
                             </div>
-
                          }
                         {((this.state.dateDataVisible==true  && this.state.attributeType)||(this.state.arrayDataVisible==true  && this.state.attributeType&&this.state.elementDateVisible)) &&
                             <div>
@@ -942,7 +947,6 @@ class AddCustomFeatures extends React.Component {
                             <div><span style={{color:'#ff4d4f',fontFamily: 'SimSun, sans-serif'}}>*</span><span> Json对象</span></div>
                             {
                                 this.state.childrenParamsList.map((item,index)=>{
-                                    debugger
                                     return   <div className="json-children-params" key={index}>
                                         <div>{item.name}</div>
                                         <div>{item.identifier} </div>
@@ -951,7 +955,7 @@ class AddCustomFeatures extends React.Component {
                                             { this.state.isEdit!=false&&
                                             <div>
                                                 <div className="option-button"
-                                                  onClick={() => this.editChildrenParams(item, index, 'child_json')}>编辑</div>
+                                                  onClick={() => this.editChildrenParams(item, index, 'child_json',true)}>编辑</div>
                                             < div className="split"></div>
                                                 <div className="option-button" onClick={() => this.deleteChildrenParams(item, index, 'child_json')}>删除</div>
                                             </div>
@@ -959,7 +963,7 @@ class AddCustomFeatures extends React.Component {
                                             {
                                                 this.state.isEdit==false&&
                                                 <div className="option-button"
-                                                     onClick={() => this.editChildrenParams(item, index, 'child_json')}>查看</div>
+                                                     onClick={() => this.editChildrenParams(item, index, 'child_json',false)}>查看</div>
                                             }
                                           </div>
                                     </div>
@@ -996,7 +1000,6 @@ class AddCustomFeatures extends React.Component {
                         }
                         <FormItem label="描述"
                                   name="remark"
-                                  // initialValue={detail.remark}
                                   rules={[
                                       {
                                           required: false,

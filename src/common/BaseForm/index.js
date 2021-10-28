@@ -1,10 +1,8 @@
 import React from 'react'
 import {getOptionsList} from '../../utils'
 import {Input, Select, Form, Button, DatePicker} from 'antd'
-import {FormInstance} from 'antd/lib/form';
 const { Search } = Input;
 const FormItem = Form.Item
-
 class BaseForm extends React.Component {
     formRef = React.createRef();
     componentWillReceiveProps(nextProps){
@@ -36,7 +34,6 @@ class BaseForm extends React.Component {
                     list.push(searchItem);
                     break;
                 case 'select':
-                    debugger
                     const selectItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue} onClick={this.clickSelect}>
                         {
                             <Select style={{width}} open={open} placeholder={placeholder} onChange={(value) => {
@@ -46,7 +43,6 @@ class BaseForm extends React.Component {
                             </Select>
                         }
                     </FormItem>
-                    debugger
                     list.push(selectItem);
                     break;
                 case 'chooseTime':
@@ -61,7 +57,6 @@ class BaseForm extends React.Component {
                 default:
             }
         })
-        //
         return list;
     }
     reset = () => {
@@ -72,17 +67,14 @@ class BaseForm extends React.Component {
     }
     onSearch=(values)=>{
         this.props.handleSearch(values)
-        console.log('123')
     }
     changeSelect=(item)=>{
         this.props.changeSelect&&this.props.changeSelect(item)
     }
     clickSelect=()=>{
-        console.log('123')
         this.props.clickSelect&&this.props.clickSelect()
     }
     render() {
-        debugger
         return (
             <Form onFinish={this.handleFilterSubmit} ref={this.formRef} layout='inline'>
                 {this.creatFormList() }

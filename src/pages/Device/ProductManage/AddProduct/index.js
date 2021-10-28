@@ -58,9 +58,7 @@ export default class AddProduct extends React.Component {
     }
     addProduct = async (values) => {
         values.createBy="1"
-        debugger
         saveProduct(values).then(res => {
-            debugger
             if(res.status==1){
                 messageGlobal('success',res.msg);
                 this.props.history.push({
@@ -72,7 +70,6 @@ export default class AddProduct extends React.Component {
                 messageGlobal('error',res.msg);
             }
         }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
-            debugger
         })
     }
     handleCancel = () => {
@@ -89,7 +86,6 @@ export default class AddProduct extends React.Component {
         this.props.history.go(-1)
     }
     selectDeviceType = (item,index) => {
-        debugger
         this.setState({
             initIndex:index
         })
@@ -109,7 +105,6 @@ export default class AddProduct extends React.Component {
         }
     }
     onChangeAccessRadio = (item) => {
-        debugger
         if(item=='1'){
             this.setState({
                 accessState:true

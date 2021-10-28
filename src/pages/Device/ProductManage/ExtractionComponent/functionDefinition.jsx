@@ -5,21 +5,17 @@ import BaseForm from "../../../../common/BaseForm";
 import BaseModel from "../../../../common/BaseModel";
 import Etable from "../../../../common/Etable";
 import {messageGlobal, updateSelectedItem} from "../../../../utils";
-import request from "../../../../api/request";
 import './../index.less'
 import {
     deleteProductModel,
-    getProductList,
     getProductModelInfo,
     getProductModelList,
-    getUserList
 } from "../../../../api/api";
 
 const {TextArea} = Input
 const FormItem = Form.Item
 
 class FunctionDefinition extends React.Component {
-    // fromModeRef = React.createRef();
     params = {
         page: 1,
         pageSize: 10
@@ -88,7 +84,6 @@ class FunctionDefinition extends React.Component {
         })
     }
     showFunctionDefinition = (item,state) => {
-        debugger
         let  params= {
             productId:this.props.productInfo.id,
             fieldType:item.fieldTypeId,
@@ -106,9 +101,6 @@ class FunctionDefinition extends React.Component {
             }
         })
     }
-    editFunctionDefinition = () => {
-        alert(1)
-    }
     deleteFunctionDefinition=(item)=>{
         this.setState({
             modelInfo:item,
@@ -117,7 +109,6 @@ class FunctionDefinition extends React.Component {
         })
     }
     handleSearch = (data) => {
-        debugger
         this.setState({
             fildName:data
         })
@@ -127,7 +118,6 @@ class FunctionDefinition extends React.Component {
         },100)
     }
     changeSelect = (data) => {
-        debugger
         this.setState({
             fildType:data==0?"":data
         })
@@ -217,7 +207,6 @@ class FunctionDefinition extends React.Component {
         })
         this.requestList()
     }
-
     render() {
         const columns = [
             {

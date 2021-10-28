@@ -165,7 +165,6 @@ export default class Permission extends React.Component {
         this.functionDefinitionRefChild.requestList()
     }
     addCustomFeatures = (item,state) => {
-        debugger
         this.addCustomFeaturesRefChild.showDrawer(item,state)
     }
     addStandardFeatures = () => {

@@ -1,10 +1,8 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import IconFont from "../../../../utils/IconFont";
-import request from "../../../../api/request";
 import './../index.less'
 import {guid, messageGlobal} from "../../../../utils";
-import {getStructInfo, updateProductModel} from "../../../../api/api";
 const {Option} = Select
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -26,39 +24,23 @@ class AddStructureParameters extends React.Component {
         elementDateVisible:false,
         elementStructVisible:false,
         title:'',
+        drawerTitle:'',
         enumList:[{uuid:guid(),value:'',remark:''}],
         childrenAttribute:[],
         editIndex:'',
     }
     showAddStructureParameters=(item)=>{
-        // switch (item) {
-        //     case '1':
-        //         this.setState({
-        //             title:'添加参数'
-        //         })
-        //         break;
-        //     case '2':
-        //         this.setState({
-        //             title:'添加输出参数'
-        //         })
-        //         break;
-        //     case '3':
-        //         this.setState({
-        //             title:'添加输入参数'
-        //         })
-        //         break;
-        //     default:
-        // }
     }
-    showDrawer = (params,index) => {
+    showDrawer = (params,index,state) => {
             this.setState({
                 visible: true,
-                // childrenParams:params!=undefined?params:'',
+                showButton:state!=undefined?state:true,
+                drawerTitle:state==false?'查看参数':(state==true?'编辑参数':'添加参数'),
+                isEdit:state,
                 editIndex:index!=undefined?index:'',
             });
             setTimeout(()=>{
                 if(params){
-                    debugger
                     this.changeDataType(params.dataType.type)
                     this.fromModeRefs.current.setFieldsValue({
                         dataType:params.dataType.type,
@@ -76,38 +58,31 @@ class AddStructureParameters extends React.Component {
                             accessMode:params.accessMode
                         })
                     }
-                    debugger
                     if(params.dataType.type=='enum'){
                         this.setState({
                             enumList:params.dataType.specs
                         })
                     }
-                    debugger
                     if(params.dataType.type=='bool'){
                         this.fromModeRefs.current.setFieldsValue({
                             zero:params.dataType.specs.zero,
                             one:params.dataType.specs.one,
                         })
                     }
-                    debugger
                     if(params.dataType.type=='string'){
                         this.fromModeRefs.current.setFieldsValue({
                         length:params.dataType.specs.length
                         })
                     }
-
                     if(params.dataType.type=='date'){
                         this.fromModeRefs.current.setFieldsValue({
-                            date:params.dataType.specs.date
+                            date:params.dataType.specs!=null?params.dataType.specs.date:''
                         })
                     }
-                }else{
-
                 }
             },100)
     };
     filterParams(values){
-        debugger
         let params=values
         params.type=values.dataType
         if(values.dataType=='int'||values.dataType=='float'||values.dataType=='double'){
@@ -166,15 +141,11 @@ class AddStructureParameters extends React.Component {
         })
     }
     onSubmit = async () => {
-        debugger
+
         const form = this.fromModeRefs.current
-        form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
-            debugger
-            let params=this.filterParams(values)
+        form.validateFields().then((values) => {
+            let params=this.filterParams(values);
             let temp=this.state.childrenAttribute;
-            console.log(1)
-            console.log(this.state.childrenAttribute)
-            debugger
             if(this.state.editIndex!==''){
                temp[this.state.editIndex]= params
             }else{
@@ -183,8 +154,6 @@ class AddStructureParameters extends React.Component {
             this.setState({
                 childrenAttribute:temp
             })
-            console.log(2)
-            console.log(this.state.childrenAttribute)
             this.props.refresChildrenParams(this.state.childrenAttribute)
             this.onClose()
         }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
@@ -336,7 +305,6 @@ class AddStructureParameters extends React.Component {
         const enumList=this.state.enumList;
         enumList[this.state.enumList.length]={uuid:guid(),value:'',remark:''};
         this.setState({enumList})
-
     }
     onChange(type,index,e){
         let enumList=this.state.enumList;
@@ -361,58 +329,46 @@ class AddStructureParameters extends React.Component {
     requestList() {
 
     }
-
     render() {
         const formItemLayout = {}
-        // const detail = this.state.childrenParams;
         const dataTypeList=[{id: '1', value: 'int',name:'int32(整数型)'}, {id: '2', value: 'enum',name:'enum(枚举)'}, {id: '3', value: 'bool',name:'bool(布尔)'}, {id: '4', value: 'string',name:'string(字符串)'}, {id: '5', value: 'double',name:'double(浮点型)'},{id: '6', value: 'date',name:'date(时间)'},{id: '7', value: 'float',name:'float(浮点型)'}];
         const unitList=[{id: '1', value: '1',name:'伏特/V'}, {id: '2', value: '2',name:'秒/s'}]
         const elementTypeList=[{id: '1', value: '1',name:'int32(整数型)'},{id: '4', value: '4',name:'string(字符串)'}, {id: '6', value: '6',name:'date(时间)'}];
         return (
             <div>
                 {this.state.visible == true && <Drawer
-                    title={this.props.title}
+                    title={this.state.drawerTitle}
                     width={440}
                     onClose={this.onClose}
                     visible={this.state.visible}
                     footer={
-                        <div
-                            style={{
-                                textAlign: 'right',
-                            }}
-                        >
-                            <Button onClick={this.onSubmit} type="primary" style={{marginRight: 8}}>
-                                添加
-                            </Button>
-                            <Button onClick={this.onClose}>
-                                关闭
-                            </Button>
-
+                        <div style={{ textAlign: 'right',  }}>
+                            {
+                                this.state.showButton&& <Button onClick={this.onSubmit} type="primary" style={{marginRight: 8}}> 添加 </Button>}
+                            <Button onClick={this.onClose}> 关闭</Button>
                         </div>
                     }
                 >
                     <Form ref={this.fromModeRefs} layout="vertical">
                         <FormItem label="参数名称"
                                   name="name"
-                                  // initialValue={detail.name}
                                   rules={[
                                       {
                                           required: true,
                                           message: '请输入参数名称'
                                       },
                                   ]}{...formItemLayout}>
-                            <Input type="text" placeholder="请输入参数名称"/>
+                            <Input type="text" placeholder="请输入参数名称" disabled={this.state.isEdit==false?'disabled':''}/>
                         </FormItem>
                         <FormItem label="标识符"
                                   name="identifier"
-                                  // initialValue={detail.identifier}
                                   rules={[
                                       {
                                           required: true,
                                           message: '请输入标识符'
                                       },
                                   ]}{...formItemLayout}>
-                            <Input type="text" placeholder="请输入标识符"/>
+                            <Input type="text" placeholder="请输入标识符" disabled={this.state.isEdit==false?'disabled':''}/>
                         </FormItem>
                         <FormItem label="数据类型"
                                   name="dataType"
@@ -424,7 +380,7 @@ class AddStructureParameters extends React.Component {
                                       },
                                   ]}{...formItemLayout}>
                             <Select placeholder="请选择数据类型" onChange={(value) => {
-                                this.changeDataType(value) }}>
+                                this.changeDataType(value) }} disabled={this.state.isEdit==false?'disabled':''}>
                                 {dataTypeList.map((item) => (
                                     <Option value={item.value} key={item.value}>
                                         {item.name}
@@ -444,7 +400,7 @@ class AddStructureParameters extends React.Component {
                                       ]}{...formItemLayout}>
                                 <Select placeholder="请选择元素类型" onChange={(value) => {
                                     this.changeElementType(value);
-                                }} defaultValue={'1'}>
+                                }} defaultValue={'1'} disabled={this.state.isEdit==false?'disabled':''}>
                                     {elementTypeList.map((item) => (
                                         <Option value={item.value} key={item.value}>
                                             {item.name}
@@ -454,14 +410,13 @@ class AddStructureParameters extends React.Component {
                             </FormItem>
                             <FormItem label="元素个数"
                                       name="size"
-                                      // initialValue={detail.size}
                                       rules={[
                                           {
                                               required: true,
                                               message: '请输入元素个数'
                                           },
                                       ]}{...formItemLayout}>
-                                <Input type="text" placeholder="请输入元素个数"/>
+                                <Input type="text" placeholder="请输入元素个数" disabled={this.state.isEdit==false?'disabled':''}/>
                             </FormItem>
                         </div>
                         }
@@ -471,42 +426,38 @@ class AddStructureParameters extends React.Component {
                                       style={{marginBottom: 0}}>
                                 <FormItem
                                     name="min"
-                                    // initialValue={detail.min}
                                     rules={[{required: true, message: '请输入最小值'}]}
                                     style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
                                 >
-                                    <Input placeholder="最小值"/>
+                                    <Input placeholder="最小值" disabled={this.state.isEdit==false?'disabled':''}/>
                                 </FormItem>
                                 <FormItem
                                     name="max"
-                                    // initialValue={detail.max}
                                     rules={[{required: true, message: '请输入最大值'}]}
                                     style={{display: 'inline-block', width: 'calc(50%)', margin: '0px 0px 0px 8px'}}
                                 >
-                                    <Input placeholder="最大值"/>
+                                    <Input placeholder="最大值" disabled={this.state.isEdit==false?'disabled':''}/>
                                 </FormItem>
                             </FormItem>
                             <FormItem label="步长"
                                       name="step"
-                                      // initialValue={detail.step}
                                       rules={[
                                           {
                                               required: false,
                                               message: '请输入步长'
                                           },
                                       ]}{...formItemLayout}>
-                                <Input placeholder="请输入步长"/>
+                                <Input placeholder="请输入步长" disabled={this.state.isEdit==false?'disabled':''}/>
                             </FormItem>
                             <FormItem label="单位"
                                       name="unit"
-                                      // initialValue={detail.unit}
                                       rules={[
                                           {
                                               required: false,
                                               message: '请选择单位'
                                           },
                                       ]}{...formItemLayout}>
-                                <Select placeholder="请选择单位">
+                                <Select placeholder="请选择单位" disabled={this.state.isEdit==false?'disabled':''}>
                                     {unitList.map((item) => (
                                         <Option value={item.value} key={item.value}>
                                             {item.name}
@@ -527,7 +478,6 @@ class AddStructureParameters extends React.Component {
                                     <div style={{width: '40%', float: 'left', marginLeft: '10px'}}>参数值</div>
                                     <div style={{width: '55%', float: 'right'}}>参数类型</div>
                                 </div>
-
                                 {this.state.enumList.map((item,index)=> {
                                     return  <FormItem label=""  rules={[{required: true, message: ' '}]}
                                                       style={{marginBottom: 0}}>
@@ -537,7 +487,7 @@ class AddStructureParameters extends React.Component {
                                             initialValue={item.value}
                                             style={{display: 'inline-block', width: 'calc(35% - 8px)'}}
                                         >
-                                            <Input placeholder="最小值" onChange ={this.onChange.bind(this,'value',index) }/>
+                                            <Input placeholder="最小值" onChange ={this.onChange.bind(this,'value',index) } disabled={this.state.isEdit==false?'disabled':''}/>
                                         </FormItem>
                                         <FormItem
                                             name={'remark'+item.uuid}
@@ -549,9 +499,9 @@ class AddStructureParameters extends React.Component {
                                                 margin: '0px 0px 0px 8px'
                                             }}
                                         >
-                                            <Input placeholder="最大值" onChange ={this.onChange.bind(this,'remark',index) }/>
+                                            <Input placeholder="最大值" onChange ={this.onChange.bind(this,'remark',index) } disabled={this.state.isEdit==false?'disabled':''}/>
                                         </FormItem>
-                                        {index>0&&
+                                        {index>0&&this.state.isEdit!=false&&
                                         <div style={{
                                             position: 'absolute',
                                             cursor: 'pointer',
@@ -565,9 +515,12 @@ class AddStructureParameters extends React.Component {
                                     </FormItem>
                                 })
                                 }
-                                <div style={{marginBottom: '24px', color: '#2979E7', cursor: 'pointer'}} onClick={this.addEnum}><IconFont
+                                {this.state.isEdit != false &&
+                                <div style={{marginBottom: '24px', color: '#2979E7', cursor: 'pointer'}}
+                                     onClick={this.addEnum}><IconFont
                                     type='icon-jiahao'/>添加枚举项
                                 </div>
+                                }
                             </div>
                         }
                         {
@@ -580,12 +533,12 @@ class AddStructureParameters extends React.Component {
                                 <div style={{float: 'left', lineHeight: '32px', padding: '0px 10px 0px 10px'}}>0 -</div>
                                 <FormItem label="" name="zero" rules={[{required: true, message: ' '}]}
                                           {...formItemLayout}>
-                                    <Input placeholder="如  关"/>
+                                    <Input placeholder="如  关" disabled={this.state.isEdit==false?'disabled':''}/>
                                 </FormItem>
                                 <div style={{float: 'left', lineHeight: '32px', padding: '0px 10px 0px 10px'}}>1 -</div>
                                 <FormItem label="" name="one" rules={[{required: true, message: ' '}]}
                                           {...formItemLayout}>
-                                    <Input placeholder="如  开"/>
+                                    <Input placeholder="如  开" disabled={this.state.isEdit==false?'disabled':''}/>
                                 </FormItem>
                             </div>
 
@@ -602,7 +555,7 @@ class AddStructureParameters extends React.Component {
                         <div>
                             <FormItem label="数据长度" name="length" rules={[{required: true, message: ' '}]}
                                       {...formItemLayout}>
-                                <Input placeholder="" addonAfter="字节"/>
+                                <Input placeholder="" addonAfter="字节" disabled={this.state.isEdit==false?'disabled':''}/>
                             </FormItem>
                         </div>
                         }

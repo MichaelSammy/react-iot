@@ -3,7 +3,7 @@ import {Card, Modal, Form, Input, Button, Select} from "antd";
 import BaseModel from "../../../../common/BaseModel";
 import IconFont from '../../../../utils/IconFont';
 import {messageGlobal} from "../../../../utils";
-import {getProductInfo, saveOrUpdateLabel} from "../../../../api/api";
+import {saveOrUpdateLabel} from "../../../../api/api";
 
 const FormItem = Form.Item
 
@@ -18,11 +18,9 @@ class AddLabel extends React.Component {
         baseModelContent: '是否删除？',
         productId:'',
     }
-
     componentDidMount() {
         this.props.onRef(this)
     }
-
     submitOk = () => {
         this.setState({
             visibleBaseModel: false
@@ -43,10 +41,6 @@ class AddLabel extends React.Component {
         this.setState({
             formList:formListTemp
         })
-        // this.setState({
-        //     visibleBaseModel: true,
-        //     baseModelContent: '是否删除？'
-        // })
     }
     filterTag = (item) => {
         this.setState({
@@ -63,7 +57,6 @@ class AddLabel extends React.Component {
         })
     }
     editTag = (item,id) => {
-        debugger
         this.setState({
             formList: item.length==0?this.state.formList:item,
             addLabelVisible: true,
@@ -110,7 +103,6 @@ class AddLabel extends React.Component {
     }
     addTagColumn = () => {
         const formList=this.state.formList;
-        debugger
         formList[this.state.formList.length]={productId:this.state.productId,key:'',value:''};
         this.setState({formList})
         
@@ -124,7 +116,6 @@ class AddLabel extends React.Component {
         }
         this.setState({ formList })
     }
-
     render() {
         const formItemLayout = {
             labelCol: {span: 5},
@@ -149,7 +140,6 @@ class AddLabel extends React.Component {
                     <Form ref={this.fromModeRef}>
                         {this.state.formList.map((item,index)=>{
                             console.log(item.key+'');
-                            debugger
                         return    <FormItem label={index > 0 ? " " : "定义取值范围"} colon={index > 0 ? false : true}  style={{marginBottom: -16}} {...formItemLayout} key={item.value}>
                                 <FormItem
                                     style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
