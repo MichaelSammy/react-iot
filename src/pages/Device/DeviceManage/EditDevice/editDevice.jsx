@@ -1,6 +1,8 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import '../index.less'
+import {addDevice, updateDevice} from "../../../../api/api";
+import {messageGlobal} from "../../../../utils";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -28,10 +30,23 @@ export  default class EditDevice extends React.Component {
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             console.log('成功')
             console.log(values)
-            this.onClose()
+            values.id=this.props.deviceInfo.id
+            this.updateDevice(values)
         }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
             console.log('失败')
             console.log(errInfo)
+        })
+    }
+    updateDevice = async (values) => {
+        values.createBy="1"
+        updateDevice(values).then(res => {
+            if(res.status==1){
+                messageGlobal('success',res.msg);
+                this.onClose()
+            }else{
+                messageGlobal('error',res.msg);
+            }
+        }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
         })
     }
     onClose = () => {
@@ -48,17 +63,7 @@ export  default class EditDevice extends React.Component {
 
     render() {
         const formItemLayout = {}
-        const detail = {
-            loginName: '',
-            name: '',
-            mobile: '',
-            address: '',
-            email: ''
-        }
-        const nameList = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
-            id: '4',
-            value: 'cyan'
-        }];
+        const detail = this.props.deviceInfo
         return (
             <div>
                 <Modal
@@ -74,8 +79,8 @@ export  default class EditDevice extends React.Component {
                 >
                     <Form ref={this.fromModeRef} layout="vertical">
                         <FormItem label="设备名称"
-                                  name="loginName"
-                                  initialValue={detail.loginName}
+                                  name="deviceName"
+                                  initialValue={detail.deviceName}
                                   rules={[
                                       {
                                           required: true,
@@ -85,8 +90,8 @@ export  default class EditDevice extends React.Component {
                             <Input type="text" placeholder="请输入设备名称"/>
                         </FormItem>
                         <FormItem label="备注名称"
-                                  name="loginName"
-                                  initialValue={detail.loginName}
+                                  name="deviceCname"
+                                  initialValue={detail.deviceCname}
                                   rules={[
                                       {
                                           required: true,
@@ -96,8 +101,8 @@ export  default class EditDevice extends React.Component {
                             <Input type="text" placeholder="请输入备注名称"/>
                         </FormItem>
                         <FormItem label="设备描述"
-                                  name="loginName"
-                                  initialValue={detail.loginName}
+                                  name="remark"
+                                  initialValue={detail.remark}
                                   rules={[
                                       {
                                           required: false,

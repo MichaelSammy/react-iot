@@ -6,8 +6,7 @@ import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../api/request";
 import './../index.less'
-import {getUserList} from "../../../../api/api";
-
+import {getDeviceList, getDeviceTabEventInfoList, getUserList} from "../../../../api/api";
 const {TextArea} = Input
 const FormItem = Form.Item
 
@@ -24,6 +23,13 @@ export default class EventRecordTabPane extends React.Component {
             placeholder: '',
             list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
             field: 'power',
+            width: '130px'
+        },
+        {
+            type: 'rangePicker',
+            initialValue: '1',
+            placeholder: '',
+            field: 'rangeTime',
             width: '130px'
         },
         {
@@ -53,7 +59,9 @@ export default class EventRecordTabPane extends React.Component {
         list: [],
         baseModelContent: '',
         detail: {},
-        title: ''
+        title: '',
+        startTime: '',
+        endTime: '',
     }
 
     componentDidMount() {
@@ -67,106 +75,30 @@ export default class EventRecordTabPane extends React.Component {
             page: this.params.page,
             pageSize: this.params.pageSize
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                this.params.total = 12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        getDeviceTabEventInfoList(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
     }
-
+    changeRangePicker=(val,str)=>{
+        this.setState({
+            startTime: str[0],
+            endTime: str[1],
+        });
+    }
     changePage = (page, pageSize) => {
         this.params.page = page;
         this.params.pageSize = pageSize;
@@ -190,27 +122,27 @@ export default class EventRecordTabPane extends React.Component {
         const columns = [
             {
                 title: '时间',
-                dataIndex: 'roleName',
+                dataIndex: 'monitorTime',
                 align: 'left'
             },
             {
                 title: '标识符',
-                dataIndex: 'officeName',
+                dataIndex: 'identifier',
                 align: 'left',
             },
             {
                 title: '事件名称',
-                dataIndex: 'createUser',
+                dataIndex: 'name',
                 align: 'left',
             },
             {
                 title: '事件类型',
-                dataIndex: 'createTime',
+                dataIndex: 'type',
                 align: 'left',
             },
             {
                 title: '输出参数',
-                dataIndex: 'remark',
+                dataIndex: 'outData',
                 align: 'left',
             }
         ];
@@ -221,6 +153,7 @@ export default class EventRecordTabPane extends React.Component {
                         data={this.data}
                         handleSearch={this.handleSearch}
                         show={false}
+                        changeRangePicker={this.changeRangePicker}
                     />
                 </div>
                 <Etable

@@ -1,6 +1,7 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import './../index.less'
+import IconFont from "../../../../utils/IconFont";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -11,7 +12,8 @@ class BatchAddDevice extends React.Component {
     state = {
         detail: {},
         visible: false,
-        showDeviceCount: true
+        showDeviceCount: true,
+        showFileInput:false
     }
     showDrawer = () => {
         this.setState({
@@ -46,10 +48,12 @@ class BatchAddDevice extends React.Component {
         if (item == '1') {
             this.setState({
                 showDeviceCount: true,
+                showFileInput:false
             })
         } else {
             this.setState({
                 showDeviceCount: false,
+                showFileInput:true
             })
         }
     }
@@ -140,6 +144,22 @@ class BatchAddDevice extends React.Component {
                                       },
                                   ]}{...formItemLayout}>
                             <Input type="text" placeholder="请输入设备数量"/>
+                        </FormItem>
+                        }
+                        {this.state.showFileInput &&
+                        <FormItem label="批量上传文件"
+                                  name="loginName"
+                                  initialValue={detail.loginName}
+                                  rules={[
+                                      {
+                                          required: true,
+                                          message: '请选择文件'
+                                      },
+                                  ]}{...formItemLayout}>
+                            <div className="batch-device-upload">
+                                <div className="upload-file" onClick={this.addDevice}> 上传文件 </div>
+                            </div>
+                            <div className="download-csv-model">下载csv模板</div>
                         </FormItem>
                         }
                     </Form>

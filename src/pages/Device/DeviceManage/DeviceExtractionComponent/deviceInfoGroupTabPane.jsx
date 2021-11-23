@@ -3,9 +3,9 @@ import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
 import IconFont from "../../../../utils/IconFont";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../api/request";
 import './../index.less'
-import {getUserList} from "../../../../api/api";
+import {getDeviceGroupList} from "../../../../api/api";
+import AddDeviceToGroup from "./addDeviceToGroup";
 
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -40,108 +40,32 @@ export default class DeviceInfoGroupTabPane extends React.Component {
         // this.props.onRef(this);
         this.requestList();
     }
-
+    addDeviceToGroupRef = (ref) => {
+        this.addDeviceToGroupRefChild = ref
+    }
+    addDeviceToGroup = () => {
+        this.addDeviceToGroupRefChild.showDrawer();
+    }
     //请求列表
     requestList() {
         let  params= {
             page: this.params.page,
             pageSize: this.params.pageSize
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                this.params.total = 12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        getDeviceGroupList(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
@@ -165,33 +89,38 @@ export default class DeviceInfoGroupTabPane extends React.Component {
         })
         this.requestList()
     }
-
+    showDeviceGroup=()=>{
+        alert("查看");
+    }
     render() {
         const columns = [
             {
-                title: '分组ID',
-                dataIndex: 'roleName',
+                title: '设备所在分组',
+                dataIndex: 'groupName',
                 align: 'left'
             },
             {
-                title: '消息类别',
-                dataIndex: 'officeName',
+                title: '分组ID',
+                dataIndex: 'groupId',
                 align: 'left',
             },
             {
-                title: '订阅级别',
-                dataIndex: 'createUser',
-                align: 'left',
-            },
-            {
-                title: '订阅方地址',
+                title: '添加时间',
                 dataIndex: 'createTime',
                 align: 'left',
             },
             {
                 title: '操作',
-                dataIndex: 'remark',
                 align: 'left',
+                render: (item) => {
+                    return (
+                        <div>
+                            <div className="function-table-option-buttion">
+                                <div className="option-button" onClick={this.showDeviceGroup.bind(this, item)}>查看</div>
+                            </div>
+                        </div>
+                    )
+                }
             }
         ];
         return (
@@ -200,7 +129,7 @@ export default class DeviceInfoGroupTabPane extends React.Component {
 
                     <div className='product-function-mode-manager'>
                         <div className="product-mode-right-option">
-                            <div className="add-stand-function" onClick={this.callBackFatherMethod}>
+                            <div className="add-stand-function" onClick={this.addDeviceToGroup}>
                                 <div><IconFont
                                     type='icon-jiahao' className="icon-font-offset-px"/>添加设备
                                 </div>
@@ -218,6 +147,7 @@ export default class DeviceInfoGroupTabPane extends React.Component {
                     type={this.state.type}
                 >
                 </Etable>
+                <AddDeviceToGroup title={'添加设备到'} onRef={this.addDeviceToGroupRef}></AddDeviceToGroup>
             </div>
         )
     }

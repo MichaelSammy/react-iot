@@ -14,16 +14,42 @@ import DeviceShadowTabPane from '../DeviceExtractionComponent/deviceShadowTabPan
 import EditDevice from '../EditDevice/editDevice'
 import '../../ProductManage/index.less'
 import AddGroup from "../../DeviceGroup/AddGroup";
+import * as qs from "qs";
+import {getDeviceInfo, getProductInfo} from "../../../../api/api";
+import AddLabel from "../../ProductManage/ExtractionComponent/addLabel";
 
 const {TabPane} = Tabs;
 const FormItem = Form.Item
 export default class Permission extends React.Component {
     state = {
-        detail: {},
+        deviceInfo:{
+            label:[]
+        },
     }
-
+    addLabelRef = (ref) => {
+        this.addLabelRefChild = ref
+    }
+    addTag = () => {
+        this.addLabelRefChild.addTag()
+    }
+    editTag = () => {
+        this.addLabelRefChild.editTag(this.state.deviceInfo.label,this.state.deviceInfo.id)
+    }
     componentDidMount() {
-        // this.requestList()
+        const deviceInfo = qs.parse(this.props.location.search,{ignoreQueryPrefix: true});
+        let deviceParams={
+            deviceId:deviceInfo.id
+        }
+        this.getDeviceDetails(deviceParams);
+    }
+    getDeviceDetails=(params)=>{
+        getDeviceInfo(params).then(res => {
+            if (res.status === '1') {
+                this.setState({
+                    deviceInfo:res.result
+                })
+            }
+        })
     }
     editDeviceRef = (ref) => {
         this.editDeviceRefChild = ref
@@ -96,19 +122,19 @@ export default class Permission extends React.Component {
                             <div className='card-top-spilt-line'></div>
                             <div>
                                 <div className='product-filed-item product-filed-item-border-right'>
-                                    <div>设备所属产品：红外双侧垃圾桶</div>
-                                    <div>设备节点类型：直连设备</div>
-                                    <div>最近在线时间：2021-07-11 10</div>
-                                    <div>设备密钥：6YdVEWEtfRdFMZX</div>
+                                    <div>设备所属产品：{this.state.deviceInfo.productName}</div>
+                                    <div>设备节点类型：{this.state.deviceInfo.nodeType}</div>
+                                    <div>最近在线时间：{this.state.deviceInfo.onlieTime}</div>
+                                    <div>设备密钥：{this.state.deviceInfo.deviceSecret}</div>
                                 </div>
                                 <div className='product-filed-item product-filed-item-border-right'>
-                                    <div>所属产品ID：q3O63w26Fy</div>
-                                    <div>设备创建时间：2021-06-11 12</div>
-                                    <div>设备描述：XXXXXXXXXXXXXXX</div>
+                                    <div>所属产品ID：{this.state.deviceInfo.productId}</div>
+                                    <div>设备创建时间：{this.state.deviceInfo.createTime}</div>
+                                    <div>设备描述：{this.state.deviceInfo.remark}</div>
                                 </div>
                                 <div className='product-filed-item'>
-                                    <div>设备状态：未激活</div>
-                                    <div>激活时间：-</div>
+                                    <div>设备状态：{this.state.deviceInfo.stateName}</div>
+                                    <div>激活时间：{this.state.deviceInfo.activeTime}</div>
                                 </div>
                             </div>
                             <div style={{padding: '10px 0px'}}>
@@ -120,15 +146,16 @@ export default class Permission extends React.Component {
                                 </div>
                                 <div style={{float: 'left', margin: '5px 0px'}}>设备标签：</div>
                                 <div className='product-tag-list'>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    {/*<div className='tag-option'>*/}
-                                    {/*<span onClick={this.editTag}> 编辑</span>*/}
-                                    {/*/<span onClick={this.addTag}>添加</span></div>*/}
+                                    {
+                                        this.state.deviceInfo.label.map((item,index)=>{
+                                            return   <div className='tag-name' >{item.key+' : '+item.value}</div>
+                                        })
+
+                                    }
+                                    {
+                                        this.state.deviceInfo.label.length==0&&
+                                        <div>无标签信息</div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -161,7 +188,9 @@ export default class Permission extends React.Component {
                         <DeviceShadowTabPane></DeviceShadowTabPane>
                     </TabPane>
                 </Tabs>
-                <EditDevice onRef={this.editDeviceRef} title='编辑'></EditDevice>
+                <EditDevice onRef={this.editDeviceRef} title='编辑' deviceInfo={this.state.deviceInfo}></EditDevice>
+                <AddLabel onRef={this.addLabelRef}
+                          getProductLabelList={this.getProductLabelList}></AddLabel>
             </div>
         )
     }

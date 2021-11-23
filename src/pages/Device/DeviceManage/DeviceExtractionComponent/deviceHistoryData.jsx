@@ -8,6 +8,7 @@ import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../api/request";
 import * as echarts from 'echarts';
 import {getUserList} from "../../../../api/api";
+import BaseForm from "../../../../common/BaseForm";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -15,6 +16,17 @@ const FormItem = Form.Item
 const {RangePicker} = DatePicker;
 export default class DeviceHistoryData extends React.Component {
     fromModeRef = React.createRef();
+    data = [
+        {
+            type: 'rangePicker',
+            startTime:new Date().getTime(),
+            endTime:new Date().getTime() - (60 * 60 *1000),
+            initialValue: '1',
+            placeholder: '',
+            field: 'rangeTime',
+            width: '130px'
+        },
+    ]
     params = {
         page: 1,
         pageSize: 5
@@ -208,7 +220,12 @@ export default class DeviceHistoryData extends React.Component {
         })
         this.requestList()
     }
-
+    changeRangePicker=(val,str)=>{
+        this.setState({
+            startTime: str[0],
+            endTime: str[1],
+        });
+    }
     render() {
         const columns = [
             {
@@ -250,15 +267,11 @@ export default class DeviceHistoryData extends React.Component {
                                 <div className="history-data-filed-desc">数据类型：array</div>
                             </div>
                             <div className="history-data-search-refresh">
-                                <div><RangePicker
-                                    ranges={{
-                                        Today: [moment(), moment()],
-                                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                                    }}
-                                    showTime
-                                    format="YYYY/MM/DD HH:mm:ss"
-                                    //  onChange={onChange}
-                                /></div>
+                                <BaseForm
+                                    data={this.data}
+                                    show={false}
+                                    changeRangePicker={this.changeRangePicker}
+                                />
                                 <div className="history-data-function-button">
                                     <div
                                         className={this.state.selectTabIndex == '1' ? 'history-data-charts-list-selected' : 'history-data-charts-list-unselected'}

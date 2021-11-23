@@ -216,3 +216,41 @@ const S4=()=>{
 export const guid=()=>{
     return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 }
+
+export const fullScreen=()=>{
+        let docElm = document.documentElement;
+        //W3C
+        if(docElm.requestFullscreen) {
+            docElm.requestFullscreen();
+        }
+        //FireFox
+        else if(docElm.mozRequestFullScreen) {
+            docElm.mozRequestFullScreen();
+        }
+        //Chrome等
+        else if(docElm.webkitRequestFullScreen) {
+            docElm.webkitRequestFullScreen();
+        }
+        //IE11
+        else if(docElm.msRequestFullscreen) {
+            docElm.msRequestFullscreen();
+        }
+}
+export const exitFullScreen=()=>{
+    //W3C
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    }
+    //FireFox
+    else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+    }
+    //Chrome等
+    else if (document.webkitCancelFullScreen) {
+        document.webkitCancelFullScreen();
+    }
+    //IE11
+    else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
+}

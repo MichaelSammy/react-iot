@@ -1,14 +1,12 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import '../index.less'
-import {addDevice, saveProduct} from "../../../../api/api";
+import {saveDeviceGoGroup} from "../../../../api/api";
 import {messageGlobal} from "../../../../utils";
-
 const {Option} = Select
-const {TextArea} = Input
 const FormItem = Form.Item
 
-class AddDevice extends React.Component {
+class AddDeviceToGroup extends React.Component {
     fromModeRef = React.createRef();
     state = {
         detail: {},
@@ -24,15 +22,15 @@ class AddDevice extends React.Component {
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             console.log('成功')
             console.log(values)
-            this.addDevice(values)
+            this.saveDeviceGoGroup(values)
         }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
             console.log('失败')
             console.log(errInfo)
         })
     }
-    addDevice = async (values) => {
+    saveDeviceGoGroup = async (values) => {
         values.createBy="1"
-        addDevice(values).then(res => {
+        saveDeviceGoGroup(values).then(res => {
             if(res.status==1){
                 messageGlobal('success',res.msg);
                 this.onClose()
@@ -95,55 +93,21 @@ class AddDevice extends React.Component {
                     }
                 >
                     <Form ref={this.fromModeRef} layout="vertical">
-                        <FormItem label="设备名称"
-                                  name="deviceName"
-                                  initialValue={detail.deviceName}
-                                  rules={[
-                                      {
-                                          required: true,
-                                          message: '请输入设备名称'
-                                      },
-                                  ]}{...formItemLayout}>
-                            <Input type="text" placeholder="请输入设备名称"/>
-                        </FormItem>
-                        <FormItem label="备注名称"
-                                  name="deviceCname"
-                                  initialValue={detail.deviceCname}
-                                  rules={[
-                                      {
-                                          required: true,
-                                          message: '请输入备注名称'
-                                      },
-                                  ]}{...formItemLayout}>
-                            <Input type="text" placeholder="请输入备注名称"/>
-                        </FormItem>
-                        <FormItem label="所属产品"
+                        <FormItem label="分组名称"
                                   name="productId"
                                   rules={[
                                       {
                                           required: true,
-                                          message: '请选择所属产品'
+                                          message: '请选择分组名称'
                                       },
                                   ]}{...formItemLayout}>
-                            <Select placeholder="请选择所属产品">
+                            <Select placeholder="请选择分组名称">
                                 {nameList.map((item) => (
                                     <Option value={item.id} key={item.id}>
                                         {item.value}
                                     </Option>
                                 ))}
                             </Select>
-                        </FormItem>
-                        <FormItem label="设备描述"
-                                  name="remark"
-                                  initialValue={detail.remark}
-                                  rules={[
-                                      {
-                                          required: false,
-                                          message: '请输入设备描述'
-                                      },
-                                  ]}{...formItemLayout}>
-                            <TextArea id='textAreaId' rows={5} maxLength={100} showCount
-                                      placeholder="请输入设备描述"></TextArea>
                         </FormItem>
                     </Form>
                 </Drawer>
@@ -152,4 +116,4 @@ class AddDevice extends React.Component {
     }
 }
 
-export default AddDevice
+export default AddDeviceToGroup

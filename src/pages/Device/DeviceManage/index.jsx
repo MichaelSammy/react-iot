@@ -3,15 +3,14 @@ import {Card, Modal, Form, Input, Button, List, Breadcrumb, Pagination, Tabs} fr
 import BaseForm from '../../../common/BaseForm'
 import BaseModel from '../../../common/BaseModel'
 import device from '../../../assets/images/device.png'
-import IconFont from '../../../utils/IconFont';
-import request from '../../../api/request'
 import './index.less'
 import './device.less'
 import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../utils";
 import DeviceListTabPane from "../DeviceManage/DeviceExtractionComponent/deviceListTabPane";
 import BatchListTabPane from "../DeviceManage/DeviceExtractionComponent/batchListTabPane";
+import * as qs from "qs";
+import { getDeviceSummaryList} from "../../../api/api";
 const {TabPane} = Tabs;
-const FormItem = Form.Item
 export default class DeviceManage extends React.Component {
     params = {
         page: 1,
@@ -29,9 +28,12 @@ export default class DeviceManage extends React.Component {
         }
     ]
     state = {
-        list: [],
-        detail: {},
-        title: ''
+        title: '',
+        deviceStateNumber: {
+            DeviceCount: "",
+            onlineNum: "",
+            activateNum: ""
+        }
     }
     //查询
     handleSearch = (data) => {
@@ -39,14 +41,29 @@ export default class DeviceManage extends React.Component {
         // data.beginTime= data.beginTime.format("YYYY-MM-DD HH:mm:ss");
         console.log(data)
     }
-
+    changeSelect=(item)=>{
+    }
     componentDidMount() {
         this.requestList()
     }
 
     //请求列表
     requestList() {
-
+        getDeviceSummaryList().then(res => {
+            if (res.status === '1' && res.result != null) {
+                this.setState({
+                    deviceStateNumber: res.result
+                })
+            } else {
+                this.setState({
+                    deviceStateNumber: {
+                        DeviceCount: "",
+                        onlineNum: "",
+                        activateNum: ""
+                    }
+                })
+            }
+        })
     }
 
     resetUserFrom = () => {
@@ -60,8 +77,8 @@ export default class DeviceManage extends React.Component {
             visibleBaseModel: false
         })
     }
-    forwardDeviceInfo=()=>{
-        this.props.history.push({'pathname': "/user/device/managent/info", params: true});
+    forwardDeviceInfo = (item) => {
+        this.props.history.push({'pathname': "/user/device/managent/info", search: qs.stringify(item)});
     }
     submitCancel = () => {
         this.setState({
@@ -113,28 +130,28 @@ export default class DeviceManage extends React.Component {
                                 data={this.data}
                                 show={false}
                                 handleSearch={this.handleSearch}
-                                clickSelect={this.clickSelect}
+                                changeSelect={this.changeSelect}
                             />
                         </div>
                         <div className="device-state-count">
                             <div className="device-state-count-category">
                                 <div className="device-state-count-picture"></div>
                                 <div className="device-state-count-number">
-                                     <div>32135</div>
-                                     <div>设备总数</div>
+                                    <div>{this.state.deviceStateNumber.DeviceCount}</div>
+                                    <div>设备总数</div>
                                 </div>
                             </div>
                             <div className="device-state-count-category">
-                                <div  className="device-state-count-picture"></div>
+                                <div className="device-state-count-picture"></div>
                                 <div className="device-state-count-number">
-                                    <div>685</div>
+                                    <div>{this.state.deviceStateNumber.onlineNum}</div>
                                     <div><span className="device-count online"></span>在线设备数</div>
                                 </div>
                             </div>
                             <div className="device-state-count-category">
-                                <div  className="device-state-count-picture"></div>
+                                <div className="device-state-count-picture"></div>
                                 <div className="device-state-count-number">
-                                    <div>0</div>
+                                    <div>{this.state.deviceStateNumber.activateNum}</div>
                                     <div><span className="device-count activation"></span> 激活设备数</div>
                                 </div>
                             </div>

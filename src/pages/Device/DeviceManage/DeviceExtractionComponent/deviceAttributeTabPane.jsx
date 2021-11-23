@@ -4,7 +4,7 @@ import IconFont from '../../../../utils/IconFont';
 import request from '../../../../api/request'
 import '../DeviceInfo/deviceInfo.less'
 import DeviceHistoryData from './deviceHistoryData'
-import {getUserList} from "../../../../api/api";
+import {getDeviceBatchList, getDeviceTabPropertyInfoList, getUserList} from "../../../../api/api";
 
 const FormItem = Form.Item
 export default class DeviceAttributeTabPane extends React.Component {
@@ -13,7 +13,6 @@ export default class DeviceAttributeTabPane extends React.Component {
         pageSize: 5
     }
     state = {
-        list: [],
         detail: {},
         title: ''
     }
@@ -34,14 +33,20 @@ export default class DeviceAttributeTabPane extends React.Component {
             page: this.params.page,
             pageSize: this.params.pageSize
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                let dataSource = res.data.map((item, index) => {
+        getDeviceTabPropertyInfoList(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
@@ -52,10 +57,6 @@ export default class DeviceAttributeTabPane extends React.Component {
     }
 
     render() {
-        const list = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
-            id: '4',
-            value: 'cyan'
-        }, {id: '1', value: 'gold'}, {id: '2', value: 'lime'}];
         return (
 
             <div>
@@ -70,19 +71,19 @@ export default class DeviceAttributeTabPane extends React.Component {
                             xl: 4,
                             xxl: 4,
                         }}
-                        dataSource={list}
+                        dataSource={this.state.dataSource}
                         renderItem={item => (
                             <List.Item>
                                 <div className="device-attribute-card">
                                     <div className="device-attribute-card-title">
-                                        <div>总累积量</div>
+                                        <div>{item.name}</div>
                                         <div style={{cursor: 'pointer'}} onClick={this.showHistoryData}><IconFont
                                             type='icon-lishishujuicon'
                                             style={{color: '#666666', marginRight: '8px'}}/>历史数据
                                         </div>
                                     </div>
-                                    <div>-</div>
-                                    <div>*未更新 | array | 只读</div>
+                                    <div>{item.value}</div>
+                                    <div>{item.updateTime||"*未更新"} | {item.type} | {item.accessModeName}</div>
                                 </div>
                             </List.Item>
                         )}

@@ -23,6 +23,10 @@ class NormalLoginForm extends React.Component {
     }
 
     render() {
+        const formItemLayout = {
+            labelCol: {span: 10},
+            wrapperCol: {span: 16}
+        }
         if(this.props.state.authed ||localStorage.getItem('authed')){
             return (
                 <Redirect to="/user" />
@@ -30,11 +34,18 @@ class NormalLoginForm extends React.Component {
         }
         // const { getFieldDecorator } = this.props.form;
         return (
-            <div className="flex_center wrapper_login">
+            <div className="wrapper_login">
+                <div className="gif-css">
+                    <div id="wrapper">
+                        <div className="zoombie"></div>
+                    </div>
+                </div>
                 <Form onFinish={this.handleSubmit} ref={this.formRef} name="control-ref" className="login-form login-form-login">
-                    <div className="login-title">用户管理系统</div>
+                    <div style={{width:"262px"}}>
+                    <div className="login-title">欢迎登录</div>
                     <Form.Item
                         name="username"
+                        initialValue="admin"
                         rules={[
                             {
                                 required: true,
@@ -43,11 +54,12 @@ class NormalLoginForm extends React.Component {
                         ]}>
 
                             <Input
-                                placeholder="请输入登录账号"
+                                placeholder="管理员账号/手机号"
                             />
                     </Form.Item>
                     <Form.Item
                         name="password"
+                        initialValue="1"
                         rules={[
                             {
                                 required: true,
@@ -57,17 +69,32 @@ class NormalLoginForm extends React.Component {
 
                             <Input
                                 type="password"
-                                placeholder="请输入密码"
+                                placeholder="密码"
                             />
                     </Form.Item>
+                    <Form.Item
+                            name="password"
+                            rules={[
+                                {
+                                    required: false,
+                                    message: '请输入验证码'
+                                },
+                            ]}>
+                        <Input.Group compact>
+                            <Input
+                                style={{ width: 'calc(100% - 95px)' }}
+                                type="password"
+                                placeholder="验证码"
+                            />
+                        <div className="get-code-button">获取验证码</div>
+                        </Input.Group>
+                        </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit"  className="login-form-button">
                            登录
                         </Button>
                     </Form.Item>
-                    <Form.Item>
-                        <div className="loginTip">默认账号：admin，密码：1</div>
-                    </Form.Item>
+                    </div>
                 </Form>
             </div>
         );

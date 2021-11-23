@@ -7,7 +7,7 @@ import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../api/request";
 import './../index.less'
 import InstructIssueInfo from "../../DeviceManage/DeviceExtractionComponent/instructIssueInfo";
-import {getUserList} from "../../../../api/api";
+import {getDeviceTabCommandSendList, getDeviceTabServerInfoList, getUserList} from "../../../../api/api";
 
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -29,9 +29,16 @@ export default class InstructIssueTabPane extends React.Component {
             bordered: true,
         },
         {
-            type: 'select',
+            type: 'rangePicker',
             initialValue: '1',
             placeholder: '',
+            field: 'rangeTime',
+            width: '130px'
+        },
+        {
+            type: 'select',
+            initialValue: null,
+            placeholder: '请选择下发状态',
             list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
             field: 'power',
             width: '130px'
@@ -54,7 +61,9 @@ export default class InstructIssueTabPane extends React.Component {
         list: [],
         baseModelContent: '',
         detail: {},
-        title: ''
+        title: '',
+        startTime: '',
+        endTime: '',
     }
     onRef=(ref)=>{
         this.child = ref
@@ -73,106 +82,30 @@ export default class InstructIssueTabPane extends React.Component {
             page: this.params.page,
             pageSize: this.params.pageSize
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                this.params.total = 12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        getDeviceTabCommandSendList(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
     }
-
+    changeRangePicker=(val,str)=>{
+        this.setState({
+            startTime: str[0],
+            endTime: str[1],
+        });
+    }
     changePage = (page, pageSize) => {
         this.params.page = page;
         this.params.pageSize = pageSize;
@@ -196,42 +129,37 @@ export default class InstructIssueTabPane extends React.Component {
         const columns = [
             {
                 title: '设备ID',
-                dataIndex: 'roleName',
+                dataIndex: 'deviceId',
                 align: 'left'
             },
             {
-                title: 'IMEI号',
-                dataIndex: 'officeName',
-                align: 'left',
-            },
-            {
                 title: '指令ID',
-                dataIndex: 'createUser',
+                dataIndex: 'commandId',
                 align: 'left',
             },
             {
                 title: '指令下发状态',
-                dataIndex: 'createTime',
+                dataIndex: 'commandState',
                 align: 'left',
             },
             {
                 title: '指令下发时间',
-                dataIndex: 'remark',
+                dataIndex: 'createTime',
                 align: 'left',
             },
             {
                 title: '指令完成时间',
-                dataIndex: 'remark',
+                dataIndex: 'completeTime',
                 align: 'left',
             },
             {
                 title: '指令级别',
-                dataIndex: 'remark',
+                dataIndex: 'commandLevel',
                 align: 'left',
             },
             {
                 title: '操作员',
-                dataIndex: 'remark',
+                dataIndex: 'createBy',
                 align: 'left',
             },
             {

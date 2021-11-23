@@ -5,14 +5,11 @@ import BaseForm from "../../../../common/BaseForm";
 import BaseModel from "../../../../common/BaseModel";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../api/request";
 import './../index.less'
 import AddDevice from "../AddDevice/addDevice"
 import BatchAddDevice from "./batchAddDevice"
-import {getUserList} from "../../../../api/api";
+import {batchDeleteDevice, deviceBatchOpenOrClose, getDeviceList} from "../../../../api/api";
 
-const {TextArea} = Input
-const FormItem = Form.Item
 
 class DeviceListTabPane extends React.Component {
     // fromModeRef = React.createRef();
@@ -29,17 +26,17 @@ class DeviceListTabPane extends React.Component {
     data = [
         {
             type: 'select',
-            initialValue: '1',
+            initialValue: '-1',
             placeholder: '',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
+            list: [{id: '-1', label: '设备状态（全部）'}, {id: '1', label: '激活'},{id: '0', label: '未激活'}],
+            field: 'state',
             width: '100px'
         },
         {
             type: 'select',
             initialValue: '1',
             placeholder: '',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            list: [{id: '1', label: 'DeviceName'}, {id: '2', label: '备注名称'}],
             field: 'power',
             width: '80px'
         },
@@ -54,12 +51,14 @@ class DeviceListTabPane extends React.Component {
         },
         {
             type: 'select',
-            initialValue: '1',
-            placeholder: '',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
-            width: '80px'
-        },
+            initialValue: null,
+            label: '',
+            placeholder: '请选择设备标签',
+            list: [{id: '1', label: '超级管理员',value:'1'}, {id: '2', label: '普通用户',value:'2'}],
+            field: 'Label',
+            width: '150px',
+            open:false
+        }
     ]
     state = {
         rowSelection: {
@@ -108,10 +107,20 @@ class DeviceListTabPane extends React.Component {
             baseModelContent: '是否启用？'
         })
     }
+
     disable = () => {
         this.setState({
             visibleBaseModel: true,
             baseModelContent: '是否禁用？'
+        })
+    }
+    enableOrDisable=()=>{
+        deviceBatchOpenOrClose().then(res => {
+            if (res.status === '1'&&res.result!=null) {
+
+            }else{
+
+            }
         })
     }
     batchDelete = () => {
@@ -120,13 +129,22 @@ class DeviceListTabPane extends React.Component {
             baseModelContent: '是否删除？'
         })
     }
-    showDevice = () => {
-        this.props.forwardDeviceInfo();
+    showDevice = (item) => {
+        this.props.forwardDeviceInfo(item);
     }
     removeDevice = () => {
         this.setState({
             visibleBaseModel: true,
             baseModelContent: '是否删除设备？'
+        })
+    }
+    deleteDevice=()=>{
+        batchDeleteDevice().then(res => {
+            if (res.status === '1'&&res.result!=null) {
+
+            }else{
+
+            }
         })
     }
     childDevice = () => {
@@ -137,103 +155,22 @@ class DeviceListTabPane extends React.Component {
     requestList() {
         let  params= {
             page: this.params.page,
-            pageSize: this.params.pageSize
+            pageSize: this.params.pageSize,
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                this.params.total = 12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        getDeviceList(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
@@ -280,22 +217,30 @@ class DeviceListTabPane extends React.Component {
         const columns = [
             {
                 title: 'DeviceName/备注名称',
-                dataIndex: 'roleName',
-                align: 'left'
+                width:300,
+                align: 'left',
+                render: (item) => {
+                    return (
+                        <div>
+                            <div className="option-button">{item.deviceName}</div>
+                            <div className="option-button" style={{color:"#bfbfbf"}}>{item.deviceCname}</div>
+                        </div>
+                    )
+                }
             },
             {
                 title: '设备所属产品',
-                dataIndex: 'officeName',
-                align: 'left',
+                dataIndex: 'productName',
+                align: 'center',
             },
             {
                 title: '节点类型',
-                dataIndex: 'createUser',
+                dataIndex: 'nodeType',
                 align: 'left',
             },
             {
                 title: '状态/启用状态',
-                dataIndex: 'createTime',
+                dataIndex: 'disState',
                 align: 'left',
                 render: (item) => {
                     return (
@@ -316,7 +261,7 @@ class DeviceListTabPane extends React.Component {
             },
             {
                 title: '最后上线时间',
-                dataIndex: 'remark',
+                dataIndex: 'updataTime',
                 align: 'left',
             },
             {

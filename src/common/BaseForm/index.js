@@ -1,7 +1,11 @@
 import React from 'react'
 import {getOptionsList} from '../../utils'
 import {Input, Select, Form, Button, DatePicker} from 'antd'
+import 'moment/locale/zh-cn';
+import moment from 'moment'
+import locale from 'antd/es/date-picker/locale/zh_CN';
 const { Search } = Input;
+const { RangePicker } = DatePicker;
 const FormItem = Form.Item
 class BaseForm extends React.Component {
     formRef = React.createRef();
@@ -14,7 +18,7 @@ class BaseForm extends React.Component {
         const data = this.props.data;
         const list = [];
         data.forEach((item, index) => {
-            const {type, field, label, initialValue, width,bordered, placeholder, showTime,open} = item;
+            const {type, field, label, initialValue, width,bordered, placeholder, showTime,open,startTime,endTime} = item;
             switch (type) {
                 case 'input':
                     const inputItem = <FormItem key={field} name={field} label={label} initialValue={initialValue}>
@@ -54,9 +58,19 @@ class BaseForm extends React.Component {
                     </FormItem>
                     list.push(beginTimeItem);
                     break;
+                case 'rangePicker':
+                    const rangePickerItem=<FormItem>
+                    <RangePicker showTime locale={locale}  format={"YYYY-MM-DD HH:mm:ss"}
+                                         // value={[moment(new Date(startTime)), moment(new Date(endTime))]}
+                                         onChange={(time, timeString) =>
+                                             this.changeRangePicker( time, timeString)
+                                         }/>
+                    </FormItem>
+                    list.push(rangePickerItem);
                 default:
             }
         })
+        console.log(list)
         return list;
     }
     reset = () => {
@@ -73,6 +87,9 @@ class BaseForm extends React.Component {
     }
     clickSelect=()=>{
         this.props.clickSelect&&this.props.clickSelect()
+    }
+    changeRangePicker = ( val, str) => {
+        this.props.changeRangePicker&&this.props.changeRangePicker(val,str)
     }
     render() {
         return (
