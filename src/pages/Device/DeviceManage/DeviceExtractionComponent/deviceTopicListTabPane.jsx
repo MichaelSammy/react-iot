@@ -6,7 +6,12 @@ import {updateSelectedItem} from "../../../../utils";
 import request from "../../../../api/request";
 import './../index.less'
 import BaseModel from "../../../../common/BaseModel";
-import {getDeviceCustomTopicList, getDeviceTabCommandSendList, getUserList} from "../../../../api/api";
+import {
+    getDeviceCustomTopicList,
+    getDeviceTabCommandSendList,
+    getUserList,
+    selectProductTopics
+} from "../../../../api/api";
 
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -64,9 +69,12 @@ export default class DeviceTopicListTabPane extends React.Component {
     requestList() {
         let  params= {
             page: this.params.page,
-            pageSize: this.params.pageSize
+            pageSize: this.params.pageSize,
+            "map[deviceId]":this.props.deviceInfo.id,
+            "map[productId]":this.props.deviceInfo.productId,
+            "map[deviceName]":this.props.deviceInfo.deviceName,
         }
-        getDeviceCustomTopicList(params).then(res => {
+        selectProductTopics(params).then(res => {
             if (res.status === '1'&&res.result!=null) {
                 let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;

@@ -18,7 +18,7 @@ class BaseForm extends React.Component {
         const data = this.props.data;
         const list = [];
         data.forEach((item, index) => {
-            const {type, field, label, initialValue, width,bordered, placeholder, showTime,open,startTime,endTime} = item;
+            const {type, field, label, initialValue, width,bordered, placeholder, showTime,open,startTime,endTime,noDropDown} = item;
             switch (type) {
                 case 'input':
                     const inputItem = <FormItem key={field} name={field} label={label} initialValue={initialValue}>
@@ -38,15 +38,29 @@ class BaseForm extends React.Component {
                     list.push(searchItem);
                     break;
                 case 'select':
-                    const selectItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue} onClick={this.clickSelect}>
-                        {
-                            <Select style={{width}} open={open} placeholder={placeholder} onChange={(value) => {
-                                this.changeSelect(value);
-                            }}>
-                                {getOptionsList(item.list)}
-                            </Select>
-                        }
-                    </FormItem>
+                    let selectItem=""
+                    if(noDropDown){
+                         selectItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue} onClick={this.clickSelect}>
+                            {
+                                <Select style={{width}} open={open} placeholder={placeholder} onChange={(value) => {
+                                    this.changeSelect(value,field);
+                                }}>
+                                    {getOptionsList(item.list)}
+                                </Select>
+                            }
+                        </FormItem>
+                    }else{
+                         selectItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue}>
+                            {
+                                <Select style={{width}} open={open} placeholder={placeholder} onChange={(value) => {
+                                    this.changeSelect(value,field);
+                                }}>
+                                    {getOptionsList(item.list)}
+                                </Select>
+                            }
+                        </FormItem>
+                    }
+
                     list.push(selectItem);
                     break;
                 case 'chooseTime':
@@ -82,8 +96,8 @@ class BaseForm extends React.Component {
     onSearch=(values)=>{
         this.props.handleSearch(values)
     }
-    changeSelect=(item)=>{
-        this.props.changeSelect&&this.props.changeSelect(item)
+    changeSelect=(item,field)=>{
+        this.props.changeSelect&&this.props.changeSelect(item,field)
     }
     clickSelect=()=>{
         this.props.clickSelect&&this.props.clickSelect()

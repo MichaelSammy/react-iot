@@ -5,9 +5,8 @@ import BaseForm from "../../../../common/BaseForm";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
 import ModelDetails from  "../ExtractionComponent/modelDetails";
-import request from "../../../../api/request";
 import './../index.less'
-import {getUserList} from "../../../../api/api";
+import { getProductTypeList, getSysDictList} from "../../../../api/api";
 
 const FormItem = Form.Item
 
@@ -19,10 +18,10 @@ class SelectProductCategory extends React.Component {
     data = [
         {
             type: 'select',
-            // initialValue: '',
+            initialValue: null,
             label: '',
-            placeholder: '模拟类型：自定义',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            placeholder: '请选择行业',
+            list: [],
             field: 'power',
             // width: '516px',
         },
@@ -53,7 +52,8 @@ class SelectProductCategory extends React.Component {
         },
         list: [],
         detail: {},
-        title: ''
+        title: '',
+        productCategoryInfo:{}
     }
     modelDetailsRef= (ref) => {
         this.modelDetailsChildRef = ref
@@ -72,12 +72,16 @@ class SelectProductCategory extends React.Component {
     selectProduct= () => {
 
     }
-    showMode= () => {
+    showMode= (item) => {
+        this.setState({
+            productCategoryInfo:item
+        })
         this.modelDetailsChildRef.showDrawer()
     }
     componentDidMount() {
         this.props.onRef(this);
-        this.requestList()
+        this.getProductCategory();
+        this.requestList();
     }
 
     changePage=(page,pageSize)=>{
@@ -98,97 +102,67 @@ class SelectProductCategory extends React.Component {
         })
         this.requestList()
     }
+    getProductCategory(){
+        let params={
+            type:"iot_industry_name"
+        }
+        getSysDictList(params).then(res => {
+            if (res.status === '1' && res.result != null) {
+                // res.result.forEach((item,index)=>{
+                //     res.result[index].label=item.name
+                // })
+                res.result.push({
+                    "id": null,
+                    "label": "全部行业",
+                    "value": null
+                })
+                res.result.reverse();
+                this.data[0].list=res.result
+            }
+        })
+    }
+    handleSearch = (data) => {
+        this.setState({
+            name:data
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
+        //日期转换
+        // data.beginTime= data.beginTime.format("YYYY-MM-DD HH:mm:ss");
+        console.log(data)
+    }
+    changeSelect=(item)=>{
+        this.setState({
+            industryId:item
+        })
+        setTimeout(()=>{
+            this.requestList();
+        },100)
+    }
     //请求列表
     requestList() {
         let  params= {
             page: this.params.page,
-            pageSize: this.params.pageSize
+            pageSize: this.params.pageSize,
+            "map[searchKeyword]":this.state.name,
+            "map[industryName]":this.state.industryId
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                // let dataSource = res.data.map((item, index) => {
-                //     item.key = index;
-                //     return item;
-                // });
-                this.params.total=12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        getProductTypeList(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
@@ -197,17 +171,17 @@ class SelectProductCategory extends React.Component {
         const columns = [
             {
                 title: '产品类别',
-                dataIndex: 'roleName',
+                dataIndex: 'productType',
                 align: 'left'
             },
             {
                 title: '行业名称',
-                dataIndex: 'officeName',
+                dataIndex: 'industryName',
                 align: 'left',
             },
             {
                 title: '应用场景',
-                dataIndex: 'createUser',
+                dataIndex: 'appScenario',
                 align: 'left',
             },
             {
@@ -259,6 +233,7 @@ class SelectProductCategory extends React.Component {
                     <BaseForm
                         data={this.data}
                         handleSearch={this.handleSearch}
+                        changeSelect={this.changeSelect}
                         show={false}
                     />
                     </div>
@@ -273,7 +248,7 @@ class SelectProductCategory extends React.Component {
                     >
                     </Etable>
                 </Drawer>
-                <ModelDetails  onRef={this.modelDetailsRef} style={{marginRight:'560px',position:'absolute'}}></ModelDetails>
+                <ModelDetails  onRef={this.modelDetailsRef} productCategoryInfo={this.state.productCategoryInfo} style={{marginRight:'560px',position:'absolute'}}></ModelDetails>
             </div>
         )
     }

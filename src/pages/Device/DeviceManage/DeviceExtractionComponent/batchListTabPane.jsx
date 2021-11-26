@@ -30,7 +30,7 @@ class BatchListTabPane extends React.Component {
     }
 
     componentDidMount() {
-        // this.props.onRef(this);
+        this.props.onRef(this);
         this.requestList();
     }
 
@@ -41,8 +41,9 @@ class BatchListTabPane extends React.Component {
     //请求列表
     requestList() {
         let  params= {
-            page: this.params.page,
-            pageSize: this.params.pageSize
+            currentPage: this.params.page,
+            pageSize: this.params.pageSize,
+            "map[productId]":this.props.productId
         }
         getDeviceBatchList(params).then(res => {
             if (res.status === '1'&&res.result!=null) {
@@ -110,7 +111,7 @@ class BatchListTabPane extends React.Component {
                 render: (item) => {
                     return (
                         <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.editDataSubscribe.bind(this, item)}>下载CVS</div>
+                            <div className="option-button" onClick={this.editDataSubscribe.bind(this, item)}>下载CSV</div>
                         </div>
                     )
                 }

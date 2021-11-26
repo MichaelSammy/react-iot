@@ -4,11 +4,12 @@ import IconFont from "../../../../utils/IconFont";
 import BaseForm from "../../../../common/BaseForm";
 import BaseModel from "../../../../common/BaseModel";
 import Etable from "../../../../common/Etable";
-import {updateSelectedItem} from "../../../../utils";
+import {messageGlobal, updateSelectedItem} from "../../../../utils";
 import './../index.less'
 import AddDevice from "../AddDevice/addDevice"
 import BatchAddDevice from "./batchAddDevice"
-import {batchDeleteDevice, deviceBatchOpenOrClose, getDeviceList} from "../../../../api/api";
+import {batchDeleteDevice, deleteProductModel, deviceBatchOpenOrClose, getDeviceList} from "../../../../api/api";
+import AddLabel from "../../ProductManage/ExtractionComponent/addLabel";
 
 
 class DeviceListTabPane extends React.Component {
@@ -19,6 +20,9 @@ class DeviceListTabPane extends React.Component {
     addBatchDeviceRef = (ref) => {
         this.addBatchDeviceRefChild = ref
     }
+    addLabelRef = (ref) => {
+        this.addLabelRefChild = ref
+    }
     params = {
         page: 1,
         pageSize: 5
@@ -26,36 +30,37 @@ class DeviceListTabPane extends React.Component {
     data = [
         {
             type: 'select',
-            initialValue: '-1',
+            initialValue: '',
             placeholder: '',
-            list: [{id: '-1', label: '设备状态（全部）'}, {id: '1', label: '激活'},{id: '0', label: '未激活'}],
+            list: [{id: '', label: '设备状态（全部）'}, {id: '1', label: '激活'},{id: '0', label: '未激活'}],
             field: 'state',
-            width: '100px'
+            width: '110px'
         },
         {
             type: 'select',
             initialValue: '1',
             placeholder: '',
             list: [{id: '1', label: 'DeviceName'}, {id: '2', label: '备注名称'}],
-            field: 'power',
-            width: '80px'
+            field: 'nameType',
+            width: '120px'
         },
         {
             type: 'search',
             initialValue: '',
             label: '',
             placeholder: '请输入搜索内容',
-            field: 'username',
+            field: 'name',
             width: '160px',
             bordered: true,
         },
         {
             type: 'select',
+            noDropDown:true,
             initialValue: null,
             label: '',
-            placeholder: '请选择设备标签',
+            placeholder: '请选择产品标签',
             list: [{id: '1', label: '超级管理员',value:'1'}, {id: '2', label: '普通用户',value:'2'}],
-            field: 'Label',
+            field: 'productLabel',
             width: '150px',
             open:false
         }
@@ -82,11 +87,13 @@ class DeviceListTabPane extends React.Component {
         baseModelContent: '',
         addDeviceToGroupModel: false,
         detail: {},
-        title: ''
+        title: '',
+        nameType:'1',
+        cfromList:[],
     }
 
     componentDidMount() {
-        // this.props.onRef(this);
+        this.props.onRef(this);
         this.requestList();
     }
 
@@ -101,61 +108,162 @@ class DeviceListTabPane extends React.Component {
             addDeviceToGroupModel: true,
         })
     }
-    enable = () => {
+    enable = (type) => {
+        if(this.state.rowSelection.selectedRows.length==0){
+            messageGlobal('warning',"请选择需要启用的设备")
+            return false;
+        }
+        let deviceIds=[];
+        this.state.rowSelection.selectedRows.map((item,index)=>{
+            deviceIds.push(item.id)
+        })
         this.setState({
             visibleBaseModel: true,
-            baseModelContent: '是否启用？'
+            baseModelContent: '是否启用？',
+            operationType:type,
+            disState:'1',
+            deviceIds:deviceIds
         })
     }
 
-    disable = () => {
+    disable = (type) => {
+        if(this.state.rowSelection.selectedRows.length==0){
+            messageGlobal('warning',"请选择需要禁用的设备")
+            return false;
+        }
+        let deviceIds=[];
+        this.state.rowSelection.selectedRows.map((item,index)=>{
+            deviceIds.push(item.id)
+        })
         this.setState({
             visibleBaseModel: true,
-            baseModelContent: '是否禁用？'
+            baseModelContent: '是否禁用？',
+            operationType:type,
+            disState:'0',
+            deviceIds:deviceIds
         })
     }
-    enableOrDisable=()=>{
-        deviceBatchOpenOrClose().then(res => {
-            if (res.status === '1'&&res.result!=null) {
-
-            }else{
-
-            }
+    batchDelete = (type) => {
+        if(this.state.rowSelection.selectedRows.length==0){
+            messageGlobal('warning',"请选择需要删除的设备")
+            return false;
+        }
+        let deviceIds=[];
+        this.state.rowSelection.selectedRows.map((item,index)=>{
+            deviceIds.push(item.id)
         })
-    }
-    batchDelete = () => {
         this.setState({
             visibleBaseModel: true,
-            baseModelContent: '是否删除？'
+            baseModelContent: '是否批量删除？',
+            operationType:type,
+            deviceIds:deviceIds
         })
     }
     showDevice = (item) => {
         this.props.forwardDeviceInfo(item);
     }
-    removeDevice = () => {
+    removeDevice = (item,type) => {
+        let deviceIds=[];
+        deviceIds.push(item.id)
         this.setState({
             visibleBaseModel: true,
-            baseModelContent: '是否删除设备？'
+            baseModelContent: '是否删除设备？',
+            operationType:type,
+            deviceIds:deviceIds
         })
     }
     deleteDevice=()=>{
-        batchDeleteDevice().then(res => {
+        let params={
+            deviceIds:JSON.stringify(this.state.deviceIds),
+        }
+        batchDeleteDevice(params).then(res => {
             if (res.status === '1'&&res.result!=null) {
-
+                messageGlobal('success',res.msg)
+                this.requestList();
             }else{
-
+                messageGlobal('errInfo',res.msg)
             }
         })
     }
     childDevice = () => {
-
+            alert("跳转子设备页面");
     }
-
+    tableColumnChange = (item,type) => {
+        let deviceIds=[];
+        deviceIds.push(item.id)
+        if(item.disState=='1'){
+            this.setState({
+                visibleBaseModel: true,
+                baseModelContent: '是否禁用设备？',
+                operationType:type,
+                disState:'0',
+                deviceIds:deviceIds
+            })
+        }else{
+            this.setState({
+                visibleBaseModel: true,
+                baseModelContent: '是否启用设备？',
+                operationType:type,
+                disState:'1',
+                deviceIds:deviceIds
+            })
+        }
+    }
+    handleSearch = (data) => {
+        this.setState({
+            name:data
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
+        //日期转换
+        // data.beginTime= data.beginTime.format("YYYY-MM-DD HH:mm:ss");
+        console.log(data)
+    }
+    changeSelect = (data,field) => {
+       if(field=="nameType"){
+           this.setState({
+               nameType:data
+           })
+       }
+        if(field=="state") {
+            this.setState({
+                state: data
+            })
+        }
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
+    }
+    setSearchLabel=(data)=>{
+        let label=[];
+        data.map((item,index)=>{
+            label.push(item.key+":"+item.value)
+        })
+        this.setState({
+            cfromList:data,
+            productLabel:label.length>0?label.join(";"):null
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },300)
+    }
+    clickSelect = (data) => {
+        this.addLabelRefChild.filterTag(this.state.cfromList)
+    }
     //请求列表
     requestList() {
         let  params= {
-            page: this.params.page,
+            currentPage: this.params.page,
             pageSize: this.params.pageSize,
+            "map[deviceName]":this.state.nameType=='1'?this.state.name:null,
+            "map[deviceCName]":this.state.nameType=='2'?this.state.name:null,
+            "map[state]":this.state.state,
+            "map[label]":JSON.stringify(this.state.cfromList),
+            "map[productId]":this.props.productId
         }
         getDeviceList(params).then(res => {
             if (res.status === '1'&&res.result!=null) {
@@ -175,8 +283,25 @@ class DeviceListTabPane extends React.Component {
             }
         })
     }
-
+    enableOrDisable=()=>{
+        let params={
+            disState:this.state.disState,
+            deviceIds:JSON.stringify(this.state.deviceIds),
+        }
+        deviceBatchOpenOrClose(params).then(res => {
+            if (res.status === '1') {
+                messageGlobal('success',res.msg)
+                this.requestList();
+            }
+        })
+    }
     submitOk = () => {
+        if(this.state.operationType=="isEnable"){
+                this.enableOrDisable();
+        }
+        if(this.state.operationType=="delete"){
+                this.deleteDevice();
+        }
         this.setState({
             visibleBaseModel: false
         })
@@ -185,9 +310,6 @@ class DeviceListTabPane extends React.Component {
         this.setState({
             visibleBaseModel: false
         })
-    }
-    tableColumnChange = () => {
-        alert('12345');
     }
     hideAddDviceToGroupModel = () => {
         this.setState({
@@ -217,7 +339,6 @@ class DeviceListTabPane extends React.Component {
         const columns = [
             {
                 title: 'DeviceName/备注名称',
-                width:300,
                 align: 'left',
                 render: (item) => {
                     return (
@@ -235,12 +356,11 @@ class DeviceListTabPane extends React.Component {
             },
             {
                 title: '节点类型',
-                dataIndex: 'nodeType',
+                dataIndex: 'nodeTypeName',
                 align: 'left',
             },
             {
                 title: '状态/启用状态',
-                dataIndex: 'disState',
                 align: 'left',
                 render: (item) => {
                     return (
@@ -252,8 +372,8 @@ class DeviceListTabPane extends React.Component {
                                 borderRadius: '3px',
                                 marginRight: '10px'
                             }}></div>
-                            <div className="option-button">已启用</div>
-                            <div className="option-button"><Switch defaultChecked onChange={this.tableColumnChange}/>
+                            <div className="option-button">{item.disStateName}</div>
+                            <div className="option-button"><Switch defaultChecked={item.disState=='1'?true:false} onClick={()=>this.tableColumnChange(item,"isEnable")}/>
                             </div>
                         </div>
                     )
@@ -272,9 +392,14 @@ class DeviceListTabPane extends React.Component {
                         <div className="function-table-option-buttion">
                             <div className="option-button" onClick={this.showDevice.bind(this, item)}>查看</div>
                             <div className="split"></div>
-                            <div className="option-button" onClick={this.removeDevice.bind(this, item)}>删除</div>
-                            <div className="split"></div>
-                            <div className="option-button" onClick={this.childDevice.bind(this, item)}>子设备(1)</div>
+                            <div className="option-button" onClick={this.removeDevice.bind(this, item,"delete")}>删除</div>
+                            {
+                               item.nodeType=="2"&& <div>
+                                    <div className="split"></div>
+                                    <div className="option-button" onClick={this.childDevice.bind(this, item)}>子设备(1)
+                                    </div>
+                                </div>
+                            }
                         </div>
                     )
                 }
@@ -285,7 +410,10 @@ class DeviceListTabPane extends React.Component {
                 <div className="function-search-from" style={{display: 'flex', justifyContent: 'space-between'}}>
                     <BaseForm
                         data={this.data}
+                        productLabel={this.state.productLabel}
                         handleSearch={this.handleSearch}
+                        changeSelect={this.changeSelect}
+                        clickSelect={this.clickSelect}
                         show={false}
                     />
                     <div className='product-function-mode-manager'>
@@ -307,19 +435,17 @@ class DeviceListTabPane extends React.Component {
                                     type='icon-daochushebei' className="icon-font-offset-px"/>导出设备
                                 </div>
                             </div>
-
-
-                            <div className="batch-delete" onClick={this.enable}>
+                            <div className="batch-delete" onClick={()=>this.enable("isEnable")}>
                                 <div><IconFont type='icon-piliangqiyong'
                                                className="icon-font-offset-px"/>启用
                                 </div>
                             </div>
-                            <div className="batch-delete" onClick={this.disable}>
+                            <div className="batch-delete" onClick={()=>this.disable("isEnable")}>
                                 <div><IconFont type='icon-piliangjinyong'
                                                className="icon-font-offset-px"/>禁用
                                 </div>
                             </div>
-                            <div className="batch-delete" onClick={this.batchDelete}>
+                            <div className="batch-delete" onClick={()=>this.batchDelete("delete")}>
                                 <div><IconFont type='icon-a-shanchucopy'
                                                className="icon-font-offset-px"/>删除
                                 </div>
@@ -345,6 +471,7 @@ class DeviceListTabPane extends React.Component {
                 ></BaseModel>
                 <AddDevice title={'添加设备'} onRef={this.addDeviceRef}></AddDevice>
                 <BatchAddDevice title={'批量添加设备'} onRef={this.addBatchDeviceRef}></BatchAddDevice>
+                <AddLabel onRef={this.addLabelRef} setSearchLabel={this.setSearchLabel}></AddLabel>
             </div>
         )
     }

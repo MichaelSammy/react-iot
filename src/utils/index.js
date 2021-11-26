@@ -88,7 +88,7 @@ export const getOptionsList = data => {
     }
     ;
     return data.map((item, index) => {
-        return <Option key={item.id} value={item.value}>{item.label}</Option>
+        return <Option key={item.id} value={item.value}>{item.label||item.name}</Option>
     })
 }
 

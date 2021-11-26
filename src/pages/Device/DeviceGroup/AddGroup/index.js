@@ -1,6 +1,8 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import './../index.less'
+import {addDevice, addDeviceGroup, updateDeviceGroup} from "../../../../api/api";
+import {messageGlobal} from "../../../../utils";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -28,10 +30,41 @@ class AddGroup extends React.Component {
         form.validateFields().then((values) => {　　// 如果全部字段通过校验，会走then方法，里面可以打印出表单所有字段（一个object）
             console.log('成功')
             console.log(values)
-            this.onClose()
+            if(this.props.deviceGroupInfo){
+                values.id=this.props.deviceGroupInfo.id;
+                this.updateDeviceGroup(values)
+                console.log('编辑');
+            }else{
+                this.addDeviceGroup(values)
+                console.log('新增');
+            }
         }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
             console.log('失败')
             console.log(errInfo)
+        })
+    }
+    updateDeviceGroup = async (values) => {
+        values.createBy="1"
+        updateDeviceGroup(values).then(res => {
+            if(res.status==1){
+                messageGlobal('success',res.msg);
+                this.onClose()
+            }else{
+                messageGlobal('error',res.msg);
+            }
+        }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
+        })
+    }
+    addDeviceGroup = async (values) => {
+        values.createBy="1"
+        addDeviceGroup(values).then(res => {
+            if(res.status==1){
+                messageGlobal('success',res.msg);
+                this.onClose()
+            }else{
+                messageGlobal('error',res.msg);
+            }
+        }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
         })
     }
     onClose = () => {
@@ -48,17 +81,8 @@ class AddGroup extends React.Component {
 
     render() {
         const formItemLayout = {}
-        const detail = {
-            loginName: '',
-            name: '',
-            mobile: '',
-            address: '',
-            email: ''
-        }
-        const nameList = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
-            id: '4',
-            value: 'cyan'
-        }];
+        const detail =this.props.deviceGroupInfo||{}
+        const nameList = [{id: '0', value: '默认值'}];
         return (
             <div>
                     <Modal
@@ -74,7 +98,8 @@ class AddGroup extends React.Component {
                     >
                     <Form ref={this.fromModeRef} layout="vertical">
                         <FormItem label="父组"
-                                  name="name"
+                                  name="parentId"
+                                  initialValue="0"
                                   rules={[
                                       {
                                           required: true,
@@ -90,8 +115,8 @@ class AddGroup extends React.Component {
                             </Select>
                         </FormItem>
                         <FormItem label="分组名称"
-                                  name="loginName"
-                                  initialValue={detail.loginName}
+                                  name="name"
+                                  initialValue={detail.name}
                                   rules={[
                                       {
                                           required: true,
@@ -102,7 +127,7 @@ class AddGroup extends React.Component {
                         </FormItem>
                         <FormItem label="描述"
                                   name="loginName"
-                                  initialValue={detail.loginName}
+                                  initialValue={detail.remark}
                                   rules={[
                                       {
                                           required: false,

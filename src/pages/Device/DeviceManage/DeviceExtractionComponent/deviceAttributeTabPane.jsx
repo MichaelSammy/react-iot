@@ -24,14 +24,16 @@ export default class DeviceAttributeTabPane extends React.Component {
     }
 
     componentDidMount() {
-        this.requestList()
+        this.props.onRef(this);
     }
 
     //请求列表
     requestList() {
         let  params= {
             page: this.params.page,
-            pageSize: this.params.pageSize
+            pageSize: this.params.pageSize,
+            "map[deviceId]":this.props.deviceInfo.id,
+            "map[productId]":this.props.deviceInfo.productId,
         }
         getDeviceTabPropertyInfoList(params).then(res => {
             if (res.status === '1'&&res.result!=null) {

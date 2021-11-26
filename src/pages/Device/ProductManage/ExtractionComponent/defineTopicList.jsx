@@ -1,15 +1,11 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
-import IconFont from "../../../../utils/IconFont";
 import Etable from "../../../../common/Etable";
-import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../api/request";
+import {messageGlobal, updateSelectedItem} from "../../../../utils";
 import './../index.less'
 import DefineTopicClass from "./defineTopicClass";
-import {getUserList} from "../../../../api/api";
-
-const {TextArea} = Input
-const FormItem = Form.Item
+import {delProductTopicsByIds, selectProductTopics} from "../../../../api/api";
+import BaseModel from "../../../../common/BaseModel";
 
 class DefineTopicList extends React.Component {
     // fromModeRef = React.createRef();
@@ -53,7 +49,8 @@ class DefineTopicList extends React.Component {
         list: [],
         defineTopicVisible: false,
         detail: {},
-        title: ''
+        title: '',
+        visibleBaseModel:false,
     }
     onRef = (ref) => {
         this.child = ref
@@ -62,114 +59,26 @@ class DefineTopicList extends React.Component {
     componentDidMount() {
         this.requestList();
     }
-
-    addDefineTopicClass = () => {
-
-    }
-    editDefineTopic = () => {
-        alert(2)
-    }
     //请求列表
     requestList() {
         let  params= {
             page: this.params.page,
             pageSize: this.params.pageSize
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                this.params.total = 12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        selectProductTopics(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
@@ -177,6 +86,42 @@ class DefineTopicList extends React.Component {
 
     saveSubmit = () => {
         this.child.saveSubmit();
+    }
+    editDefineTopic = (item) => {
+        this.setState({
+            detail:item,
+            defineTopicVisible: true,
+            title: '定义Topic类'
+        })
+    }
+    deleteDefineTopic=(item)=>{
+        this.setState({
+            modelInfo:item,
+            visibleBaseModel:true,
+            baseModelContent:'是否删除？'
+        })
+    }
+    submitOk=()=>{
+        this.setState({
+            visibleBaseModel:false
+        })
+        this.deleteTopic()
+    }
+    submitCancel=()=>{
+        this.setState({
+            visibleBaseModel:false
+        })
+    }
+    deleteTopic(){
+        let params={
+            ids:this.state.modelInfo.id
+        }
+        delProductTopicsByIds(params).then(res => {
+            if (res.status === '1') {
+                messageGlobal('success',res.msg)
+                this.requestList();
+            }
+        })
     }
     closeSubmit = () => {
         this.setState({
@@ -215,17 +160,17 @@ class DefineTopicList extends React.Component {
     render() {
         const columns = [
             {
-                title: '订阅类型',
-                dataIndex: 'roleName',
+                title: '自定义 Topic',
+                dataIndex: 'topicName',
                 align: 'left'
             },
             {
-                title: '订阅消息',
-                dataIndex: 'officeName',
+                title: '操作权限',
+                dataIndex: 'accessMode',
                 align: 'left',
             },
             {
-                title: '创建时间',
+                title: 'remark',
                 dataIndex: 'createUser',
                 align: 'left',
             },
@@ -236,6 +181,8 @@ class DefineTopicList extends React.Component {
                     return (
                         <div className="function-table-option-buttion">
                             <div className="option-button" onClick={this.editDefineTopic.bind(this, item)}>编辑</div>
+                            <div className="split"></div>
+                            <div className="option-button" onClick={this.deleteDefineTopic.bind(this, item)}>删除</div>
                         </div>
                     )
                 }
@@ -267,9 +214,15 @@ class DefineTopicList extends React.Component {
                             <Button key="back" onClick={this.closeSubmit}>取消</Button>
                         ]}
                     >
-                        <DefineTopicClass detail={this.state.detail} onRef={this.onRef}> </DefineTopicClass>
+                        <DefineTopicClass detail={this.state.detail} onRef={this.onRef} closeSubmit={this.closeSubmit}> </DefineTopicClass>
                     </Modal>
                 }
+                <BaseModel that={this}
+                           visible={this.state.visibleBaseModel}
+                           submitOk={this.submitOk}
+                           submitCancel={this.submitCancel}
+                           content={this.state.baseModelContent}
+                ></BaseModel>
             </div>
         )
     }

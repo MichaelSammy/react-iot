@@ -8,18 +8,34 @@ import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../../utils"
 import AddGroup from '../AddGroup'
 import AddGroupLabel from "../GroupExtractionComponent/addGroupLabel"
 import '../../ProductManage/index.less'
+import * as qs from "qs";
+import {getDeviceGroupInfo, getDeviceInfo} from "../../../../api/api";
 
 const {TabPane} = Tabs;
 const FormItem = Form.Item
 export default class Permission extends React.Component {
     state = {
-        detail: {},
+        deviceGroupInfo: {
+            labelList:[]
+        },
     }
 
     componentDidMount() {
-        // this.requestList()
+        const deviceGroupInfo = qs.parse(this.props.location.search,{ignoreQueryPrefix: true});
+        let params={
+            id:deviceGroupInfo.id
+        }
+        this.getDeviceGroupInfo(params);
     }
-
+    getDeviceGroupInfo=(params)=>{
+        getDeviceGroupInfo(params).then(res => {
+            if (res.status === '1') {
+                this.setState({
+                    deviceGroupInfo:res.result
+                })
+            }
+        })
+    }
     addGroupRef = (ref) => {
         this.addGroupRefChild = ref
     }
@@ -103,19 +119,19 @@ export default class Permission extends React.Component {
                             <div className='card-top-spilt-line'></div>
                             <div>
                                 <div className='product-filed-item product-filed-item-border-right'>
-                                    <div>分组名称：华北一组</div>
-                                    <div>设备总数：11</div>
-                                    <div>创建时间：2021-07-11 10:3</div>
-                                    <div>分组描述：-</div>
+                                    <div>分组名称：{this.state.deviceGroupInfo.name}</div>
+                                    <div>设备总数：{this.state.deviceGroupInfo.deviceCount}</div>
+                                    <div>创建时间：{this.state.deviceGroupInfo.createTime}</div>
+                                    <div>分组描述：{this.state.deviceGroupInfo.remark}</div>
                                 </div>
                                 <div className='product-filed-item product-filed-item-border-right'>
-                                    <div>分组层级：q3O63w26Fy</div>
-                                    <div>激活设备：1</div>
+                                    <div>分组层级：{"--"}</div>
+                                    <div>激活设备：{this.state.deviceGroupInfo.activCount}</div>
                                     <div></div>
                                 </div>
                                 <div className='product-filed-item'>
-                                    <div>分组ID：M16QXXmHokos3rj</div>
-                                    <div>当前在线：0</div>
+                                    <div>分组ID：{this.state.deviceGroupInfo.id}</div>
+                                    <div>当前在线：{this.state.deviceGroupInfo.onlineCount}</div>
                                 </div>
                             </div>
                             <div style={{padding: '10px 0px'}}>
@@ -127,15 +143,16 @@ export default class Permission extends React.Component {
                                 </div>
                                 <div style={{float: 'left', margin: '5px 0px'}}>分组标签：</div>
                                 <div className='product-tag-list'>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    <div className='tag-name'>ncknsac</div>
-                                    {/*<div className='tag-option'>*/}
-                                        {/*<span onClick={this.editTag}> 编辑</span>*/}
-                                        {/*/<span onClick={this.addTag}>添加</span></div>*/}
+                                    {
+                                        this.state.deviceGroupInfo.labelList.map((item,index)=>{
+                                            return   <div className='tag-name' >{item.key+' : '+item.value}</div>
+                                        })
+
+                                    }
+                                    {
+                                        this.state.deviceGroupInfo.labelList.length==0&&
+                                        <div>无标签信息</div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -150,7 +167,7 @@ export default class Permission extends React.Component {
                         <GroupSubscrList></GroupSubscrList>
                     </TabPane>
                 </Tabs>
-                <AddGroup onRef={this.addGroupRef} title='编辑分组'></AddGroup>
+                <AddGroup onRef={this.addGroupRef} title='编辑分组' deviceGroupInfo={this.state.deviceGroupInfo}></AddGroup>
                 <AddGroupLabel onRef={this.addGroupLabelRef}></AddGroupLabel>
             </div>
         )

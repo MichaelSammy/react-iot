@@ -66,8 +66,6 @@ export const getDeviceTabServerInfoList=(params)=> request.GET(config.getDeviceT
 
 /**获取设备页签-指令下发列表**/
 export const getDeviceTabCommandSendList=(params)=> request.GET(config.getDeviceTabCommandSend,params)
-/**获取设备页签-Topic列表**/
-export const getDeviceCustomTopicList=(params)=> request.GET(config.getDeviceCustomTopicList,params)
 /**批量添加设备（自动生成/手动导入）**/
 export const batchCreateDevice=(params)=> request.POST(config.batchCreateDevice,params)
 /**设备列表汇总数据**/
@@ -81,13 +79,15 @@ export const batchDeleteDevice=(params)=> request.GET(config.batchDeleteDevice,p
 /**添加设备到分组**/
 export const saveDeviceGoGroup=(params)=> request.GET(config.saveDeviceGoGroup,params)
 /**添加、修改设备分组**/
-export const addOrUpdateDeviceGroup=(params)=> request.POST(config.addOrUpdateDeviceGroup,params)
+export const addDeviceGroup=(params)=> request.POST(config.addDeviceGroup,params)
+/**修改设备分组**/
+export const updateDeviceGroup=(params)=> request.POST(config.updateDeviceGroup,params)
 /**获取设备分组详情**/
 export const getDeviceGroupInfo=(params)=> request.GET(config.getDeviceGroupInfo,params)
 /**分组下设备列表**/
 export const selectDeviceListByGroupId=(params)=> request.GET(config.selectDeviceListByGroupId,params)
 /**分页获取设备分组列表**/
-export const selectDeviceListByPage=(params)=> request.GET(config.selectDeviceListByPage,params)
+export const selectDeviceListByPage=(params)=> request.POST(config.selectDeviceListByPage,params)
 /**新增修改设备分组标签信息**/
 export const saveOrUpdateDeviceGroupLabel=(params)=> request.GET(config.saveOrUpdateDeviceGroupLabel,params)
 /**获取产品类别**/
@@ -104,3 +104,20 @@ export const saveProductTopics=(params)=> request.POST(config.saveProductTopics,
 export const updateProductTopics=(params)=> request.POST(config.updateProductTopics,params)
 /**批量删除自定义Topics**/
 export const delProductTopicsByIds=(params)=> request.GET(config.delProductTopicsByIds,params)
+/**查询自定义Topics列表**/
+export const selectProductTopics=(params)=> request.GET(config.selectProductTopics,params)
+/**获取产品列表-select选择框使用**/
+export const getProductDropDownList=(params)=> request.GET(config.getProductDropDownList,params)
+/**
+ * 字典表
+ * iot_product_category ——>产品类别
+ * iot_industry_name---->行业名称
+ * iot_appli_scenario----->应用场景
+ * **/
+export const getSysDictList=(params)=> request.GET(config.getSysDictList,params)
+/**删除设备分组**/
+export const deleteDeviceGroupById=(params)=> request.GET(config.deleteDeviceGroupById,params)
+/**批量添加设备到分组**/
+export const insertDeviceToGroup=(params)=> request.POST(config.insertDeviceToGroup,params)
+/**批量移除分组内设备**/
+export const deleteDeviceFromGroup=(params)=> request.POST(config.deleteDeviceFromGroup,params)

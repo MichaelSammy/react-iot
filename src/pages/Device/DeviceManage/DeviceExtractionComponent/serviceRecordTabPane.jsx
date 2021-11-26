@@ -65,8 +65,13 @@ export default class ServiceRecordTabPane extends React.Component {
     //请求列表
     requestList() {
         let  params= {
-            page: this.params.page,
-            pageSize: this.params.pageSize
+            currentPage: this.params.page,
+            pageSize: this.params.pageSize,
+            "map[deviceId]":this.props.deviceInfo.id,
+            "map[productId]":this.props.deviceInfo.productId,
+            "map[startTime]":this.state.startTime,
+            "map[endTime]":this.state.endTime,
+            "map[identifier]":this.state.identifier,
         }
         getDeviceTabServerInfoList(params).then(res => {
             if (res.status === '1'&&res.result!=null) {
@@ -110,7 +115,15 @@ export default class ServiceRecordTabPane extends React.Component {
         })
         this.requestList()
     }
-
+    handleSearch = (data) => {
+        this.setState({
+            identifier:data
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
+    }
     render() {
         const columns = [
             {
@@ -145,6 +158,7 @@ export default class ServiceRecordTabPane extends React.Component {
                     <BaseForm
                         data={this.data}
                         handleSearch={this.handleSearch}
+                        changeRangePicker={this.changeRangePicker}
                         show={false}
                     />
                 </div>

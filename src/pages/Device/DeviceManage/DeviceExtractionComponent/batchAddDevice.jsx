@@ -126,8 +126,8 @@ class BatchAddDevice extends React.Component {
                             <Radio.Group onChange={(e) => {
                                 this.onChangeTypeRadio(e.target.value);
                             }} defaultValue={'1'}>
-                                {addTypeList.map((item) => (
-                                    <Radio value={item.value}>
+                                {addTypeList.map((item,index) => (
+                                    <Radio value={item.value} key={index}>
                                         {item.label}
                                     </Radio>
                                 ))}

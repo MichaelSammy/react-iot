@@ -5,10 +5,9 @@ import BaseForm from "../../../../common/BaseForm";
 import BaseModel from "../../../../common/BaseModel";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../api/request";
 import './../index.less'
 import AddDeviceToGruop from "./addDeviceToGruop";
-import {getUserList} from "../../../../api/api";
+import {getDeviceList, getProductDropDownList, getUserList, selectDeviceListByGroupId} from "../../../../api/api";
 
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -22,9 +21,10 @@ class GroupDeviceList extends React.Component {
     data = [
         {
             type: 'select',
-            initialValue: '1',
-            placeholder: '',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            initialValue: null,
+            label: '',
+            placeholder: '全部产品',
+            list: [],
             field: 'power',
             width: '130px'
         },
@@ -65,9 +65,22 @@ class GroupDeviceList extends React.Component {
 
     componentDidMount() {
         // this.props.onRef(this);
+        this.getProductList();
         this.requestList();
     }
-
+    getProductList(){
+        getProductDropDownList().then(res => {
+            if (res.status === '1' && res.result != null) {
+                res.result.push({
+                    "id": null,
+                    "label": "全部",
+                    "value": null
+                })
+                res.result.reverse();
+                this.data[0].list=res.result
+            }
+        })
+    }
     callBackFatherMethod = () => {
         this.setState({
             addDeviceToGroupModel: true,
@@ -93,104 +106,28 @@ class GroupDeviceList extends React.Component {
     //请求列表
     requestList() {
         let  params= {
-            page: this.params.page,
-            pageSize: this.params.pageSize
+            currentPage: this.params.page,
+            pageSize: this.params.pageSize,
+            "map[deviceName]":this.state.nameType=='1'?this.state.name:null,
+            "map[deviceCName]":this.state.nameType=='2'?this.state.name:null,
+            "map[state]":this.state.state,
+            "map[label]":JSON.stringify(this.state.cfromList),
+            "map[productId]":this.props.productId
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                this.params.total = 12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        selectDeviceListByGroupId(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
@@ -237,36 +174,41 @@ class GroupDeviceList extends React.Component {
         const columns = [
             {
                 title: 'DeviceName/备注名称',
-                dataIndex: 'roleName',
+                dataIndex: 'name',
                 align: 'left'
             },
             {
                 title: '设备所属产品',
-                dataIndex: 'officeName',
+                dataIndex: 'productName',
                 align: 'left',
             },
             {
                 title: '节点类型',
-                dataIndex: 'createUser',
                 align: 'left',
+                render: (item) => {
+                    return(
+                        item.nodeType=="1"? "设备":(item.nodeType=="2"?"网关":"子设备")
+                    )
+                }
             },
             {
                 title: '状态/启用状态',
                 dataIndex: 'createTime',
                 align: 'left',
-                render: (item) => {
-                    return (
-                        <div className="function-table-option-buttion">
-                            <div style={{width: '6px',height: '6px',background: '#FF6D6D',borderRadius:'3px',marginRight:'10px'}}></div>
-                            <div className="option-button">已启用</div>
-                            <div className="option-button"><Switch defaultChecked onChange={this.tableColumnChange} /></div>
-                        </div>
-                    )
-                }
+                // render: (item) => {
+                //     return (
+                //         <div className="function-table-option-buttion">
+                //             <div style={{width: '6px',height: '6px',background: '#FF6D6D',borderRadius:'3px',marginRight:'10px'}}></div>
+                //             <div className="option-button">{item.state=='1'?'':''}</div>
+                //             <div className="option-button"><Switch defaultChecked={item.state=='1'?true:false} onClick={()=>this.tableColumnChange(item,"isEnable")}/>
+                //             </div>
+                //         </div>
+                //     )
+                // }
             },
             {
                 title: '最后上线时间',
-                dataIndex: 'remark',
+                dataIndex: 'onlieTime',
                 align: 'left',
             },
             {

@@ -9,7 +9,8 @@ import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../utils";
 import DeviceListTabPane from "../DeviceManage/DeviceExtractionComponent/deviceListTabPane";
 import BatchListTabPane from "../DeviceManage/DeviceExtractionComponent/batchListTabPane";
 import * as qs from "qs";
-import { getDeviceSummaryList} from "../../../api/api";
+import {getDeviceSummaryList, getProductDropDownList, getSysDictList} from "../../../api/api";
+import EditProduct from "../ProductManage/EditProduct";
 const {TabPane} = Tabs;
 export default class DeviceManage extends React.Component {
     params = {
@@ -19,10 +20,10 @@ export default class DeviceManage extends React.Component {
     data = [
         {
             type: 'select',
-            // initialValue: '',
+            initialValue: null,
             label: '',
             placeholder: '全部产品',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
+            list: [],
             field: 'power',
             width: '400px'
         }
@@ -33,7 +34,13 @@ export default class DeviceManage extends React.Component {
             DeviceCount: "",
             onlineNum: "",
             activateNum: ""
-        }
+        },
+    }
+    onRef = (ref) => {
+        this.child = ref
+    }
+    batchListRef=(ref)=>{
+        this.batchListChildRef = ref
     }
     //查询
     handleSearch = (data) => {
@@ -42,14 +49,38 @@ export default class DeviceManage extends React.Component {
         console.log(data)
     }
     changeSelect=(item)=>{
+        this.setState({
+            productId:item
+        })
+        setTimeout(()=>{
+            this.requestList();
+            this.child.requestList();
+            this.batchListChildRef&&this.batchListChildRef.requestList();
+        },100)
     }
     componentDidMount() {
-        this.requestList()
+        this.getProductList();
+        this.requestList();
     }
-
+    getProductList(){
+        getProductDropDownList().then(res => {
+            if (res.status === '1' && res.result != null) {
+                res.result.push({
+                    "id": null,
+                    "label": "全部",
+                    "value": null
+                })
+                res.result.reverse();
+                this.data[0].list=res.result
+            }
+        })
+    }
     //请求列表
     requestList() {
-        getDeviceSummaryList().then(res => {
+        let params={
+            productId:this.state.productId
+        }
+        getDeviceSummaryList(params).then(res => {
             if (res.status === '1' && res.result != null) {
                 this.setState({
                     deviceStateNumber: res.result
@@ -64,13 +95,6 @@ export default class DeviceManage extends React.Component {
                 })
             }
         })
-    }
-
-    resetUserFrom = () => {
-        this.setState({
-            roleVisible: false
-        })
-        this.child.resetUserFrom()
     }
     submitOk = () => {
         this.setState({
@@ -160,10 +184,16 @@ export default class DeviceManage extends React.Component {
                     <div style={{clear: 'both'}}></div>
                     <Tabs id="product-info-tabs-id" type="card">
                         <TabPane tab="设备列表" key="1">
-                            <DeviceListTabPane forwardDeviceInfo={this.forwardDeviceInfo}></DeviceListTabPane>
+                            <DeviceListTabPane forwardDeviceInfo={this.forwardDeviceInfo}
+                                               productId={this.state.productId}
+                                               onRef={this.onRef}
+                            ></DeviceListTabPane>
                         </TabPane>
                         <TabPane tab="批次列表" key="2">
-                            <BatchListTabPane></BatchListTabPane>
+                            <BatchListTabPane
+                                productId={this.state.productId}
+                                onRef={this.batchListRef}
+                            ></BatchListTabPane>
                         </TabPane>
                     </Tabs>
 

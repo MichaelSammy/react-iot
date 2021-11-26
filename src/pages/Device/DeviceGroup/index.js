@@ -6,10 +6,18 @@ import AddGroup from './AddGroup'
 import IconFont from '../../../utils/IconFont';
 import request from '../../../api/request'
 import './index.less'
-import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../utils";
+import {filterRoutes, getBreadItem, messageGlobal, updateSelectedItem} from "../../../utils";
 import Etable from "../../../common/Etable";
 import AddGroupLabel from "./GroupExtractionComponent/addGroupLabel"
-import {getUserList} from "../../../api/api";
+import {
+    batchDeleteDevice,
+    deleteDeviceGroupById,
+    getDeviceBatchList,
+    getUserList,
+    selectDeviceListByPage
+} from "../../../api/api";
+import AddLabel from "../ProductManage/ExtractionComponent/addLabel";
+import * as qs from "qs";
 
 const FormItem = Form.Item
 export default class DeviceGroup extends React.Component {
@@ -28,11 +36,12 @@ export default class DeviceGroup extends React.Component {
         },
         {
             type: 'select',
-            // initialValue: '',
+            noDropDown:true,
+            initialValue: null,
             label: '',
-            placeholder: '请选择分组标签',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
+            placeholder: '请选择产品标签',
+            list: [{id: '1', label: '超级管理员',value:'1'}, {id: '2', label: '普通用户',value:'2'}],
+            field: 'productLabel',
             width: '150px',
             open:false
         }
@@ -53,7 +62,8 @@ export default class DeviceGroup extends React.Component {
         type: false,
         list: [],
         detail: {},
-        title: ''
+        title: '',
+        cfromList:[]
     }
 
     componentDidMount() {
@@ -66,17 +76,21 @@ export default class DeviceGroup extends React.Component {
     createGroup = () => {
         this.addGroupRefChild.showDrawer()
     }
-    addGroupLabelRef = (ref) => {
-        this.addGroupLabelRefChild = ref
+    addLabelRef = (ref) => {
+        this.addLabelRefChild = ref
     }
     //查询
     handleSearch = (data) => {
+        this.setState({
+            name:data
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
         //日期转换
         // data.beginTime= data.beginTime.format("YYYY-MM-DD HH:mm:ss");
         console.log(data)
-    }
-    clickSelect = (data) => {
-        this.addGroupLabelRefChild.filterTag()
     }
     changePage = (page, pageSize) => {
         this.params.page = page;
@@ -100,117 +114,51 @@ export default class DeviceGroup extends React.Component {
     //请求列表
     requestList() {
         let  params= {
-            page: this.params.page,
-            pageSize: this.params.pageSize
+            name:this.state.name,
+            currentPage: this.params.page,
+            pageSize: this.params.pageSize,
+            label:this.state.cfromList
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                // let dataSource = res.data.map((item, index) => {
-                //     item.key = index;
-                //     return item;
-                // });
-                this.params.total = 12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        selectDeviceListByPage(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
+
     }
 
-    showDroupInfo = () => {
-        this.props.history.push({'pathname': "/user/device/group/info", params: true});
+    showDroupInfo = (item) => {
+        this.props.history.push({'pathname': "/user/device/group/info", search: qs.stringify(item)});
+    }
+    deleteDeviceDroup=()=>{
+        let params={
+            id:this.state.groupId,
+        }
+        deleteDeviceGroupById(params).then(res => {
+            if (res.status === '1') {
+                messageGlobal('success',res.msg)
+                this.requestList();
+            }else{
+                messageGlobal('errInfo',res.msg)
+            }
+        })
     }
     submitOk = () => {
+        if(this.state.operationType=="delete"){
+            this.deleteDeviceDroup();
+        }
         this.setState({
             visibleBaseModel: false
         })
@@ -220,28 +168,41 @@ export default class DeviceGroup extends React.Component {
             visibleBaseModel: false
         })
     }
-    deleteDroup = () => {
+    deleteDroup = (item,type) => {
         this.setState({
             visibleBaseModel: true,
-            baseModelContent: '是否删除？'
+            baseModelContent: '是否删除？',
+            groupId:item.id,
+            operationType:type
         })
     }
-
+    setSearchLabel=(data)=>{
+        let label=[];
+        data.map((item,index)=>{
+            label.push(item.key+":"+item.value)
+        })
+        this.setState({
+            cfromList:data,
+            productLabel:label.length>0?label.join(";"):null
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },300)
+    }
+    clickSelect = (data) => {
+        this.addLabelRefChild.filterTag(this.state.cfromList)
+    }
     render() {
         const columns = [
             {
-                title: '功能类型',
-                dataIndex: 'roleName',
-                align: 'left'
-            },
-            {
                 title: '分组名称',
-                dataIndex: 'officeName',
+                dataIndex: 'name',
                 align: 'left',
             },
             {
                 title: '分组ID',
-                dataIndex: 'createUser',
+                dataIndex: 'id',
                 align: 'left',
             },
             {
@@ -258,7 +219,7 @@ export default class DeviceGroup extends React.Component {
                             <div className="function-table-option-buttion">
                                 <div className="option-button" onClick={this.showDroupInfo.bind(this, item)}>查看</div>
                                 <div className="split"></div>
-                                <div className="option-button" onClick={this.deleteDroup.bind(this, item)}>删除</div>
+                                <div className="option-button" onClick={this.deleteDroup.bind(this, item,"delete")}>删除</div>
                             </div>
                         </div>
                     )
@@ -335,7 +296,7 @@ export default class DeviceGroup extends React.Component {
                            content={this.state.baseModelContent}
                 ></BaseModel>
                 <AddGroup onRef={this.addGroupRef} title='创建分组'></AddGroup>
-                <AddGroupLabel onRef={this.addGroupLabelRef}></AddGroupLabel>
+                <AddLabel onRef={this.addLabelRef} setSearchLabel={this.setSearchLabel}></AddLabel>
             </div>
         )
     }

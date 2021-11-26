@@ -28,6 +28,7 @@ export default class Permission extends React.Component {
         {
             type: 'select',
             initialValue: null,
+            noDropDown:true,
             label: '',
             placeholder: '请选择产品标签',
             list: [{id: '1', label: '超级管理员',value:'1'}, {id: '2', label: '普通用户',value:'2'}],

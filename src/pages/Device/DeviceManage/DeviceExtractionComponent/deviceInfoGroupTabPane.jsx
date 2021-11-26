@@ -50,7 +50,8 @@ export default class DeviceInfoGroupTabPane extends React.Component {
     requestList() {
         let  params= {
             page: this.params.page,
-            pageSize: this.params.pageSize
+            pageSize: this.params.pageSize,
+            "map[deviceId]":this.props.deviceInfo.id,
         }
         getDeviceGroupList(params).then(res => {
             if (res.status === '1'&&res.result!=null) {

@@ -1,7 +1,6 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, List, Breadcrumb, Tabs} from "antd";
 import IconFont from '../../../../utils/IconFont';
-import request from '../../../../api/request'
 import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../../utils";
 import DeviceAttributeTabPane from '../DeviceExtractionComponent/deviceAttributeTabPane'
 import EventRecordTabPane from '../DeviceExtractionComponent/eventRecordTabPane'
@@ -13,7 +12,6 @@ import ChildDeviceTabPane from '../DeviceExtractionComponent/childDeviceTabPane'
 import DeviceShadowTabPane from '../DeviceExtractionComponent/deviceShadowTabPane'
 import EditDevice from '../EditDevice/editDevice'
 import '../../ProductManage/index.less'
-import AddGroup from "../../DeviceGroup/AddGroup";
 import * as qs from "qs";
 import {getDeviceInfo, getProductInfo} from "../../../../api/api";
 import AddLabel from "../../ProductManage/ExtractionComponent/addLabel";
@@ -29,6 +27,9 @@ export default class Permission extends React.Component {
     addLabelRef = (ref) => {
         this.addLabelRefChild = ref
     }
+    deviceAttributeRef = (ref) => {
+        this.deviceAttributeRefChild = ref
+    }
     addTag = () => {
         this.addLabelRefChild.addTag()
     }
@@ -41,6 +42,9 @@ export default class Permission extends React.Component {
             deviceId:deviceInfo.id
         }
         this.getDeviceDetails(deviceParams);
+        setTimeout(()=>{
+            this.deviceAttributeRefChild.requestList();
+        },900)
     }
     getDeviceDetails=(params)=>{
         getDeviceInfo(params).then(res => {
@@ -164,28 +168,31 @@ export default class Permission extends React.Component {
                 </Card>
                 <Tabs id="product-info-tabs-id" className="product-info-tabs" type="card">
                     <TabPane tab="属性" key="1">
-                        <DeviceAttributeTabPane></DeviceAttributeTabPane>
+                        <DeviceAttributeTabPane  deviceInfo={this.state.deviceInfo}
+                                                 onRef={this.deviceAttributeRef}></DeviceAttributeTabPane>
                     </TabPane>
                     <TabPane tab="事件记录" key="2">
-                        <EventRecordTabPane></EventRecordTabPane>
+                        <EventRecordTabPane
+                            deviceInfo={this.state.deviceInfo}
+                        ></EventRecordTabPane>
                     </TabPane>
                     <TabPane tab="服务记录" key="3">
-                        <ServiceRecordTabPane></ServiceRecordTabPane>
+                        <ServiceRecordTabPane deviceInfo={this.state.deviceInfo}></ServiceRecordTabPane>
                     </TabPane>
                     <TabPane tab="子设备" key="4">
-                        <ChildDeviceTabPane></ChildDeviceTabPane>
+                        <ChildDeviceTabPane  deviceInfo={this.state.deviceInfo}></ChildDeviceTabPane>
                     </TabPane>
                     <TabPane tab="指令下发" key="5">
-                        <InstructIssueTabPane></InstructIssueTabPane>
+                        <InstructIssueTabPane  deviceInfo={this.state.deviceInfo}></InstructIssueTabPane>
                     </TabPane>
                     <TabPane tab="Topic列表" key="6">
-                        <DeviceTopicListTabPane></DeviceTopicListTabPane>
+                        <DeviceTopicListTabPane  deviceInfo={this.state.deviceInfo}></DeviceTopicListTabPane>
                     </TabPane>
                     <TabPane tab="分组" key="7">
-                        <DeviceInfoGroupTabPane></DeviceInfoGroupTabPane>
+                        <DeviceInfoGroupTabPane  deviceInfo={this.state.deviceInfo}></DeviceInfoGroupTabPane>
                     </TabPane>
                     <TabPane tab="设备影子" key="8">
-                        <DeviceShadowTabPane></DeviceShadowTabPane>
+                        <DeviceShadowTabPane  deviceInfo={this.state.deviceInfo}></DeviceShadowTabPane>
                     </TabPane>
                 </Tabs>
                 <EditDevice onRef={this.editDeviceRef} title='编辑' deviceInfo={this.state.deviceInfo}></EditDevice>

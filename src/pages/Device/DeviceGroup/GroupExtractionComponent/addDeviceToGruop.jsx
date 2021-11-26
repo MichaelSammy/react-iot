@@ -204,11 +204,6 @@ class AddDeviceToGruop extends React.Component {
                 align: 'left',
             },
             {
-                title: '设备编号/IMEI',
-                dataIndex: 'createUser',
-                align: 'left',
-            },
-            {
                 title: '节点类型',
                 dataIndex: 'createTime',
                 align: 'left',

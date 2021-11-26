@@ -1,14 +1,9 @@
 import React from "react";
-import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
-import IconFont from "../../../../utils/IconFont";
 import BaseForm from "../../../../common/BaseForm";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../api/request";
 import './../index.less'
-import {getDeviceList, getDeviceTabEventInfoList, getUserList} from "../../../../api/api";
-const {TextArea} = Input
-const FormItem = Form.Item
+import { getDeviceTabEventInfoList} from "../../../../api/api";
 
 export default class EventRecordTabPane extends React.Component {
     // fromModeRef = React.createRef();
@@ -19,10 +14,10 @@ export default class EventRecordTabPane extends React.Component {
     data = [
         {
             type: 'select',
-            initialValue: '1',
+            initialValue: '',
             placeholder: '',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
+            list: [{id:'',label:'事件类型（全部）'},{id: 'info', label: '信息'}, {id: 'alert', label: '告警'},{id:'error',label:'故障'}],
+            field: 'filedType',
             width: '130px'
         },
         {
@@ -37,7 +32,7 @@ export default class EventRecordTabPane extends React.Component {
             initialValue: '',
             label: '',
             placeholder: '请输入搜索内容',
-            field: 'username',
+            field: 'identifier',
             width: '336px',
             bordered: true,
         }
@@ -72,8 +67,14 @@ export default class EventRecordTabPane extends React.Component {
     //请求列表
     requestList() {
         let  params= {
-            page: this.params.page,
-            pageSize: this.params.pageSize
+            currentPage: this.params.page,
+            pageSize: this.params.pageSize,
+            "map[deviceId]":this.props.deviceInfo.id,
+            "map[productId]":this.props.deviceInfo.productId,
+            "map[startTime]":this.state.startTime,
+            "map[endTime]":this.state.endTime,
+            "map[type]":this.state.filedType,
+            "map[identifier]":this.state.identifier,
         }
         getDeviceTabEventInfoList(params).then(res => {
             if (res.status === '1'&&res.result!=null) {
@@ -98,6 +99,24 @@ export default class EventRecordTabPane extends React.Component {
             startTime: str[0],
             endTime: str[1],
         });
+    }
+    handleSearch = (data) => {
+        this.setState({
+            identifier:data
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
+    }
+    changeSelect = (data) => {
+        this.setState({
+            filedType:data
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
     }
     changePage = (page, pageSize) => {
         this.params.page = page;
@@ -154,6 +173,7 @@ export default class EventRecordTabPane extends React.Component {
                         handleSearch={this.handleSearch}
                         show={false}
                         changeRangePicker={this.changeRangePicker}
+                        changeSelect={this.changeSelect}
                     />
                 </div>
                 <Etable

@@ -350,7 +350,7 @@ export default class Permission extends React.Component {
                     </Modal>
                 }
                 <AddCustomFeatures onRef={this.addCustomFeaturesRef}  refresFunctionList={this.refresFunctionList}  productInfo={this.state.productInfo}></AddCustomFeatures>
-                <AddStandardFeatures onRef={this.addStandardFeaturesRef}></AddStandardFeatures>
+                <AddStandardFeatures onRef={this.addStandardFeaturesRef} refresFunctionList={this.refresFunctionList}   productInfo={this.state.productInfo}></AddStandardFeatures>
                 <AddLabel onRef={this.addLabelRef}
                           getProductLabelList={this.getProductLabelList}></AddLabel>
                 <BaseModel that={this}

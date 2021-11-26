@@ -1,11 +1,9 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
-import IconFont from "../../../../utils/IconFont";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../api/request";
 import './../index.less'
-import {getUserList} from "../../../../api/api";
+import {getDeviceList, getProductDetailList, getUserList} from "../../../../api/api";
 
 const FormItem = Form.Item
 
@@ -74,94 +72,24 @@ class ModelDetails extends React.Component {
     //请求列表
     requestList() {
         let  params= {
-            page: this.params.page,
-            pageSize: this.params.pageSize
+            currentPage: this.params.page,
+            pageSize: this.params.pageSize,
+            "map[dataId]":this.props.productCategoryInfo.dataId,
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                // let dataSource = res.data.map((item, index) => {
-                //     item.key = index;
-                //     return item;
-                // });
-                this.params.total = 12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        getProductDetailList(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
@@ -173,22 +101,22 @@ class ModelDetails extends React.Component {
         const columns = [
             {
                 title: '功能类型',
-                dataIndex: 'roleName',
+                dataIndex: 'fieldType',
                 align: 'left'
             },
             {
                 title: '功能名称',
-                dataIndex: 'roleName',
+                dataIndex: 'name',
                 align: 'left'
             },
             {
                 title: '标识符',
-                dataIndex: 'officeName',
+                dataIndex: 'identifier',
                 align: 'left',
             },
             {
                 title: '数据类型',
-                dataIndex: 'createUser',
+                dataIndex: 'dataType',
                 align: 'left',
             }
         ];
