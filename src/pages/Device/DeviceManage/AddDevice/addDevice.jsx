@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import '../index.less'
-import {addDevice, saveProduct} from "../../../../api/api";
+import {addDevice, getProductDropDownList, saveProduct} from "../../../../api/api";
 import {messageGlobal} from "../../../../utils";
 
 const {Option} = Select
@@ -13,6 +13,7 @@ class AddDevice extends React.Component {
     state = {
         detail: {},
         visible: false,
+        productList:[],
     }
     showDrawer = () => {
         this.setState({
@@ -52,13 +53,23 @@ class AddDevice extends React.Component {
 
     componentDidMount() {
         this.props.onRef(this);
+        this.getProductList();
         this.requestList()
     }
 
     requestList() {
 
     }
-
+    getProductList(){
+        getProductDropDownList().then(res => {
+            if (res.status === '1' && res.result != null) {
+                res.result.reverse();
+                this.setState({
+                    productList:res.result
+                })
+            }
+        })
+    }
     render() {
         const formItemLayout = {}
         const detail = {
@@ -67,10 +78,7 @@ class AddDevice extends React.Component {
             productId: '',
             remark: '',
         }
-        const nameList = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
-            id: '4',
-            value: 'cyan'
-        }];
+
         return (
             <div>
                 <Drawer
@@ -126,9 +134,9 @@ class AddDevice extends React.Component {
                                       },
                                   ]}{...formItemLayout}>
                             <Select placeholder="请选择所属产品">
-                                {nameList.map((item) => (
+                                {this.state.productList.map((item) => (
                                     <Option value={item.id} key={item.id}>
-                                        {item.value}
+                                        {item.label}
                                     </Option>
                                 ))}
                             </Select>

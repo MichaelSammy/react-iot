@@ -2,6 +2,7 @@ import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import './../index.less'
 import IconFont from "../../../../utils/IconFont";
+import {getProductDropDownList} from "../../../../api/api";
 
 const {Option} = Select
 const {TextArea} = Input
@@ -13,7 +14,8 @@ class BatchAddDevice extends React.Component {
         detail: {},
         visible: false,
         showDeviceCount: true,
-        showFileInput:false
+        showFileInput:false,
+        productList:[],
     }
     showDrawer = () => {
         this.setState({
@@ -41,9 +43,19 @@ class BatchAddDevice extends React.Component {
 
     componentDidMount() {
         this.props.onRef(this);
+        this.getProductList();
         this.requestList()
     }
-
+    getProductList(){
+        getProductDropDownList().then(res => {
+            if (res.status === '1' && res.result != null) {
+                res.result.reverse();
+                this.setState({
+                    productList:res.result
+                })
+            }
+        })
+    }
     onChangeTypeRadio = (item) => {
         if (item == '1') {
             this.setState({
@@ -71,10 +83,6 @@ class BatchAddDevice extends React.Component {
             address: '',
             email: ''
         }
-        const nameList = [{id: '1', value: 'gold'}, {id: '2', value: 'lime'}, {id: '3', value: 'green'}, {
-            id: '4',
-            value: 'cyan'
-        }];
         const addTypeList = [{id: '1', label: '自动生成', value: '1'}, {id: '2', label: '批量上传', value: '2'}];
         return (
             <div>
@@ -109,9 +117,9 @@ class BatchAddDevice extends React.Component {
                                       },
                                   ]}{...formItemLayout}>
                             <Select placeholder="请选择产品">
-                                {nameList.map((item) => (
+                                {this.state.productList.map((item) => (
                                     <Option value={item.id} key={item.id}>
-                                        {item.value}
+                                        {item.label}
                                     </Option>
                                 ))}
                             </Select>

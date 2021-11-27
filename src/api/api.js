@@ -123,3 +123,7 @@ export const insertDeviceToGroup=(params)=> request.POST(config.insertDeviceToGr
 export const deleteDeviceToGroup=(params)=> request.POST(config.deleteDeviceToGroup,params)
 /**查询不在设备分组内的设备列表**/
 export const getDeviceListOutGroup=(params)=> request.GET(config.getDeviceListOutGroup,params)
+/**数据解析脚本保存**/
+export const saveProductParseScript=(params)=> request.POST(config.saveProductParseScript,params)
+/**数据解析脚本查询**/
+export const selectScriptByParam=(params)=> request.GET(config.selectScriptByParam,params)

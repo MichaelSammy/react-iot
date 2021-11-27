@@ -127,4 +127,8 @@ export default {
     deleteDeviceToGroup:ServerConfig.opensense_url+"rest/deviceGroup/deleteDeviceToGroup",
     /**查询不在设备分组内的设备列表**/
     getDeviceListOutGroup:ServerConfig.opensense_url+"rest/device/getDeviceListOutGroup",
+    /**数据解析脚本保存**/
+    saveProductParseScript:ServerConfig.opensense_url+"rest/product/saveProductParseScript",
+    /**数据解析脚本查询**/
+    selectScriptByParam:ServerConfig.opensense_url+"rest/product/selectScriptByParam",
 }

@@ -88,7 +88,7 @@ class GroupDeviceList extends React.Component {
             addDeviceToGroupModel: true,
         })
         setTimeout(()=>{
-            this.addDeviceToGroupRefChild.requestList();
+            this.addDeviceToGroupRefChild&&this.addDeviceToGroupRefChild.requestList();
         },600)
     }
 

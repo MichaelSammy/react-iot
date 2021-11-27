@@ -11,7 +11,7 @@ class DefineTopicList extends React.Component {
     // fromModeRef = React.createRef();
     params = {
         page: 1,
-        pageSize: 5
+        pageSize: 10
     }
     data = [
         {
@@ -76,7 +76,17 @@ class DefineTopicList extends React.Component {
                 });
                 this.setState({
                     dataSource,
-                    total:res.result.recordCount
+                    pagination: {
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        hideOnSinglePage: false,
+                        pageSizeOptions: ['10', '20', '30'],
+                        pageSize: this.params.pageSize,
+                        current: this.params.page,
+                        total: res.result.recordCount,
+                        onChange: (page, pageSize) => this.changePage(page, pageSize),
+                        showTotal: (total) => `共${total}条`,
+                    }
                 })
             }else{
                 this.setState({

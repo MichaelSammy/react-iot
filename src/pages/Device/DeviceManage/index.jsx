@@ -34,6 +34,7 @@ export default class DeviceManage extends React.Component {
             onlineNum: "",
             activateNum: ""
         },
+        list:[],
     }
     onRef = (ref) => {
         this.child = ref
@@ -71,6 +72,9 @@ export default class DeviceManage extends React.Component {
                 })
                 res.result.reverse();
                 this.data[0].list=res.result
+                this.setState({
+                    list:res.result
+                })
             }
         })
     }
@@ -151,6 +155,7 @@ export default class DeviceManage extends React.Component {
                             <div className="device-manage-search-title">产品范围</div>
                             <BaseForm
                                 data={this.data}
+                                list={this.state.list}
                                 show={false}
                                 handleSearch={this.handleSearch}
                                 changeSelect={this.changeSelect}

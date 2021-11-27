@@ -174,7 +174,7 @@ class DeviceListTabPane extends React.Component {
     }
     deleteDevice=()=>{
         let params={
-            deviceIds:JSON.stringify(this.state.deviceIds),
+            deviceIds:this.state.deviceIds.toString(),
         }
         batchDeleteDevice(params).then(res => {
             if (res.status === '1'&&res.result!=null) {
@@ -260,7 +260,7 @@ class DeviceListTabPane extends React.Component {
             currentPage: this.params.page,
             pageSize: this.params.pageSize,
             "map[deviceName]":this.state.nameType=='1'?this.state.name:null,
-            "map[deviceCName]":this.state.nameType=='2'?this.state.name:null,
+            "map[deviceCname]":this.state.nameType=='2'?this.state.name:null,
             "map[state]":this.state.state,
             "map[label]":JSON.stringify(this.state.cfromList),
             "map[productId]":this.props.productId
@@ -273,7 +273,17 @@ class DeviceListTabPane extends React.Component {
                 });
                 this.setState({
                     dataSource,
-                    total:res.result.recordCount
+                    pagination: {
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        hideOnSinglePage: false,
+                        pageSizeOptions: ['10', '20', '30'],
+                        pageSize: this.params.pageSize,
+                        current: this.params.page,
+                        total: res.result.recordCount,
+                        onChange: (page, pageSize) => this.changePage(page, pageSize),
+                        showTotal: (total) => `共${total}条`,
+                    }
                 })
             }else{
                 this.setState({
@@ -286,7 +296,7 @@ class DeviceListTabPane extends React.Component {
     enableOrDisable=()=>{
         let params={
             disState:this.state.disState,
-            deviceIds:JSON.stringify(this.state.deviceIds),
+            deviceIds:this.state.deviceIds,
         }
         deviceBatchOpenOrClose(params).then(res => {
             if (res.status === '1') {

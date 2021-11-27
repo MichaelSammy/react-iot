@@ -319,7 +319,7 @@ export default class Permission extends React.Component {
                         ></FunctionDefinition>
                     </TabPane>
                     <TabPane tab="数据解析" key="2">
-                        <DataAnalysis></DataAnalysis>
+                        <DataAnalysis  productInfo={this.state.productInfo}></DataAnalysis>
                     </TabPane>
                     <TabPane tab="Topic列表" key="3">
                         <TopicListTab productInfo={this.state.productInfo}></TopicListTab>

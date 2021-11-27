@@ -9,6 +9,7 @@ const { RangePicker } = DatePicker;
 const FormItem = Form.Item
 class BaseForm extends React.Component {
     formRef = React.createRef();
+
     componentWillReceiveProps(nextProps){
         this.formRef.current.setFieldsValue({
             label:nextProps.label
@@ -18,7 +19,7 @@ class BaseForm extends React.Component {
         const data = this.props.data;
         const list = [];
         data.forEach((item, index) => {
-            const {type, field, label, initialValue, width,bordered, placeholder, showTime,open,startTime,endTime,noDropDown} = item;
+            const {type, field, label, initialValue, width,bordered, placeholder, showTime,open,startTime,endTime,noDropDown,disabled} = item;
             switch (type) {
                 case 'input':
                     const inputItem = <FormItem key={field} name={field} label={label} initialValue={initialValue}>
@@ -52,7 +53,7 @@ class BaseForm extends React.Component {
                     }else{
                          selectItem = <FormItem key={field} name={field} label={label}  initialValue={initialValue}>
                             {
-                                <Select style={{width}} open={open} placeholder={placeholder} onChange={(value) => {
+                                <Select style={{width}} open={open}disabled={disabled} placeholder={placeholder} onChange={(value) => {
                                     this.changeSelect(value,field);
                                 }}>
                                     {getOptionsList(item.list)}

@@ -2,10 +2,8 @@ import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
 import IconFont from "../../../../utils/IconFont";
 import BaseForm from "../../../../common/BaseForm";
-import request from "../../../../api/request";
 import {fullScreen,exitFullScreen} from "../../../../utils";
 import './../index.less'
-
 const {TextArea} = Input
 const FormItem = Form.Item
 
@@ -16,9 +14,39 @@ class DataAnalysis extends React.Component {
             // initialValue: '',
             label: '',
             placeholder: '脚本语言',
-            list: [{id: '1', label: 'JavaScript（ECMAScript 5'}],
-            field: 'power',
+            list: [{id: 1, label: 'java'},{id: 2, label: 'javascript'},{id: 3, label: 'python'}],
+            field: 'scriptLanguage',
             width: '200px'
+        }
+    ]
+    data1=[
+        {
+            type: 'select',
+            // initialValue: '',
+            label: '',
+            placeholder: '模拟类型',
+            list: [{id: 1, label: '自定义'}],
+            field:"simulationType",
+            width: '200px'
+        },
+        {
+            type: 'select',
+            // initialValue: '',
+            label: '',
+            placeholder: '请选择设备',
+            list: [{id: 1, label: '设备1'}],
+            field: "deviceId",
+            width: '200px'
+        },
+        {
+            type: 'select',
+            // initialValue: '',
+            label: '',
+            placeholder: 'Topic：请选择模拟输入Topic',
+            list: [],
+            field: "topic",
+            width: '200px',
+            disabled:true
         }
     ]
     state = {
@@ -114,7 +142,7 @@ class DataAnalysis extends React.Component {
                     </div>
                     <div className="data-analysis-result-search">
                         {this.state.showScript && <BaseForm
-                            data={this.data}
+                            data={this.data1}
                             handleSearch={this.handleSearch}
                             show={false}
                         />

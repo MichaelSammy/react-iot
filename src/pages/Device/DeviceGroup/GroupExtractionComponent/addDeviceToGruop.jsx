@@ -72,6 +72,9 @@ class AddDeviceToGruop extends React.Component {
                 })
                 res.result.reverse();
                 this.data[0].list=res.result
+                this.setState({
+                    list:res.result
+                })
             }
         })
     }
@@ -140,7 +143,7 @@ class AddDeviceToGruop extends React.Component {
             pageSize: this.params.pageSize,
             "map[groupId]":this.props.deviceGroupInfo.id,
             "map[deviceName]":this.state.name,
-            "map[productId]":this.state.productId
+            "map[productTypeId]":this.state.productId
         }
         getDeviceListOutGroup(params).then(res => {
             if (res.status === '1'&&res.result!=null) {
@@ -242,6 +245,7 @@ class AddDeviceToGruop extends React.Component {
                                 handleSearch={this.handleSearch}
                                 changeSelect={this.changeSelect}
                                 show={false}
+                                list={this.state.list}
                             />
                         </div>
                     </div>
