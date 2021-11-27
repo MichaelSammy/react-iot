@@ -25,7 +25,7 @@ class DeviceListTabPane extends React.Component {
     }
     params = {
         page: 1,
-        pageSize: 5
+        pageSize: 10
     }
     data = [
         {
@@ -60,7 +60,7 @@ class DeviceListTabPane extends React.Component {
             label: '',
             placeholder: '请选择产品标签',
             list: [{id: '1', label: '超级管理员',value:'1'}, {id: '2', label: '普通用户',value:'2'}],
-            field: 'productLabel',
+            field: 'label',
             width: '150px',
             open:false
         }
@@ -244,7 +244,7 @@ class DeviceListTabPane extends React.Component {
         })
         this.setState({
             cfromList:data,
-            productLabel:label.length>0?label.join(";"):null
+            label:label.length>0?label.join(";"):null
         })
         this.params.page=1;
         setTimeout(()=>{
@@ -410,7 +410,7 @@ class DeviceListTabPane extends React.Component {
                 <div className="function-search-from" style={{display: 'flex', justifyContent: 'space-between'}}>
                     <BaseForm
                         data={this.data}
-                        productLabel={this.state.productLabel}
+                        label={this.state.label}
                         handleSearch={this.handleSearch}
                         changeSelect={this.changeSelect}
                         clickSelect={this.clickSelect}

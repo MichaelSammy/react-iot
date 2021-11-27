@@ -87,7 +87,7 @@ class BatchListTabPane extends React.Component {
         const columns = [
             {
                 title: '产品名称',
-                dataIndex: 'productName',
+                dataIndex: 'name',
                 align: 'left'
             },
             {

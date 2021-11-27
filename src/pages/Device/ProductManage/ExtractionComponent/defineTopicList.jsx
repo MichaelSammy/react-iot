@@ -60,10 +60,13 @@ class DefineTopicList extends React.Component {
         this.requestList();
     }
     //请求列表
-    requestList() {
+    requestList=()=> {
         let  params= {
-            page: this.params.page,
-            pageSize: this.params.pageSize
+            currentPage: this.params.page,
+            pageSize: this.params.pageSize,
+            "map[productId]":this.props.productInfo.id,
+            "map[productKey]":this.props.productInfo.productKey,
+            "map[topicType]":3
         }
         selectProductTopics(params).then(res => {
             if (res.status === '1'&&res.result!=null) {
@@ -113,9 +116,8 @@ class DefineTopicList extends React.Component {
         })
     }
     deleteTopic(){
-        let params={
-            ids:this.state.modelInfo.id
-        }
+        let params=[];
+        params.push(this.state.modelInfo.id)
         delProductTopicsByIds(params).then(res => {
             if (res.status === '1') {
                 messageGlobal('success',res.msg)
@@ -166,12 +168,18 @@ class DefineTopicList extends React.Component {
             },
             {
                 title: '操作权限',
-                dataIndex: 'accessMode',
                 align: 'left',
+                render:(item)=>{
+                    return(
+                    <div>
+                        {item.accessMode==1?'发布':(item.accessMode==2?'订阅':"发布和订阅")}
+                    </div>
+                    )
+                }
             },
             {
                 title: 'remark',
-                dataIndex: 'createUser',
+                dataIndex: 'remark',
                 align: 'left',
             },
             {
@@ -214,7 +222,7 @@ class DefineTopicList extends React.Component {
                             <Button key="back" onClick={this.closeSubmit}>取消</Button>
                         ]}
                     >
-                        <DefineTopicClass detail={this.state.detail} onRef={this.onRef} closeSubmit={this.closeSubmit}> </DefineTopicClass>
+                        <DefineTopicClass detail={this.state.detail} productInfo={this.props.productInfo} onRef={this.onRef} closeSubmit={this.closeSubmit} requestList={this.requestList}> </DefineTopicClass>
                     </Modal>
                 }
                 <BaseModel that={this}

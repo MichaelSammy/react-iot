@@ -3,19 +3,10 @@ import {Card, Modal, Form, Input, Button, List, Breadcrumb, Pagination} from "an
 import BaseForm from '../../../common/BaseForm'
 import BaseModel from '../../../common/BaseModel'
 import AddGroup from './AddGroup'
-import IconFont from '../../../utils/IconFont';
-import request from '../../../api/request'
 import './index.less'
 import {filterRoutes, getBreadItem, messageGlobal, updateSelectedItem} from "../../../utils";
 import Etable from "../../../common/Etable";
-import AddGroupLabel from "./GroupExtractionComponent/addGroupLabel"
-import {
-    batchDeleteDevice,
-    deleteDeviceGroupById,
-    getDeviceBatchList,
-    getUserList,
-    selectDeviceListByPage
-} from "../../../api/api";
+import {deleteDeviceGroupById, selectDeviceListByPage} from "../../../api/api";
 import AddLabel from "../ProductManage/ExtractionComponent/addLabel";
 import * as qs from "qs";
 
@@ -23,7 +14,7 @@ const FormItem = Form.Item
 export default class DeviceGroup extends React.Component {
     params = {
         page: 1,
-        pageSize: 5
+        pageSize: 10
     }
     data = [
         {
@@ -36,12 +27,12 @@ export default class DeviceGroup extends React.Component {
         },
         {
             type: 'select',
-            noDropDown:true,
             initialValue: null,
+            noDropDown:true,
             label: '',
             placeholder: '请选择产品标签',
             list: [{id: '1', label: '超级管理员',value:'1'}, {id: '2', label: '普通用户',value:'2'}],
-            field: 'productLabel',
+            field: 'label',
             width: '150px',
             open:false
         }
@@ -55,7 +46,7 @@ export default class DeviceGroup extends React.Component {
             pageSizeOptions: ['10', '20', '30'],
             pageSize: this.params.pageSize,
             current: this.params.page,
-            total: this.params.total,
+            total: 0,
             onChange: (page, pageSize) => this.changePage(page, pageSize),
             showTotal: (total) => `共${total}条`,
         },
@@ -112,12 +103,14 @@ export default class DeviceGroup extends React.Component {
     }
 
     //请求列表
-    requestList() {
+    requestList=()=> {
         let  params= {
-            name:this.state.name,
+            map:{
+                name:this.state.name,
+                label:this.state.cfromList
+            },
             currentPage: this.params.page,
             pageSize: this.params.pageSize,
-            label:this.state.cfromList
         }
         selectDeviceListByPage(params).then(res => {
             if (res.status === '1'&&res.result!=null) {
@@ -127,12 +120,24 @@ export default class DeviceGroup extends React.Component {
                 });
                 this.setState({
                     dataSource,
-                    total:res.result.recordCount
+                    pagination: {
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        hideOnSinglePage: false,
+                        pageSizeOptions: ['10', '20', '30'],
+                        pageSize: this.params.pageSize,
+                        current: this.params.page,
+                        total: res.result.recordCount,
+                        onChange: (page, pageSize) => this.changePage(page, pageSize),
+                        showTotal: (total) => `共${total}条`,
+                    }
                 })
             }else{
                 this.setState({
                     dataSource:[],
-                    total:0
+                    pagination:{
+                        total:0
+                    }
                 })
             }
         })
@@ -183,7 +188,7 @@ export default class DeviceGroup extends React.Component {
         })
         this.setState({
             cfromList:data,
-            productLabel:label.length>0?label.join(";"):null
+            label:label.length>0?label.join(";"):null
         })
         this.params.page=1;
         setTimeout(()=>{
@@ -265,6 +270,7 @@ export default class DeviceGroup extends React.Component {
                     <div className="product-list-card-search">
                         <div style={{float: 'left'}}>
                             <BaseForm
+                                label={this.state.label}
                                 data={this.data}
                                 show={false}
                                 handleSearch={this.handleSearch}
@@ -295,7 +301,7 @@ export default class DeviceGroup extends React.Component {
                            submitCancel={this.submitCancel}
                            content={this.state.baseModelContent}
                 ></BaseModel>
-                <AddGroup onRef={this.addGroupRef} title='创建分组'></AddGroup>
+                <AddGroup onRef={this.addGroupRef} requestList={()=>this.requestList()} title='创建分组'></AddGroup>
                 <AddLabel onRef={this.addLabelRef} setSearchLabel={this.setSearchLabel}></AddLabel>
             </div>
         )

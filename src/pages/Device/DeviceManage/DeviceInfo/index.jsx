@@ -13,7 +13,7 @@ import DeviceShadowTabPane from '../DeviceExtractionComponent/deviceShadowTabPan
 import EditDevice from '../EditDevice/editDevice'
 import '../../ProductManage/index.less'
 import * as qs from "qs";
-import {getDeviceInfo, getProductInfo} from "../../../../api/api";
+import {getDeviceInfo} from "../../../../api/api";
 import AddLabel from "../../ProductManage/ExtractionComponent/addLabel";
 
 const {TabPane} = Tabs;
@@ -34,7 +34,7 @@ export default class Permission extends React.Component {
         this.addLabelRefChild.addTag()
     }
     editTag = () => {
-        this.addLabelRefChild.editTag(this.state.deviceInfo.label,this.state.deviceInfo.id)
+        this.addLabelRefChild.editTag(this.state.deviceInfo.label,this.state.deviceInfo.id,"deviceLabel")
     }
     componentDidMount() {
         const deviceInfo = qs.parse(this.props.location.search,{ignoreQueryPrefix: true});

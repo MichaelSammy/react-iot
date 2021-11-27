@@ -71,7 +71,7 @@ export const batchCreateDevice=(params)=> request.POST(config.batchCreateDevice,
 /**设备列表汇总数据**/
 export const getDeviceSummaryList=(params)=> request.GET(config.getDeviceSummaryList,params)
 /**设备（启用、禁用）批量**/
-export const deviceBatchOpenOrClose=(params)=> request.GET(config.deviceBatchOpenOrClose,params)
+export const deviceBatchOpenOrClose=(params)=> request.POST(config.deviceBatchOpenOrClose,params)
 /**获取设备页签-分组列表**/
 export const getDeviceGroupList=(params)=> request.GET(config.getDeviceGroupList,params)
 /**设备单个、批量删除**/
@@ -89,7 +89,7 @@ export const selectDeviceListByGroupId=(params)=> request.GET(config.selectDevic
 /**分页获取设备分组列表**/
 export const selectDeviceListByPage=(params)=> request.POST(config.selectDeviceListByPage,params)
 /**新增修改设备分组标签信息**/
-export const saveOrUpdateDeviceGroupLabel=(params)=> request.GET(config.saveOrUpdateDeviceGroupLabel,params)
+export const saveOrUpdateDeviceGroupLabel=(params)=> request.POST(config.saveOrUpdateDeviceGroupLabel,params)
 /**获取产品类别**/
 export const getProductTypeList=(params)=> request.GET(config.getProductTypeList,params)
 /**根据产品类别 获取物模型详情**/
@@ -103,7 +103,7 @@ export const saveProductTopics=(params)=> request.POST(config.saveProductTopics,
 /**修改自定义Topics**/
 export const updateProductTopics=(params)=> request.POST(config.updateProductTopics,params)
 /**批量删除自定义Topics**/
-export const delProductTopicsByIds=(params)=> request.GET(config.delProductTopicsByIds,params)
+export const delProductTopicsByIds=(params)=> request.POST(config.delProductTopicsByIds,params)
 /**查询自定义Topics列表**/
 export const selectProductTopics=(params)=> request.GET(config.selectProductTopics,params)
 /**获取产品列表-select选择框使用**/
@@ -120,4 +120,6 @@ export const deleteDeviceGroupById=(params)=> request.GET(config.deleteDeviceGro
 /**批量添加设备到分组**/
 export const insertDeviceToGroup=(params)=> request.POST(config.insertDeviceToGroup,params)
 /**批量移除分组内设备**/
-export const deleteDeviceFromGroup=(params)=> request.POST(config.deleteDeviceFromGroup,params)
+export const deleteDeviceToGroup=(params)=> request.POST(config.deleteDeviceToGroup,params)
+/**查询不在设备分组内的设备列表**/
+export const getDeviceListOutGroup=(params)=> request.GET(config.getDeviceListOutGroup,params)

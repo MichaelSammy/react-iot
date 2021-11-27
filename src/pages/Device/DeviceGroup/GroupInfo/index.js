@@ -3,13 +3,12 @@ import {Card, Modal, Form, Input, Button, List, Breadcrumb, Tabs} from "antd";
 import IconFont from '../../../../utils/IconFont';
 import GroupDeviceList from "../GroupExtractionComponent/groupDeviceList"
 import GroupSubscrList from "../GroupExtractionComponent/groupSubscrList"
-import request from '../../../../api/request'
 import {filterRoutes, getBreadItem, updateSelectedItem} from "../../../../utils";
 import AddGroup from '../AddGroup'
-import AddGroupLabel from "../GroupExtractionComponent/addGroupLabel"
 import '../../ProductManage/index.less'
 import * as qs from "qs";
 import {getDeviceGroupInfo, getDeviceInfo} from "../../../../api/api";
+import AddLabel from "../../ProductManage/ExtractionComponent/addLabel";
 
 const {TabPane} = Tabs;
 const FormItem = Form.Item
@@ -18,6 +17,7 @@ export default class Permission extends React.Component {
         deviceGroupInfo: {
             labelList:[]
         },
+        id:"",
     }
 
     componentDidMount() {
@@ -26,6 +26,9 @@ export default class Permission extends React.Component {
             id:deviceGroupInfo.id
         }
         this.getDeviceGroupInfo(params);
+        setTimeout(()=>{
+            this.groupDeviceListRefChild.requestList();
+        },900)
     }
     getDeviceGroupInfo=(params)=>{
         getDeviceGroupInfo(params).then(res => {
@@ -39,14 +42,18 @@ export default class Permission extends React.Component {
     addGroupRef = (ref) => {
         this.addGroupRefChild = ref
     }
-    addGroupLabelRef = (ref) => {
-        this.addGroupLabelRefChild = ref
+    addLabelRef = (ref) => {
+        this.addLabelRefChild = ref
+    }
+    groupDeviceListRef = (ref) => {
+        this.groupDeviceListRefChild=ref;
     }
     addTag = () => {
-        this.addGroupLabelRefChild.addTag()
+
+        this.addLabelRefChild.addTag()
     }
-    editTag = (item) => {
-        this.addGroupLabelRefChild.editTag(item)
+    editTag = () => {
+        this.addLabelRefChild.editTag(this.state.deviceGroupInfo.labelList,this.state.deviceGroupInfo.id,'deviceGroupLabel')
     }
     goBackPreviousPage = () => {
         this.props.history.go(-1)
@@ -161,14 +168,15 @@ export default class Permission extends React.Component {
                 </Card>
                 <Tabs id="product-info-tabs-id" className="product-info-tabs" type="card">
                     <TabPane tab="设备列表" key="1">
-                        <GroupDeviceList></GroupDeviceList>
+                        <GroupDeviceList deviceGroupInfo={this.state.deviceGroupInfo} onRef={this.groupDeviceListRef} getDeviceGroupInfo={()=>this.getDeviceGroupInfo({id:this.state.deviceGroupInfo.id})}></GroupDeviceList>
                     </TabPane>
                     <TabPane tab="分组订阅" key="2">
                         <GroupSubscrList></GroupSubscrList>
                     </TabPane>
                 </Tabs>
                 <AddGroup onRef={this.addGroupRef} title='编辑分组' deviceGroupInfo={this.state.deviceGroupInfo}></AddGroup>
-                <AddGroupLabel onRef={this.addGroupLabelRef}></AddGroupLabel>
+                <AddLabel onRef={this.addLabelRef}
+                          getProductLabelList={()=>this.getDeviceGroupInfo({id:this.state.deviceGroupInfo.id})}></AddLabel>
             </div>
         )
     }

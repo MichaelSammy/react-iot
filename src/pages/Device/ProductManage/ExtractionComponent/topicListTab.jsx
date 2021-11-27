@@ -19,13 +19,13 @@ class TopicListTab extends React.Component {
             <div>
                 <Tabs id="product-info-tabs-id-child" className="product-info-tabs" type="card">
                     <TabPane tab="基础通信 Topic" key="1">
-                        <BasicCommTopic></BasicCommTopic>
+                        <BasicCommTopic  productInfo={this.props.productInfo}></BasicCommTopic>
                     </TabPane>
                     <TabPane tab="物模型通信 Topic" key="2">
-                        <ModelCommTopic></ModelCommTopic>
+                        <ModelCommTopic  productInfo={this.props.productInfo}></ModelCommTopic>
                     </TabPane>
                     <TabPane tab="自定义 Topic" key="3">
-                        <DefineTopicList></DefineTopicList>
+                        <DefineTopicList productInfo={this.props.productInfo}></DefineTopicList>
                     </TabPane>
                 </Tabs>
             </div>

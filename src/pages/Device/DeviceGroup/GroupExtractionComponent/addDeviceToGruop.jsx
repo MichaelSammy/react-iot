@@ -1,25 +1,28 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
-import IconFont from "../../../../utils/IconFont";
 import BaseForm from "../../../../common/BaseForm";
 import Etable from "../../../../common/Etable";
-import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../api/request";
+import {messageGlobal, updateSelectedItem} from "../../../../utils";
 import './../index.less'
-import {getUserList} from "../../../../api/api";
+import {
+    getDeviceListOutGroup,
+    getProductDropDownList,
+    insertDeviceToGroup,
+} from "../../../../api/api";
 
 class AddDeviceToGruop extends React.Component {
     params = {
         page: 1,
-        pageSize: 5
+        pageSize:10
     }
     data = [
         {
             type: 'select',
-            initialValue: '1',
-            placeholder: '请先选择分组',
-            list: [{id: '1', label: '超级管理员'}, {id: '2', label: '普通用户'}],
-            field: 'power',
+            initialValue: null,
+            label: '',
+            placeholder: '全部产品',
+            list: [],
+            field: 'productId',
             width: '130px'
         },
         {
@@ -27,7 +30,7 @@ class AddDeviceToGruop extends React.Component {
             initialValue: '',
             label: '',
             placeholder: '请输入搜索内容',
-            field: 'username',
+            field: 'name',
             width: '336px',
             bordered: true,
         }
@@ -55,12 +58,76 @@ class AddDeviceToGruop extends React.Component {
     }
 
     componentDidMount() {
-        // this.props.onRef(this);
+        this.props.onRef(this);
+        this.getProductList();
         this.requestList();
     }
-
+    getProductList(){
+        getProductDropDownList().then(res => {
+            if (res.status === '1' && res.result != null) {
+                res.result.push({
+                    "id": null,
+                    "label": "全部",
+                    "value": null
+                })
+                res.result.reverse();
+                this.data[0].list=res.result
+            }
+        })
+    }
+    handleSearch = (data) => {
+        this.setState({
+            name:data
+        })
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
+        //日期转换
+        // data.beginTime= data.beginTime.format("YYYY-MM-DD HH:mm:ss");
+        console.log(data)
+    }
+    changeSelect = (data,field) => {
+        if(field=="productId"){
+            this.setState({
+                productId:data
+            })
+        }
+        this.params.page=1;
+        setTimeout(()=>{
+            this.requestList()
+        },100)
+    }
     saveSubmit = async () => {
-        this.props.hideAddDviceToGroupModel()
+        this.batchDeviceToGroup();
+    }
+    batchDeviceToGroup=()=>{
+        if(this.state.rowSelection.selectedRows.length==0){
+            messageGlobal('warning',"请选择设备")
+            return false;
+        }
+        let deviceIds=[];
+        this.state.rowSelection.selectedRows.map((item,index)=>{
+            deviceIds.push(
+                {
+                    groupId:this.props.deviceGroupInfo.id,
+                    deviceId:item.id
+                }
+            )
+        })
+        insertDeviceToGroup(deviceIds).then(res => {
+            if (res.status === '1') {
+                messageGlobal('success',res.msg)
+                this.props.hideAddDviceToGroupModel()
+                this.props.requestList();
+            }
+            this.setState({
+                rowSelection: {
+                    selectedRowKeys: [],
+                    selectedRows: [],
+                },
+            })
+        })
     }
     resetModelFrom = () => {
         this.props.hideAddDviceToGroupModel()
@@ -69,104 +136,36 @@ class AddDeviceToGruop extends React.Component {
     //请求列表
     requestList() {
         let  params= {
-            page: this.params.page,
-            pageSize: this.params.pageSize
+            currentPage: this.params.page,
+            pageSize: this.params.pageSize,
+            "map[groupId]":this.props.deviceGroupInfo.id,
+            "map[deviceName]":this.state.name,
+            "map[productId]":this.state.productId
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                this.params.total = 12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        getDeviceListOutGroup(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    pagination: {
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        hideOnSinglePage: false,
+                        pageSizeOptions: ['10', '20', '30'],
+                        pageSize: this.params.pageSize,
+                        current: this.params.page,
+                        total: res.result.recordCount,
+                        onChange: (page, pageSize) => this.changePage(page, pageSize),
+                        showTotal: (total) => `共${total}条`,
+                    }
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
@@ -195,23 +194,31 @@ class AddDeviceToGruop extends React.Component {
         const columns = [
             {
                 title: '设备名称',
-                dataIndex: 'roleName',
+                dataIndex: 'deviceName',
                 align: 'left'
             },
             {
                 title: '设备ID',
-                dataIndex: 'officeName',
+                dataIndex: 'id',
                 align: 'left',
             },
             {
                 title: '节点类型',
-                dataIndex: 'createTime',
                 align: 'left',
+                render: (item) => {
+                    return(
+                        item.nodeType=="1"? "设备":(item.nodeType=="2"?"网关":"子设备")
+                    )
+                }
             },
             {
                 title: '状态',
-                dataIndex: 'remark',
                 align: 'left',
+                render: (item) => {
+                    return(
+                        item.nodeType=="1"? "未激活":(item.nodeType=="2"?"在线":"断线")
+                    )
+                }
             },
         ];
         return (
@@ -233,6 +240,7 @@ class AddDeviceToGruop extends React.Component {
                             <BaseForm
                                 data={this.data}
                                 handleSearch={this.handleSearch}
+                                changeSelect={this.changeSelect}
                                 show={false}
                             />
                         </div>

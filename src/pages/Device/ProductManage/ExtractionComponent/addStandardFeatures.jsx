@@ -60,7 +60,6 @@ class AddStandardFeatures extends React.Component {
                 fieldType:data
             })
         }
-        this.params.page=1;
         setTimeout(()=>{
             this.requestList()
         },100)

@@ -32,7 +32,7 @@ export default class Permission extends React.Component {
             label: '',
             placeholder: '请选择产品标签',
             list: [{id: '1', label: '超级管理员',value:'1'}, {id: '2', label: '普通用户',value:'2'}],
-            field: 'productLabel',
+            field: 'label',
             width: '150px',
             open:false
         }
@@ -44,7 +44,7 @@ export default class Permission extends React.Component {
         title: '',
         dataSource:[],
         cfromList:[],
-        productLabel:null,
+        label:null,
         total:0,
     }
     onRef = (ref) => {
@@ -73,7 +73,7 @@ export default class Permission extends React.Component {
         })
         this.setState({
             cfromList:data,
-            productLabel:label.length>0?label.join(";"):null
+            label:label.length>0?label.join(";"):null
         })
         this.params.page=1;
         setTimeout(()=>{
@@ -222,7 +222,7 @@ export default class Permission extends React.Component {
                     <div className="product-list-card-search">
                         <div style={{float: 'left'}}>
                             <BaseForm
-                                productLabel={this.state.productLabel}
+                                label={this.state.label}
                                 data={this.data}
                                 show={false}
                                 handleSearch={this.handleSearch}

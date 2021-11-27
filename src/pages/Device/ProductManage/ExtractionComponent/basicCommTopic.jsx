@@ -1,11 +1,9 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
-import IconFont from "../../../../utils/IconFont";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../api/request";
 import './../index.less'
-import {getUserList} from "../../../../api/api";
+import {selectProductTopics} from "../../../../api/api";
 
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -47,104 +45,26 @@ class BasicCommTopic extends React.Component {
     //请求列表
     requestList() {
         let  params= {
-            page: this.params.page,
-            pageSize: this.params.pageSize
+            currentPage: this.params.page,
+            pageSize: this.params.pageSize,
+            "map[productId]":this.props.productInfo.id,
+            "map[productKey]":this.props.productInfo.productKey,
+            "map[topicType]":1
         }
-        getUserList(params).then(res => {
-            if (res.code === 1) {
-                this.params.total = 12;
-                let dataSource = [
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                    {
-                        roleName: '超级管理员',
-                        officeName: '物联网部门 ',
-                        createUser: '张三',
-                        createTime: '2021-07-26 16:56:21',
-                        'remark': '备注'
-                    },
-                ];
-                dataSource = dataSource.map((item, index) => {
+        selectProductTopics(params).then(res => {
+            if (res.status === '1'&&res.result!=null) {
+                let dataSource = res.result.resultList.map((item, index) => {
                     item.key = index;
                     return item;
                 });
                 this.setState({
-                    dataSource
+                    dataSource,
+                    total:res.result.recordCount
+                })
+            }else{
+                this.setState({
+                    dataSource:[],
+                    total:0
                 })
             }
         })
@@ -192,30 +112,30 @@ class BasicCommTopic extends React.Component {
     render() {
         const columns = [
             {
-                title: '订阅类型',
-                dataIndex: 'roleName',
+                title: '功能',
+                dataIndex: 'topicFunction',
                 align: 'left'
             },
             {
-                title: '订阅消息',
-                dataIndex: 'officeName',
+                title: 'Topic类',
+                dataIndex: 'topicName',
                 align: 'left',
             },
             {
-                title: '创建时间',
-                dataIndex: 'createUser',
+                title: '操作权限',
                 align: 'left',
-            },
-            {
-                title: '操作',
-                align: 'left',
-                render: (item) => {
-                    return (
-                        <div className="function-table-option-buttion">
-                            <div className="option-button" onClick={this.editBasicCommTopic.bind(this, item)}>编辑</div>
+                render:(item)=>{
+                    return(
+                        <div>
+                            {item.accessMode==1?'发布':(item.accessMode==2?'订阅':"发布和订阅")}
                         </div>
                     )
                 }
+            },
+            {
+                title: '描述',
+                dataIndex: 'remark',
+                align: 'left',
             }
         ];
         return (

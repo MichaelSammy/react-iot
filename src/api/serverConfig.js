@@ -4,7 +4,7 @@ if (!ServerConfig) {
         /**开发环境**/
         opensense_url: "http://114.116.119.117:9086/",
         // opensense_url: "http://10.17.86.108:9087/",
-        // mock_opensense_url:"http://114.116.119.117:38080/app/mock/16/",
+        // opensense_url:"http://114.116.119.117:38080/app/mock/16/",
     }
 }
 
@@ -49,80 +49,82 @@ export default {
     saveOrUpdateLabel:ServerConfig.opensense_url+"rest/product/saveLabel",
 
     /**获取设备批次列表**/
-    getDeviceBatchList:ServerConfig.mock_opensense_url+"rest/device/getDeviceBatchList",
+    getDeviceBatchList:ServerConfig.opensense_url+"rest/device/getDeviceBatchList",
     /**设备管理列表**/
-    getDeviceList:ServerConfig.mock_opensense_url+"rest/device/getDeviceList",
+    getDeviceList:ServerConfig.opensense_url+"rest/device/getDeviceList",
     /**设备详情**/
-    getDeviceInfo:ServerConfig.mock_opensense_url+"rest/device/getDeviceInfo",
+    getDeviceInfo:ServerConfig.opensense_url+"rest/device/getDeviceInfo",
     /**设备新增**/
-    addDevice:ServerConfig.mock_opensense_url+"rest/device/save",
+    addDevice:ServerConfig.opensense_url+"rest/device/save",
     /**设备编辑**/
-    updateDevice:ServerConfig.mock_opensense_url+"rest/device/update",
+    updateDevice:ServerConfig.opensense_url+"rest/device/update",
     /**添加设备标签**/
-    saveDeviceLabel:ServerConfig.mock_opensense_url+"/rest/device/saveLabel",
+    saveDeviceLabel:ServerConfig.opensense_url+"/rest/device/saveLabel",
     /**获取设备页签-属性列表**/
-    getDeviceTabPropertyInfo:ServerConfig.mock_opensense_url+"rest/device/getDeviceTabPropertyInfo",
+    getDeviceTabPropertyInfo:ServerConfig.opensense_url+"rest/device/getDeviceTabPropertyInfo",
     /**获取设备页签-事件列表**/
-    getDeviceTabEventInfo:ServerConfig.mock_opensense_url+"rest/device/getDeviceTabEventInfo",
+    getDeviceTabEventInfo:ServerConfig.opensense_url+"rest/device/getDeviceTabEventInfo",
     /**获取设备页签-服务列表**/
-    getDeviceTabServerInfo:ServerConfig.mock_opensense_url+"rest/device/getDeviceTabServerInfo",
+    getDeviceTabServerInfo:ServerConfig.opensense_url+"rest/device/getDeviceTabServerInfo",
     /**获取设备页签-子设备列表**/
 
     /**获取设备页签-指令下发列表**/
-    getDeviceTabCommandSend:ServerConfig.mock_opensense_url+"rest/device/getDeviceTabCommandSend",
+    getDeviceTabCommandSend:ServerConfig.opensense_url+"rest/device/getDeviceTabCommandSend",
     /**批量添加设备（自动生成/手动导入）**/
-    batchCreateDevice:ServerConfig.mock_opensense_url+"rest/device/batchCreate",
+    batchCreateDevice:ServerConfig.opensense_url+"rest/device/batchCreate",
     /**设备列表汇总数据**/
-    getDeviceSummaryList:ServerConfig.mock_opensense_url+"rest/device/getDeviceSummaryList",
+    getDeviceSummaryList:ServerConfig.opensense_url+"rest/device/getDeviceSummaryList",
     /**设备（启用、禁用）批量**/
-    deviceBatchOpenOrClose:ServerConfig.mock_opensense_url+"rest/device/deviceBatchOpenOrClose",
+    deviceBatchOpenOrClose:ServerConfig.opensense_url+"rest/device/deviceBatchOpenOrClose",
     /**获取设备页签-分组列表**/
-    getDeviceGroupList:ServerConfig.mock_opensense_url+"rest/device/getDeviceGroupList",
+    getDeviceGroupList:ServerConfig.opensense_url+"rest/device/getDeviceGroupList",
     /**设备单个、批量删除**/
-    batchDeleteDevice:ServerConfig.mock_opensense_url+"rest/device/batchDelete",
+    batchDeleteDevice:ServerConfig.opensense_url+"rest/device/batchDelete",
     /**添加设备到分组**/
-    saveDeviceGoGroup:ServerConfig.mock_opensense_url+"rest/device/saveDeviceGoGroup",
+    saveDeviceGoGroup:ServerConfig.opensense_url+"rest/device/saveDeviceGoGroup",
     /**添加设备分组**/
-    addDeviceGroup:ServerConfig.mock_opensense_url+"rest/deviceGroup/insertGroup",
+    addDeviceGroup:ServerConfig.opensense_url+"rest/deviceGroup/insertGroup",
     /**修改设备分组**/
-    updateDeviceGroup:ServerConfig.mock_opensense_url+"rest/deviceGroup/updateGroup",
+    updateDeviceGroup:ServerConfig.opensense_url+"rest/deviceGroup/updateGroup",
     /**获取设备分组详情**/
-    getDeviceGroupInfo:ServerConfig.mock_opensense_url+"rest/deviceGroup/selectById",
+    getDeviceGroupInfo:ServerConfig.opensense_url+"rest/deviceGroup/selectById",
     /**分组下设备列表**/
-    selectDeviceListByGroupId:ServerConfig.mock_opensense_url+"rest/deviceGroup/selectDeviceListByGroupId",
+    selectDeviceListByGroupId:ServerConfig.opensense_url+"rest/deviceGroup/selectDeviceListByGroupId",
     /**分页获取设备分组列表**/
-    selectDeviceListByPage:ServerConfig.mock_opensense_url+"rest/deviceGroup/selectDeviceListByPage",
+    selectDeviceListByPage:ServerConfig.opensense_url+"rest/deviceGroup/selectDeviceListByPage",
     /**新增修改设备分组标签信息**/
-    saveOrUpdateDeviceGroupLabel:ServerConfig.mock_opensense_url+"rest/deviceGroup/insertGroupLabel",
+    saveOrUpdateDeviceGroupLabel:ServerConfig.opensense_url+"rest/deviceGroup/insertGroupLabel",
     /**获取产品类别**/
-    getProductTypeList:ServerConfig.mock_opensense_url+"rest/productPublic/getProductTypeList",
+    getProductTypeList:ServerConfig.opensense_url+"rest/productPublic/getProductTypeList",
     /**根据产品类别 获取物模型详情**/
-    getProductDetailList:ServerConfig.mock_opensense_url+"rest/productPublic/getProductDetailList",
+    getProductDetailList:ServerConfig.opensense_url+"rest/productPublic/getProductDetailList",
     /**添加标准功能点**/
-    saveProductDetail:ServerConfig.mock_opensense_url+"rest/productPublic/saveProductDetail",
+    saveProductDetail:ServerConfig.opensense_url+"rest/productPublic/saveProductDetail",
     /**批量删除标准功能点**/
-    delProductDetail:ServerConfig.mock_opensense_url+"rest/productPublic/delProductDetail",
+    delProductDetail:ServerConfig.opensense_url+"rest/productPublic/delProductDetail",
     /**保存自定义Topics**/
-    saveProductTopics:ServerConfig.mock_opensense_url+"rest/productTopics/saveProductTopics",
+    saveProductTopics:ServerConfig.opensense_url+"rest/productTopics/saveProductTopics",
     /**修改自定义Topics**/
-    updateProductTopics:ServerConfig.mock_opensense_url+"rest/productTopics/updateProductTopics",
+    updateProductTopics:ServerConfig.opensense_url+"rest/productTopics/updateProductTopics",
     /**批量删除自定义Topics**/
-    delProductTopicsByIds:ServerConfig.mock_opensense_url+"rest/productTopics/delProductTopicsByIds",
+    delProductTopicsByIds:ServerConfig.opensense_url+"rest/productTopics/delProductTopicsByIds",
     /**查询自定义Topics列表**/
-    selectProductTopics:ServerConfig.mock_opensense_url+"rest/productTopics/selectProductTopics",
+    selectProductTopics:ServerConfig.opensense_url+"rest/productTopics/selectProductTopics",
     /**获取产品列表-select选择框使用**/
-    getProductDropDownList:ServerConfig.mock_opensense_url+"rest/product/getProductDropDownList",
+    getProductDropDownList:ServerConfig.opensense_url+"rest/product/getProductDropDownList",
     /**
      * 字典表
      * iot_product_category ——>产品类别
      * iot_industry_name---->行业名称
      * iot_appli_scenario----->应用场景
      * **/
-    getSysDictList:ServerConfig.mock_opensense_url+"rest/sysDict/getSysDictList",
+    getSysDictList:ServerConfig.opensense_url+"rest/sysDict/getSysDictList",
     /**删除设备分组**/
-    deleteDeviceGroupById:ServerConfig.mock_opensense_url+"rest/deviceGroup/deleteGroupById",
+    deleteDeviceGroupById:ServerConfig.opensense_url+"rest/deviceGroup/deleteGroupById",
     /**批量添加设备到分组**/
-    insertDeviceToGroup:ServerConfig.mock_opensense_url+"rest/deviceGroup/insertDeviceToGroup",
+    insertDeviceToGroup:ServerConfig.opensense_url+"rest/deviceGroup/insertDeviceToGroup",
     /**批量移除分组内设备**/
-    deleteDeviceFromGroup:ServerConfig.mock_opensense_url+"rest/deviceGroup/deleteDeviceFromGroup"
+    deleteDeviceToGroup:ServerConfig.opensense_url+"rest/deviceGroup/deleteDeviceToGroup",
+    /**查询不在设备分组内的设备列表**/
+    getDeviceListOutGroup:ServerConfig.opensense_url+"rest/device/getDeviceListOutGroup",
 }

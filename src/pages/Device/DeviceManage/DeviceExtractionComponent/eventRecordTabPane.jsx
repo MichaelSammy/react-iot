@@ -69,7 +69,7 @@ export default class EventRecordTabPane extends React.Component {
         let  params= {
             currentPage: this.params.page,
             pageSize: this.params.pageSize,
-            "map[deviceId]":this.props.deviceInfo.id,
+            "map[deviceSecret]":this.props.deviceInfo.deviceSecret,
             "map[productId]":this.props.deviceInfo.productId,
             "map[startTime]":this.state.startTime,
             "map[endTime]":this.state.endTime,

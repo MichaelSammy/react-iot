@@ -3,7 +3,7 @@ import {Card, Modal, Form, Input, Button, Select} from "antd";
 import BaseModel from "../../../../common/BaseModel";
 import IconFont from '../../../../utils/IconFont';
 import {messageGlobal} from "../../../../utils";
-import {saveOrUpdateLabel} from "../../../../api/api";
+import {saveOrUpdateDeviceGroupLabel, saveOrUpdateDeviceLabel, saveOrUpdateLabel} from "../../../../api/api";
 
 const FormItem = Form.Item
 
@@ -16,7 +16,7 @@ class AddLabel extends React.Component {
         title: '',
         visibleBaseModel: false,
         baseModelContent: '是否删除？',
-        productId:'',
+        id:'',
     }
     componentDidMount() {
         this.props.onRef(this)
@@ -56,12 +56,13 @@ class AddLabel extends React.Component {
             title: '新增标签'
         })
     }
-    editTag = (item,id) => {
+    editTag = (item,id,type) => {
         this.setState({
             formList: item.length==0?this.state.formList:item,
             addLabelVisible: true,
             title: '编辑标签',
-            productId:id,
+            id:id,
+            type:type
         })
     }
     saveSubmit = async () => {
@@ -74,18 +75,42 @@ class AddLabel extends React.Component {
             }
         })
         if(nextStep){
-            if(this.state.isSearchLabel==false){//标签新增修改
-                let params={
-                    productId:this.state.productId,
-                    list:this.state.formList
-                }
-                saveOrUpdateLabel(params).then(res => {
-                    if (res.status === '1') {
-                        messageGlobal('success',"标签修改成功！");
-                        this.props.getProductLabelList(params)
+            if(this.state.isSearchLabel==false) {//标签新增修改
+                if (this.state.type == "productLabel") {//产品标签
+                    let params = {
+                        productId: this.state.id,
+                        list: this.state.formList
                     }
-                })
-            }else{//根据标签筛选数据
+                    saveOrUpdateLabel(params).then(res => {
+                        if (res.status === '1') {
+                            messageGlobal('success', "标签修改成功！");
+                            this.props.getProductLabelList(params)
+                        }
+                    })
+                } else if(this.state.type == "deviceGroupLabel"){
+                    let params=this.state.formList;
+                    this.state.formList.map((item)=>{
+                        item.groupId=this.state.id
+                    })
+                    saveOrUpdateDeviceGroupLabel(params).then(res => {//分组标签
+                        if (res.status === '1') {
+                            messageGlobal('success', "标签修改成功！");
+                            this.props.getProductLabelList(params)
+                        }
+                    })
+                  }else{//deviceLabel
+                    let params = {
+                        deviceId: this.state.id,
+                        list: this.state.formList
+                    }
+                    saveOrUpdateDeviceLabel(params).then(res => {//设备标签
+                        if (res.status === '1') {
+                            messageGlobal('success', "标签修改成功！");
+                            this.props.getProductLabelList(params)
+                        }
+                    })
+                 }
+                } else{//根据标签筛选数据
                 this.props.setSearchLabel(this.state.formList)
             }
 
@@ -103,16 +128,16 @@ class AddLabel extends React.Component {
     }
     addTagColumn = () => {
         const formList=this.state.formList;
-        formList[this.state.formList.length]={productId:this.state.productId,key:'',value:''};
+        formList[this.state.formList.length]={id:this.state.id,key:'',value:''};
         this.setState({formList})
         
     }
     onChange(type,index,e){
         let formList=this.state.formList;
         if(type=='key'){
-            formList[index]={productId:this.state.productId,key:e.target.value,value:formList[index].value};
+            formList[index]={id:this.state.id,key:e.target.value,value:formList[index].value};
         }else{
-            formList[index]={productId:this.state.productId,key:formList[index].key,value:e.target.value};
+            formList[index]={id:this.state.id,key:formList[index].key,value:e.target.value};
         }
         this.setState({ formList })
     }

@@ -1,10 +1,9 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, List, Breadcrumb, Pagination} from "antd";
 import IconFont from '../../../../utils/IconFont';
-import request from '../../../../api/request'
 import '../DeviceInfo/deviceInfo.less'
 import DeviceHistoryData from './deviceHistoryData'
-import {getDeviceBatchList, getDeviceTabPropertyInfoList, getUserList} from "../../../../api/api";
+import {getDeviceTabPropertyInfoList} from "../../../../api/api";
 
 const FormItem = Form.Item
 export default class DeviceAttributeTabPane extends React.Component {
@@ -33,7 +32,7 @@ export default class DeviceAttributeTabPane extends React.Component {
             page: this.params.page,
             pageSize: this.params.pageSize,
             "map[deviceId]":this.props.deviceInfo.id,
-            "map[productId]":this.props.deviceInfo.productId,
+            "map[deviceSecret]":this.props.deviceInfo.deviceSecret,
         }
         getDeviceTabPropertyInfoList(params).then(res => {
             if (res.status === '1'&&res.result!=null) {

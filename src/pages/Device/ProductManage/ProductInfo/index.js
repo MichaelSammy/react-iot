@@ -149,7 +149,7 @@ export default class Permission extends React.Component {
         this.addLabelRefChild.addTag()
     }
     editTag = () => {
-        this.addLabelRefChild.editTag(this.state.productLabelList,this.state.productInfo.id)
+        this.addLabelRefChild.editTag(this.state.productLabelList,this.state.productInfo.id,"productLabel")
     }
     saveSubmit = () => {
         this.child.handleSubmit('info');
@@ -322,7 +322,7 @@ export default class Permission extends React.Component {
                         <DataAnalysis></DataAnalysis>
                     </TabPane>
                     <TabPane tab="Topic列表" key="3">
-                        <TopicListTab></TopicListTab>
+                        <TopicListTab productInfo={this.state.productInfo}></TopicListTab>
                     </TabPane>
                     <TabPane tab="数据订阅" key="5">
                         <DataSubscribe></DataSubscribe>

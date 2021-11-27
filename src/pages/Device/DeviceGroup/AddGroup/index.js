@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio, Drawer} from "antd";
 import './../index.less'
-import {addDevice, addDeviceGroup, updateDeviceGroup} from "../../../../api/api";
+import {addDeviceGroup, updateDeviceGroup} from "../../../../api/api";
 import {messageGlobal} from "../../../../utils";
 
 const {Option} = Select
@@ -31,13 +31,15 @@ class AddGroup extends React.Component {
             console.log('成功')
             console.log(values)
             if(this.props.deviceGroupInfo){
-                values.id=this.props.deviceGroupInfo.id;
                 this.updateDeviceGroup(values)
                 console.log('编辑');
             }else{
                 this.addDeviceGroup(values)
                 console.log('新增');
             }
+            setTimeout(()=>{
+                this.props.requestList();
+            },600)
         }).catch((errInfo) => {　　// 如果有字段没听过校验，会走catch，里面可以打印所有校验失败的信息
             console.log('失败')
             console.log(errInfo)
@@ -45,6 +47,9 @@ class AddGroup extends React.Component {
     }
     updateDeviceGroup = async (values) => {
         values.createBy="1"
+        values.parentId="0";
+        values.parentIds="0";
+        values.id=this.props.deviceGroupInfo.id;
         updateDeviceGroup(values).then(res => {
             if(res.status==1){
                 messageGlobal('success',res.msg);
@@ -56,7 +61,9 @@ class AddGroup extends React.Component {
         })
     }
     addDeviceGroup = async (values) => {
-        values.createBy="1"
+        values.createBy="1";
+        values.parentId="0";
+        values.parentIds="0"
         addDeviceGroup(values).then(res => {
             if(res.status==1){
                 messageGlobal('success',res.msg);
@@ -126,7 +133,7 @@ class AddGroup extends React.Component {
                             <Input type="text" placeholder="请输入分组名称"/>
                         </FormItem>
                         <FormItem label="描述"
-                                  name="loginName"
+                                  name="remark"
                                   initialValue={detail.remark}
                                   rules={[
                                       {

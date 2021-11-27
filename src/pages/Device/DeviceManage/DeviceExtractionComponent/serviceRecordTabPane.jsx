@@ -1,12 +1,10 @@
 import React from "react";
 import {Card, Modal, Form, Input, Button, Select, Radio} from "antd";
-import IconFont from "../../../../utils/IconFont";
 import BaseForm from "../../../../common/BaseForm";
 import Etable from "../../../../common/Etable";
 import {updateSelectedItem} from "../../../../utils";
-import request from "../../../../api/request";
 import './../index.less'
-import {getDeviceTabEventInfoList, getDeviceTabServerInfoList, getUserList} from "../../../../api/api";
+import { getDeviceTabServerInfoList} from "../../../../api/api";
 
 const {TextArea} = Input
 const FormItem = Form.Item
@@ -67,7 +65,7 @@ export default class ServiceRecordTabPane extends React.Component {
         let  params= {
             currentPage: this.params.page,
             pageSize: this.params.pageSize,
-            "map[deviceId]":this.props.deviceInfo.id,
+            "map[deviceSecret]":this.props.deviceInfo.deviceSecret,
             "map[productId]":this.props.deviceInfo.productId,
             "map[startTime]":this.state.startTime,
             "map[endTime]":this.state.endTime,

@@ -11,7 +11,7 @@ class BaseForm extends React.Component {
     formRef = React.createRef();
     componentWillReceiveProps(nextProps){
         this.formRef.current.setFieldsValue({
-            productLabel:nextProps.productLabel
+            label:nextProps.label
         })
     }
     creatFormList = () => {

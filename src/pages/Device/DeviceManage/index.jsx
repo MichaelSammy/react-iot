@@ -10,7 +10,6 @@ import DeviceListTabPane from "../DeviceManage/DeviceExtractionComponent/deviceL
 import BatchListTabPane from "../DeviceManage/DeviceExtractionComponent/batchListTabPane";
 import * as qs from "qs";
 import {getDeviceSummaryList, getProductDropDownList, getSysDictList} from "../../../api/api";
-import EditProduct from "../ProductManage/EditProduct";
 const {TabPane} = Tabs;
 export default class DeviceManage extends React.Component {
     params = {
